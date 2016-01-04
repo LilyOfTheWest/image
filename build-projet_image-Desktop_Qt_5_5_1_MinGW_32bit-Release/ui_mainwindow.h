@@ -91,7 +91,7 @@ public:
 
     void retranslateUi(QMainWindow *MainWindow)
     {
-        MainWindow->setWindowTitle(QApplication::translate("MainWindow", "MainWindow", 0));
+        MainWindow->setWindowTitle(QApplication::translate("MainWindow", "ImageEditor", 0));
         actionNouveau->setText(QApplication::translate("MainWindow", "Nouveau", 0));
         actionOuvrir->setText(QApplication::translate("MainWindow", "Ouvrir", 0));
         actionEnregistrer->setText(QApplication::translate("MainWindow", "Enregistrer", 0));
