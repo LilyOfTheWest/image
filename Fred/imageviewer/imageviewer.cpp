@@ -47,87 +47,26 @@
 #include "imageviewer.h"
 #include "qkernelconv.h"
 
-//! [0]
 ImageViewer::ImageViewer()
 {
-    w = new QWidget;
-
-    w1 = new QLabel();
-    QGraphicsOpacityEffect * effect = new QGraphicsOpacityEffect(w1);
-    effect->setOpacity(0.0);
-    w1->setBackgroundRole(QPalette::Base);
-    w1->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
-    w1->setScaledContents(true);
-    w1->setAutoFillBackground(false);
-    scrollArea2 = new QScrollArea;
-    scrollArea2->setBackgroundRole(QPalette::Base);
-    scrollArea2->setAutoFillBackground(false);
-    effect = new QGraphicsOpacityEffect(scrollArea2);
-    effect->setOpacity(0.0);
-    scrollArea2->setWidget(w1);
-    w1->setStyleSheet("background-color: rgba(0,0,0,0)");
-
-    w2 = new QStackedLayout(w);
-
-
     imageLabel = new QLabel;
-    imageLabel->setBackgroundRole(QPalette::Base);
-    imageLabel->setAutoFillBackground(false);
     imageLabel->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
     imageLabel->setScaledContents(true);
-
-kernelConv = new QKernelConv();
-
+    kernelConv = new QKernelConv();
     scrollArea = new QScrollArea;
-    scrollArea->setBackgroundRole(QPalette::Base);
-    scrollArea->setAutoFillBackground(false);
     scrollArea->setWidget(imageLabel);
-
-    /* https://openclassrooms.com/forum/sujet/qt-qscrollarea-et-les-qwidgets-63790
-     * QScrollArea *frame = new QScrollArea();
-    frame->setFixedSize(290, 110);
-QWidget *contenu = new QWidget;
-        QVBoxLayout *mLayout = new QVBoxLayout();
-        contenu->setLayout(mLayout);
-
-        for(int i = 0 ; i < 4 ; i++)
-        {
-            QHBoxLayout *layout = new QHBoxLayout();
-            mLayout->addLayout(layout);
-
-            for(int j = 0 ; j < 3 ; j++)
-            {
-                layout->addWidget(new QPushButton("Test"));
-            }
-        }
-        // Si tu essayes d'appeler setWidget avant que les boutons
-        // soient ajoutés, rien ne s'affiche
-        // (voir doc de QScrollArea::setWidget)
-        frame->setWidget(contenu);*/
-
-
-    w2->addWidget(scrollArea);
-    w2->addWidget(scrollArea2);
-
-    w2->setCurrentIndex(1);
-
-    setCentralWidget(w);
-
+    setCentralWidget(scrollArea);
     createActions();
     createMenus();
-
     resize(QGuiApplication::primaryScreen()->availableSize() * 3 / 5);
 }
-
-//! [0]
-//! [2]
 
 bool ImageViewer::loadFile(const QString &fileName)
 {
     QImageReader reader(fileName);
     reader.setAutoTransform(true);
-    const QImage image = reader.read();
-    if (image.isNull()) {
+    QImage image2 = reader.read();
+    if (image2.isNull()) {
         QMessageBox::information(this, QGuiApplication::applicationDisplayName(),
                                  tr("Cannot load %1.").arg(QDir::toNativeSeparators(fileName)));
         setWindowFilePath(QString());
@@ -135,21 +74,19 @@ bool ImageViewer::loadFile(const QString &fileName)
         imageLabel->adjustSize();
         return false;
     }
-//! [2] //! [3]
+
+    //Exemple de code de dessin - substitut au calque
+    QPainter p;
+    p.begin(&image2);
+    p.setPen(QColor(Qt::color0));
+    p.setBrush(Qt::NoBrush);
+    p.drawRect(QRect(30,30,400,400));
+    p.end();
+    const QImage image = image2;
+
     imageLabel->setPixmap(QPixmap::fromImage(image));
     imageL=new QImage(image);
-    imageL2=new QImage(image);
-//! [3] //! [4]
     scaleFactor = 1.0;
-
-    *imageL2 = kernelConv->calque(imageL);
-    const QImage imageCalque = *imageL2;
-    w1->setPixmap(QPixmap::fromImage(imageCalque));
-    QGraphicsOpacityEffect * effect = new QGraphicsOpacityEffect(w1);
-    effect->setOpacity(0.2);
-    scaleFactor = 1.0;//scaleImage(1.5);
-    if (!fitToWindowAct->isChecked())
-        w1->adjustSize();
 
     printAct->setEnabled(true);
     fitToWindowAct->setEnabled(true);
@@ -162,11 +99,6 @@ bool ImageViewer::loadFile(const QString &fileName)
     return true;
 }
 
-//! [4]
-
-//! [2]
-
-//! [1]
 void ImageViewer::open()
 {
     QStringList mimeTypeFilters;
@@ -182,17 +114,12 @@ void ImageViewer::open()
 
     while (dialog.exec() == QDialog::Accepted && !loadFile(dialog.selectedFiles().first())) {}
 }
-//! [1]
 
-//! [5]
 void ImageViewer::print()
-//! [5] //! [6]
 {
     Q_ASSERT(imageLabel->pixmap());
 #if !defined(QT_NO_PRINTER) && !defined(QT_NO_PRINTDIALOG)
-//! [6] //! [7]
     QPrintDialog dialog(&printer, this);
-//! [7] //! [8]
     if (dialog.exec()) {
         QPainter painter(&printer);
         QRect rect = painter.viewport();
@@ -204,11 +131,8 @@ void ImageViewer::print()
     }
 #endif
 }
-//! [8]
 
-//! [9]
 void ImageViewer::zoomIn()
-//! [9] //! [10]
 {
     scaleImage(1.25);
 }
@@ -218,18 +142,12 @@ void ImageViewer::zoomOut()
     scaleImage(0.8);
 }
 
-//! [10] //! [11]
 void ImageViewer::normalSize()
-//! [11] //! [12]
 {
     imageLabel->adjustSize();
     scaleFactor = 1.0;
 }
-//! [12]
-
-//! [13]
 void ImageViewer::fitToWindow()
-//! [13] //! [14]
 {
     bool fitToWindow = fitToWindowAct->isChecked();
     scrollArea->setWidgetResizable(fitToWindow);
@@ -238,12 +156,8 @@ void ImageViewer::fitToWindow()
     }
     updateActions();
 }
-//! [14]
 
-
-//! [15]
 void ImageViewer::about()
-//! [15] //! [16]
 {
     QMessageBox::about(this, tr("About Image Viewer"),
             tr("<p>The <b>Image Viewer</b> example shows how to combine QLabel "
@@ -259,11 +173,7 @@ void ImageViewer::about()
                "zooming and scaling features. </p><p>In addition the example "
                "shows how to use QPainter to print an image.</p>"));
 }
-//! [16]
-
-//! [17]
 void ImageViewer::createActions()
-//! [17] //! [18]
 {
     openAct = new QAction(tr("&Open..."), this);
     openAct->setShortcut(tr("Ctrl+O"));
@@ -278,7 +188,7 @@ void ImageViewer::createActions()
     exitAct->setShortcut(tr("Ctrl+Q"));
     connect(exitAct, SIGNAL(triggered()), this, SLOT(close()));
 
-    inverseColorAct = new QAction(tr("Produit convolution Moyenneur rudimentaire"), this);
+    inverseColorAct = new QAction(tr("Inverseur des couleurs"), this);
     inverseColorAct->setShortcut(tr("Ctrl+N"));
     inverseColorAct->setEnabled(false);
     connect(inverseColorAct, SIGNAL(triggered()), this, SLOT(inverseColor()));
@@ -315,11 +225,7 @@ void ImageViewer::createActions()
     aboutQtAct = new QAction(tr("About &Qt"), this);
     connect(aboutQtAct, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
 }
-//! [18]
-
-//! [19]
 void ImageViewer::createMenus()
-//! [19] //! [20]
 {
     fileMenu = new QMenu(tr("&File"), this);
     fileMenu->addAction(openAct);
@@ -344,11 +250,8 @@ void ImageViewer::createMenus()
     menuBar()->addMenu(viewMenu);
     menuBar()->addMenu(helpMenu);
 }
-//! [20]
 
-//! [21]
 void ImageViewer::updateActions()
-//! [21] //! [22]
 {
     inverseColorAct->setEnabled(!fitToWindowAct->isChecked());
     prodConvAct->setEnabled(!fitToWindowAct->isChecked());
@@ -356,11 +259,8 @@ void ImageViewer::updateActions()
     zoomOutAct->setEnabled(!fitToWindowAct->isChecked());
     normalSizeAct->setEnabled(!fitToWindowAct->isChecked());
 }
-//! [22]
 
-//! [23]
 void ImageViewer::scaleImage(double factor)
-//! [23] //! [24]
 {
     Q_ASSERT(imageLabel->pixmap());
     scaleFactor *= factor;
@@ -372,16 +272,12 @@ void ImageViewer::scaleImage(double factor)
     zoomInAct->setEnabled(scaleFactor < 3.0);
     zoomOutAct->setEnabled(scaleFactor > 0.333);
 }
-//! [24]
 
-//! [25]
 void ImageViewer::adjustScrollBar(QScrollBar *scrollBar, double factor)
-//! [25] //! [26]
 {
     scrollBar->setValue(int(factor * scrollBar->value()
                             + ((factor - 1) * scrollBar->pageStep()/2)));
 }
-//! [26]
 
 /*void ImageViewer::createToolBars()
 {
@@ -390,8 +286,7 @@ void ImageViewer::adjustScrollBar(QScrollBar *scrollBar, double factor)
 }*/
 
 void ImageViewer::inverseColor()
-//! [9] //! [10]
-{// opencv
+{
     *imageL = kernelConv->inverseColor(imageL);
     const QImage imageConv = *imageL;
     imageLabel->setPixmap(QPixmap::fromImage(imageConv));
@@ -399,7 +294,6 @@ void ImageViewer::inverseColor()
 }
 
 void ImageViewer::prodConv()
-//! [9] //! [10]
 {
     *imageL = kernelConv->produitConv(imageL);
     const QImage imageConv = *imageL;

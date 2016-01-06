@@ -83,12 +83,8 @@ private:
     void scaleImage(double factor);
     void adjustScrollBar(QScrollBar *scrollBar, double factor);
 
-    QWidget *w;
-    QLabel *w1;
-    QStackedLayout *w2;
     QLabel *imageLabel;
     QScrollArea *scrollArea;
-    QScrollArea *scrollArea2;
     double scaleFactor;
 
 #ifndef QT_NO_PRINTER
@@ -113,7 +109,6 @@ private:
 
     QKernelConv *kernelConv;
     QImage *imageL;
-    QImage *imageL2;
 };
 //! [0]
 

@@ -24,20 +24,12 @@ QImage QKernelConv::inverseColor(QImage *src) {
     for (int i=0; i< src->height() ; i++) {
         for (int j=0; j<src->width() ; j++) {
             color=src->pixel(j,i);
-            r=qRed(color);
-            b=qBlue(color);
-            g=qGreen(color);
+            r=255-qRed(color);
+            g=255-qBlue(color);
+            b=255-qGreen(color);
             alpha=qAlpha(color);
-
-            /* Lignes rajoutées */
-            r=255-r;
-            g=255-g;
-            b=255-b;
-            /* */
-
             color2=qRgba(r,g,b,alpha);
             ret->setPixel(j,i,color2);
-
         }
     }
     return *ret;
@@ -49,42 +41,9 @@ QImage QKernelConv::produitConv(QImage *src) {
     QImage *ret = new QImage(src->width(),src->height(),src->format());
     for (int i=0; i< src->height() ; i++) {
         for (int j=0; j<src->width() ; j++) {
-            color=src->pixel(j,i);
-            r=qRed(color);
-            b=qBlue(color);
-            g=qGreen(color);
-            alpha=qAlpha(color);
-            if ((i < 100) || (i>110))
-                alpha=0;
-
-            color2=qRgba(255,255,255,alpha);
-            ret->setPixel(j,i,color2);
+            // A faire
         }
     }
     return *ret;
 }
 
-QImage QKernelConv::calque(QImage *src) {
-    QRgb color,color2;
-    int r,g,b,alpha;
-    QImage *ret = new QImage(src->width(),src->height(),src->format());
-    for (int i=0; i< src->height() ; i++) {
-        for (int j=0; j<src->width() ; j++) {
-            color=src->pixel(j,i);
-            r=qRed(color);
-            b=qBlue(color);
-            g=qGreen(color);
-            alpha=qAlpha(color);
-//            if ((j < 3) || (j>60))
-//                color2=qRgba(0,0,0,0);
-//            else
-
-            color2=qRgb(r,g,b);
-
-            //color2=qRgba(0,0,0,0);
-            //color2=qRgba(r,g,b,alpha);
-            ret->setPixel(j,i,color2);
-        }
-    }
-    return *ret;
-}
