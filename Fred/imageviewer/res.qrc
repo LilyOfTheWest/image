@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/group1">
+        <file>pipette-icon.png</file>
+    </qresource>
+    <qresource prefix="/">
+        <file>Ccc.qml</file>
+        <file>CccForm.ui.qml</file>
+    </qresource>
+</RCC>
