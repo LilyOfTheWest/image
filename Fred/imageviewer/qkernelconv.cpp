@@ -28,8 +28,16 @@ QImage QKernelConv::inverseColor(QImage *src) {
             g=qBlue(color);
             b=qGreen(color);
             alpha=qAlpha(color);
+
+            /* Lignes rajoutées */
+            r=255-r;
+            g=255-g;
+            b=255-b;
+            /* */
+
             color2=qRgba(r,g,b,alpha);
             ret->setPixel(j,i,color2);
+
         }
     }
     return *ret;

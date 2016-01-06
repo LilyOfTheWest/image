@@ -108,7 +108,7 @@ QWidget *contenu = new QWidget;
     w2->addWidget(scrollArea);
     w2->addWidget(scrollArea2);
 
-    w2->setCurrentIndex(1);
+    w2->setCurrentIndex(0);
 
     setCentralWidget(w);
 
