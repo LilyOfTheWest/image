@@ -54,7 +54,7 @@ ImageViewer::ImageViewer()
 
     w1 = new QLabel();
     QGraphicsOpacityEffect * effect = new QGraphicsOpacityEffect(w1);
-    effect->setOpacity(0.5);
+    effect->setOpacity(0.0);
     w1->setBackgroundRole(QPalette::Base);
     w1->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
     w1->setScaledContents(true);
@@ -63,8 +63,9 @@ ImageViewer::ImageViewer()
     scrollArea2->setBackgroundRole(QPalette::Base);
     scrollArea2->setAutoFillBackground(false);
     effect = new QGraphicsOpacityEffect(scrollArea2);
-    effect->setOpacity(0.5);
+    effect->setOpacity(0.0);
     scrollArea2->setWidget(w1);
+    w1->setStyleSheet("background-color: rgba(0,0,0,0)");
 
     w2 = new QStackedLayout(w);
 
@@ -108,7 +109,7 @@ QWidget *contenu = new QWidget;
     w2->addWidget(scrollArea);
     w2->addWidget(scrollArea2);
 
-    w2->setCurrentIndex(0);
+    w2->setCurrentIndex(1);
 
     setCentralWidget(w);
 
