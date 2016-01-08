@@ -1,15 +1,14 @@
 #ifndef KERNELCONVMOYENNEUR_H
 #define KERNELCONVMOYENNEUR_H
+#include "kernelconv.h"
 
 class KernelConvMoyenneur : public KernelConv
 {
 
 public:
-    explicit KernelConvMoyenneur(QObject *parent = 0,int ordre);
+    explicit KernelConvMoyenneur(int ordre);
+    ~KernelConvMoyenneur();
 
-signals:
-
-public slots:
 };
 
 #endif // KERNELCONVMOYENNEUR_H

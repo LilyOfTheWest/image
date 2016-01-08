@@ -105,6 +105,4 @@ private:
     QMenu *helpMenu;
 
 };
-//! [0]
-
 #endif

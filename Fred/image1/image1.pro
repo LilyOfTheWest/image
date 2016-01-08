@@ -5,13 +5,19 @@ HEADERS       = imageviewer.h \
     picdisplay.h \
     pictlabel.h \
     transfocouleur.h \
-    kernelconv.h
+    kernelconv.h \
+    mainwindow.h \
+    imageanalyse.h \
+    kernelconvmoyenneur.h
 SOURCES       = imageviewer.cpp \
                 main.cpp \
     picdisplay.cpp \
     pictlabel.cpp \
     transfocouleur.cpp \
-    kernelconv.cpp
+    kernelconv.cpp \
+    mainwindow.cpp \
+    imageanalyse.cpp \
+    kernelconvmoyenneur.cpp
 
 # install
 target.path = $$[QT_INSTALL_EXAMPLES]/widgets/widgets/imageviewer
@@ -23,7 +29,8 @@ wince {
 }
 
 FORMS += \
-    picdisplay.ui
+    picdisplay.ui \
+    mainwindow.ui
 
 RESOURCES += \
     res.qrc

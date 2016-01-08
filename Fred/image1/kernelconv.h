@@ -1,20 +1,16 @@
 #ifndef KERNELCONV_H
 #define KERNELCONV_H
 
-class KernelConv : public QObject
+class KernelConv
 {
 
 public:
     explicit KernelConv();
+    ~KernelConv();
     double **produitConv(double **src);
 
-signals:
-
-public slots:
-
 private:
-    int w;  // convolution kernel width
-    int h;  // convolution kernel heigth
+    int w;  // convolution kernel size
     int sum;  // convolution kernel sum
     double **buf;  // convolution kernel data
 };

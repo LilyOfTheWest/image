@@ -1,7 +1,11 @@
 #include "kernelconvmoyenneur.h"
 
-KernelConvMoyenneur::KernelConvMoyenneur(QObject *parent) : QObject(parent)
+KernelConvMoyenneur::KernelConvMoyenneur(int ordre)
 {
 
 }
 
+KernelConvMoyenneur::~KernelConvMoyenneur()
+{
+
+}
