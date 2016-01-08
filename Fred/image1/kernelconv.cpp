@@ -24,6 +24,7 @@ QImage KernelConv::produitConv(QImage *src) {
     for (int i=0; i< src->height() ; i++) {
         for (int j=0; j<src->width() ; j++) {
             // A faire
+            ret->
         }
     }
     return *ret;
