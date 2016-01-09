@@ -1,7 +1,7 @@
 QT += widgets
 qtHaveModule(printsupport): QT += printsupport
 
-HEADERS       = imageviewer.h \
+HEADERS       = \
     picdisplay.h \
     pictlabel.h \
     transfocouleur.h \
@@ -9,7 +9,7 @@ HEADERS       = imageviewer.h \
     mainwindow.h \
     imageanalyse.h \
     kernelconvmoyenneur.h
-SOURCES       = imageviewer.cpp \
+SOURCES       = \
                 main.cpp \
     picdisplay.cpp \
     pictlabel.cpp \

@@ -14,8 +14,13 @@ public:
     QImage *flou(QImage *src);
     QImage *rehaussement(QImage *src);
     double *rgb_YUV_image(QImage *src);
+    double **get_YBuf_image(QImage *src);
     double *rgb_YUV_pixel(QRgb *pixel_src);
     QImage *resize(QImage *src, int pct_V, int pct_H);
+
+    double get_YVal_Pixel(QRgb *pixel_src);
+    double get_UVal_Pixel(QRgb *pixel_src);
+    double get_VVal_Pixel(QRgb *pixel_src);
 
 signals:
 

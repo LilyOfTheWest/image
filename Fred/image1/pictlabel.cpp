@@ -3,15 +3,35 @@
 #include <QRubberBand>
 #include <QPainter>
 #include <QImage>
+#include <QRgb>
 
-void PictLabel::setPrincipal(QImage *principal)
+PictLabel::PictLabel(QWidget *parent) :
+    QLabel(parent),colorPicked(qRgb(0,0,0))
 {
-    principal = principal;
+    origin_select.setX(0);
+    origin_select.setY(0);
+    mouseListenerState=11;
+}
+
+PictLabel::~PictLabel()
+{
+    delete principal;
+}
+
+void PictLabel::setPrincipal(QImage *src)
+{
+    principal = new QImage(src->width(),src->height(),src->format());
+    for (int i=0; i< src->height() ; i++) {
+        for (int j=0; j<src->width() ; j++) {
+            principal->setPixel(j,i,src->pixel(j,i));
+        }
+    }
 }
 
 QImage *PictLabel::getPrincipal()
 {
     return principal;
+
 }
 
 /*void PictLabel::enterEvent ( QEvent * event )
@@ -24,18 +44,40 @@ void PictLabel::leaveEvent ( QEvent * event )
 
 void PictLabel::mouseMoveEvent ( QMouseEvent * event )
 {
-    rubberBand->setGeometry(QRect(origin_select, event->pos()).normalized());
+    switch(mouseListenerState){
+    case 10:
+
+        break;
+    case 11:
+        rubberBand->setGeometry(QRect(origin_select, event->pos()).normalized());
+        break;
+    case 12:
+        break;
+    }
+
+
 }
 
 void PictLabel::mousePressEvent ( QMouseEvent * event )
 {
-    origin_select = event->pos();
-    rubberBand = new QRubberBand(QRubberBand::Rectangle, this);
-    rubberBand->setGeometry(QRect(origin_select, QSize()));
-    rubberBand->show();
+    switch(mouseListenerState){
+    case 10:
+        origin_select = event->pos();
+        colorPicked = principal->pixel(origin_select);
+        signalNewPixelPicked();
+        break;
+    case 11:
+        origin_select = event->pos();
+        rubberBand = new QRubberBand(QRubberBand::Rectangle, this);
+        rubberBand->setGeometry(QRect(origin_select, QSize()));
+        rubberBand->show();
+        break;
+    case 12:
+        break;
+    }
 }
 
-void PictLabel::mouseReleaseEvent ( QMouseEvent * event )
+void PictLabel::drawSelection ( QMouseEvent * event )
 {
     end_select = event->pos();
     rubberBand->hide();
@@ -50,6 +92,23 @@ void PictLabel::mouseReleaseEvent ( QMouseEvent * event )
     p.end();
     const QImage image = image2;
     this->setPixmap(QPixmap::fromImage(image));
+}
+
+void PictLabel::mouseReleaseEvent ( QMouseEvent * event )
+{
+    switch(mouseListenerState){
+    case 10:
+
+        break;
+    case 11:
+        drawSelection (event);
+        break;
+
+    case 12:
+
+        break;
+
+    }
 }
 
 void PictLabel::saveTemp() {
@@ -69,4 +128,18 @@ void PictLabel::undoLast() {
     this->setPixmap(QPixmap::fromImage(image));
 }
 
+void PictLabel::setMouseListenerState(int mouseListenerStateVal)
+{
+    mouseListenerState=mouseListenerStateVal;
+}
+
+QRgb PictLabel::getColorPicked()
+{
+    return colorPicked;
+}
+
+QPoint PictLabel::getPixelPicked()
+{
+    return origin_select;
+}
 

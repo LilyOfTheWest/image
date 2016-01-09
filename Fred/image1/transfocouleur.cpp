@@ -21,6 +21,33 @@ QImage *TransfoCouleur::inverseColor(QImage *src) {
             ret->setPixel(j,i,color2);
         }
     }
+
     return ret;
 }
 
+
+
+double TransfoCouleur::get_YVal_Pixel(QRgb *pixel_src)
+{
+    double ret = 0;
+    ret = qRed(*pixel_src);
+    return ret;
+}
+
+double TransfoCouleur::get_UVal_Pixel(QRgb *pixel_src)
+{
+
+}
+
+double TransfoCouleur::get_VVal_Pixel(QRgb *pixel_src)
+{
+
+}
+
+double ** TransfoCouleur::get_YBuf_image(QImage *src) {
+    double ** M = new double*[src->height()];
+    for(int i = 0 ; i<src->height() ; i++){
+        M[i] = new double[src->width()];
+    }
+    return M;
+}

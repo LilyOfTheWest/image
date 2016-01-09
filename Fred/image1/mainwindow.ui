@@ -19,8 +19,8 @@
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>771</width>
-      <height>571</height>
+      <width>831</width>
+      <height>591</height>
      </rect>
     </property>
     <property name="widgetResizable">
@@ -31,8 +31,8 @@
       <rect>
        <x>0</x>
        <y>0</y>
-       <width>769</width>
-       <height>569</height>
+       <width>829</width>
+       <height>589</height>
       </rect>
      </property>
     </widget>
@@ -50,6 +50,8 @@
     <bool>false</bool>
    </attribute>
    <addaction name="actionFlouter"/>
+   <addaction name="actionPick_Color"/>
+   <addaction name="actionSelect"/>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
@@ -105,6 +107,30 @@
   <action name="action_Exit">
    <property name="text">
     <string>&amp;Exit</string>
+   </property>
+  </action>
+  <action name="actionPick_Color">
+   <property name="icon">
+    <iconset theme="group1/pipette-icon.png" resource="res.qrc">
+     <normaloff>:/group1/pipette-icon.png</normaloff>:/group1/pipette-icon.png</iconset>
+   </property>
+   <property name="text">
+    <string>Pick Color</string>
+   </property>
+   <property name="toolTip">
+    <string>Affichage couleur d'un pixel</string>
+   </property>
+  </action>
+  <action name="actionSelect">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/group1/pipette-icon.png</normaloff>:/group1/pipette-icon.png</iconset>
+   </property>
+   <property name="text">
+    <string>Select</string>
+   </property>
+   <property name="toolTip">
+    <string>Sélection souris</string>
    </property>
   </action>
  </widget>

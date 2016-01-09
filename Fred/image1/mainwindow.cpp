@@ -17,12 +17,22 @@ MainWindow::MainWindow(QWidget *parent) :
     imageLabel = new PictLabel;
     imageLabel->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
     imageLabel->setScaledContents(true);
+
     scrollArea = new QScrollArea;
-    ui->scrollAreaPict->setWidget(imageLabel);
-    setCentralWidget(ui->scrollAreaPict);
-    //setCentralWidget(new PicDisplay());
-    ui->scrollAreaPict->setWidgetResizable(false);
-    ui->statusbar->insertWidget(0,new PicDisplay());
+    scrollArea->setWidget(imageLabel);
+
+    //ui->scrollAreaPict->setWidget(imageLabel);
+    //PictLabel jj = (PictLabel) ui->scrollAreaPict->widget();
+
+    //setCentralWidget(ui->scrollAreaPict);
+    pdis =new PicDisplay();
+    pdis->setScrollArea(imageLabel);
+    setCentralWidget(pdis);
+    QObject::connect(imageLabel,SIGNAL(signalNewPixelPicked()),pdis,SLOT(on_refreshPixelProperties()));
+
+    //ui->scrollAreaPict->setWidgetResizable(false); AVOIR !!!
+
+    //ui->statusbar->insertWidget(0,new PicDisplay());
     createActions();
     createMenus();
     resize(QGuiApplication::primaryScreen()->availableSize() * 3 / 5);
@@ -39,6 +49,7 @@ bool MainWindow::loadFile(const QString &fileName)
 {
     QImageReader reader(fileName);
     reader.setAutoTransform(true);
+
     QImage image2 = reader.read();
     if (image2.isNull()) {
         QMessageBox::information(this, QGuiApplication::applicationDisplayName(),
@@ -50,17 +61,23 @@ bool MainWindow::loadFile(const QString &fileName)
     }
 
     //Exemple de code de dessin - substitut au calque
-    QPainter p;
+    /*QPainter p;
     p.begin(&image2);
     p.setPen(QColor(Qt::color0));
     p.setBrush(Qt::NoBrush);
     p.drawRect(QRect(30,30,400,400));
-    p.end();
+    p.end();*/
     const QImage image = image2;
 
     imageLabel->setPrincipal(&image2);
+    //const QImage imageCst = *principal;
+
+    //this->setPixmap(QPixmap::fromImage(imageCst));
     imageLabel->setPixmap(QPixmap::fromImage(image));
+    //imageLabel->setPixmap(QPixmap::fromImage(image));
     scaleFactor = 1.0;
+
+    pdis->resizeScrollArea(imageLabel);
 
     printAct->setEnabled(true);
     fitToWindowAct->setEnabled(true);
@@ -240,8 +257,8 @@ void MainWindow::scaleImage(double factor)
     scaleFactor *= factor;
     imageLabel->resize(scaleFactor * imageLabel->pixmap()->size());
 
-    adjustScrollBar(ui->scrollAreaPict->horizontalScrollBar(), factor);
-    adjustScrollBar(ui->scrollAreaPict->verticalScrollBar(), factor);
+    //adjustScrollBar(ui->scrollAreaPict->horizontalScrollBar(), factor);
+    //adjustScrollBar(ui->scrollAreaPict->verticalScrollBar(), factor);
 
     zoomInAct->setEnabled(scaleFactor < 3.0);
     zoomOutAct->setEnabled(scaleFactor > 0.333);
@@ -262,6 +279,7 @@ void MainWindow::adjustScrollBar(QScrollBar *scrollBar, double factor)
 void MainWindow::inverseColor()
 {
     TransfoCouleur *tc = new TransfoCouleur;
+    //PictLabel *jj = static_cast<PictLabel*>(ui->scrollAreaPict->widget());
     QImage *imageInversee = tc->inverseColor(imageLabel->getPrincipal());
     imageLabel->setPrincipal(imageInversee);
     const QImage imageConv = *imageLabel->getPrincipal();
@@ -285,4 +303,14 @@ void MainWindow::on_actionFlouter_triggered()
 void MainWindow::on_action_Open_triggered()
 {
     open();
+}
+
+void MainWindow::on_actionPick_Color_triggered()
+{
+    imageLabel->setMouseListenerState(10);
+}
+
+void MainWindow::on_actionSelect_triggered()
+{
+    imageLabel->setMouseListenerState(11);
 }

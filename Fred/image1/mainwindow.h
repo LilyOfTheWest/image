@@ -18,6 +18,9 @@ class PictLabel;
 class QScrollBar;
 class QLabel;
 class QKernelConv;
+
+class PicDisplay;
+class QWidget;
 QT_END_NAMESPACE
 
 class MainWindow : public QMainWindow
@@ -44,6 +47,10 @@ private slots:
 
     void on_action_Open_triggered();
 
+    void on_actionPick_Color_triggered();
+
+    void on_actionSelect_triggered();
+
 private:
     Ui::MainWindow *ui;
     void createActions();
@@ -54,6 +61,7 @@ private:
 
     PictLabel *imageLabel;
     QScrollArea *scrollArea;
+    PicDisplay *pdis;
     double scaleFactor;
 
 #ifndef QT_NO_PRINTER
