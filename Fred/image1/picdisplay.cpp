@@ -1,6 +1,7 @@
 #include "picdisplay.h"
 #include "ui_picdisplay.h"
 #include "pictlabel.h"
+#include "TransfoCouleur.h"
 #include <QScrollBar>
 
 PicDisplay::PicDisplay(QWidget *parent) :
@@ -8,6 +9,7 @@ PicDisplay::PicDisplay(QWidget *parent) :
     ui(new Ui::PicDisplay)
 {
     ui->setupUi(this);
+    ui->radioButtonRGB->setChecked(true);
 }
 
 PicDisplay::~PicDisplay()
@@ -18,16 +20,40 @@ PicDisplay::~PicDisplay()
 void PicDisplay::refreshPixelProperties()
 {
     PictLabel *jj = static_cast<PictLabel*>(ui->scrollAreaP->widget());
+    QRgb color = jj->getColorPicked();
+    QPoint position = jj->getPixelPicked();
+    QString valx= QString::number(position.x());
+    ui->valPosX->setText(valx);
+    QString valy= QString::number(position.y());
+    ui->valPosY->setText(valy);
+    QString val1,val2,val3;
 
     if (ui->radioButtonRGB->isChecked())
     {
         ui->libLibre->setText("RGB");
-        ui->libCoul1->setText("R");
-        ui->valCoul1->setText("R");
+        ui->libCoul1->setText("R:");
+        ui->libCoul2->setText("G:");
+        ui->libCoul3->setText("B:");
+        val1= QString::number(qRed(color));
+        ui->valCoul1->setText(val1);
+        val2= QString::number(qGreen(color));
+        ui->valCoul2->setText(val2);
+        val3= QString::number(qBlue(color));
+        ui->valCoul3->setText(val3);
 
     } else
     {
         ui->libLibre->setText("YUV");
+        ui->libCoul1->setText("Y:");
+        ui->libCoul2->setText("U:");
+        ui->libCoul3->setText("V:");
+        TransfoCouleur *tc = new TransfoCouleur;
+        val1= QString::number(tc->get_YVal_Pixel(color));
+        ui->valCoul1->setText(val1);
+        val2= QString::number(tc->get_UVal_Pixel(color));
+        ui->valCoul2->setText(val2);
+        val3= QString::number(tc->get_VVal_Pixel(color));
+        ui->valCoul3->setText(val3);
     }
 }
 

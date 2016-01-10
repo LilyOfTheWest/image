@@ -33,7 +33,7 @@
     <item>
      <widget class="QLabel" name="valCoul2">
       <property name="text">
-       <string>out2</string>
+       <string>0</string>
       </property>
      </widget>
     </item>
@@ -59,7 +59,7 @@
     <item>
      <widget class="QLabel" name="valCoul3">
       <property name="text">
-       <string>out3</string>
+       <string>0</string>
       </property>
      </widget>
     </item>
@@ -85,7 +85,7 @@
     <item>
      <widget class="QLabel" name="valPosX">
       <property name="text">
-       <string>out1</string>
+       <string>0</string>
       </property>
      </widget>
     </item>
@@ -111,7 +111,7 @@
     <item>
      <widget class="QLabel" name="valPosY">
       <property name="text">
-       <string>out1</string>
+       <string>0</string>
       </property>
      </widget>
     </item>
@@ -218,7 +218,7 @@
     <item>
      <widget class="QLabel" name="valCoul1">
       <property name="text">
-       <string>out1</string>
+       <string>0</string>
       </property>
      </widget>
     </item>
