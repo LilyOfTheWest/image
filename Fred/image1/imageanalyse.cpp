@@ -41,3 +41,43 @@ void ImageAnalyse::calculHisto()
 {
 
 }
+
+QImage * ImageAnalyse::getDataRGB(){
+    return dataRGB;
+}
+
+void ImageAnalyse::setDataRGB(QImage *i){
+    dataRGB = i;
+}
+
+QImage * ImageAnalyse::getDataYUV(){
+    return dataYUV;
+}
+
+void ImageAnalyse::setDataYUV(QImage *i){
+    dataYUV = i;
+}
+
+double ** ImageAnalyse::getImagris(){
+    return imagris;
+}
+
+void ImageAnalyse::setImagris(double ** i){
+    imagris = i;
+}
+
+double ** ImageAnalyse::getD_x(){
+    return d_x;
+}
+
+void ImageAnalyse::setD_x(double ** dx){
+    d_x = dx;
+}
+
+double ** ImageAnalyse::getD_y(){
+    return d_y;
+}
+
+void ImageAnalyse::setD_y(double ** dy){
+    d_y = dy;
+}

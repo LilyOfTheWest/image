@@ -14,6 +14,18 @@ public:
     ~ImageAnalyse();
     void initYuvImagris();
     void calculHisto();
+
+    /* Getters & Setters */
+    QImage * getDataRGB();
+    void setDataRGB(QImage *i);
+    QImage * getDataYUV();
+    void setDataYUV(QImage *i);
+    double ** getImagris();
+    void setImagris(double ** i);
+    double ** getD_x();
+    void setD_x(double ** dx);
+    double ** getD_y();
+    void setD_y(double ** dy);
 signals:
 
 public slots:

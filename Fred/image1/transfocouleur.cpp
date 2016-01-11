@@ -1,4 +1,6 @@
 #include "transfocouleur.h"
+#include "kernelconvmoyenneur.h"
+#include "imageanalyse.h"
 #include "qglobal.h"
 
 TransfoCouleur::TransfoCouleur(QObject *parent) : QObject(parent)
@@ -47,34 +49,41 @@ QImage *TransfoCouleur::convertYuvToRgb(QImage *src)
 
 QImage *TransfoCouleur::flou(QImage *src)
 {
-    QImage *tmp = convertRgbToYuv(src);
-    QImage *ret = convertYuvToRgb(tmp);
+    /* Test de base */
+//    QImage *tmp = convertRgbToYuv(src);
+//    QImage *ret = convertYuvToRgb(tmp);
 
-    int r,g,b,y,u,v;
-    QRgb color1,color2,color3;
-    color1 = src->pixel(430,145);
-    r=qRed(color1);
-    g=qGreen(color1);
-    b=qBlue(color1);
-    color2 = tmp->pixel(430,145);
-    r=qRed(color2);
-    g=qGreen(color2);
-    b=qBlue(color2);
-    color3 = ret->pixel(430,145);
-    r=qRed(color3);
-    g=qGreen(color3);
-    b=qBlue(color3);
+//    int r,g,b,y,u,v;
+//    QRgb color1,color2,color3;
+//    color1 = src->pixel(430,145);
+//    r=qRed(color1);
+//    g=qGreen(color1);
+//    b=qBlue(color1);
+//    color2 = tmp->pixel(430,145);
+//    r=qRed(color2);
+//    g=qGreen(color2);
+//    b=qBlue(color2);
+//    color3 = ret->pixel(430,145);
+//    r=qRed(color3);
+//    g=qGreen(color3);
+//    b=qBlue(color3);
+//    return ret;
 
 
-
+    /* Final test */
     // appel dialog pour properties /
-    // new imageAnalyse -> imagris Y
     // new KernelConv()
+    KernelConvMoyenneur *kMoy = new KernelConvMoyenneur(3);
+    // new imageAnalyse -> imagris Y
+    ImageAnalyse *imA = new ImageAnalyse(src);
+    imA->initYuvImagris();
     // double **produitConv(double **src);
-    // tc . algo
+    imA->setImagris(kMoy->produitConv(imA->getImagris(), src->width(), src->height()));
     // -> nvle image flouter ; passe pictlabel ; undo + ;
+
+    return imA->getDataRGB();
     // delete de tous les new créés.
-    return ret;
+
 }
 
 QImage *TransfoCouleur::inverseColor(QImage *src) {

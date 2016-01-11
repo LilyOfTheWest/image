@@ -3,7 +3,7 @@
 
 KernelConv::KernelConv(int ordre)
 {
-    w=3;
+    w=ordre;
     buf=(double**) malloc(w*w*sizeof(double*)); 
     coef = 0;
 }
