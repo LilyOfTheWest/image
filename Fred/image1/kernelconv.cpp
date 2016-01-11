@@ -84,10 +84,10 @@ void KernelConv::retournement(){
 }
 
 void KernelConv::sommeCoef(){
-    setCoef(0);
+    coef=0;
     for(int i =0;i<w;i++){
         for(int j =0;j<w;j++){
-            setCoef(coef+buf[i][j]);
+            coef+=buf[i][j];
         }
     }
 }

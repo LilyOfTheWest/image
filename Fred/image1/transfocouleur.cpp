@@ -74,7 +74,7 @@ QImage *TransfoCouleur::flou(QImage *src)
     /* Final test */
     // appel dialog pour properties /
     // new KernelConv()
-    KernelConv *kMoy = new KernelConvMoyenneur(3);
+    KernelConv *kMoy = new KernelConvBinomial(3);
     // new imageAnalyse -> imagris Y
     ImageAnalyse *imA = new ImageAnalyse(src);
     imA->initYuvImagris();

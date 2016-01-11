@@ -9,7 +9,7 @@ KernelConvMoyenneur::KernelConvMoyenneur(int ordre) : KernelConv(ordre)
         }
     }
 
-    this->sommeCoef();
+    sommeCoef();
 }
 
 KernelConvMoyenneur::~KernelConvMoyenneur()
