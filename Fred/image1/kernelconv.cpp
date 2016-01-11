@@ -4,7 +4,10 @@
 KernelConv::KernelConv(int ordre)
 {
     w=ordre;
-    buf=(double**) malloc(w*w*sizeof(double*));
+    buf = new double*[ordre];
+    for(int i = 0;i<ordre;i++){
+        buf[i] = new double[ordre];
+    }
     coef = 0;
 
 }
@@ -15,9 +18,9 @@ KernelConv::~KernelConv() {
 
 double ** KernelConv::produitConv(double **src, int n, int m) {
     /* Place pour l'image formée */
-    double ** S = new double*[n];
-    for(int i = 0;i<n;i++){
-        S[i] = new double[m];
+    double ** S = new double*[m];
+    for(int i = 0;i<m;i++){
+        S[i] = new double[n];
     }
 
     /* Retournement spacial du noyau + calcul de ses coeffs */
@@ -29,11 +32,11 @@ double ** KernelConv::produitConv(double **src, int n, int m) {
     int sum;
 
     /* Régler problème des tailles de noyau sup */
-    for(int i=0;i<n;i++){
-        for(int j=0;j<m;j++){
+    for(int i=0;i<m;i++){
+        for(int j=0;j<n;j++){
             // Pour ne pas prendre en compte les bords
-            if(i==0 || i== n-1 || j== 0 || j== m-1){
-                S[i][j] = buf[i][j];
+            if(i==0 || i == m-1 || j== 0 || j == n-1){
+                S[i][j] = src[i][j];
 
             }
             // Les bords restent les mêmes
@@ -41,7 +44,7 @@ double ** KernelConv::produitConv(double **src, int n, int m) {
                 sum = 0;
                 for(int l=-lk;l<=lk;l++){
                     for(int c = -ck;c<=ck;c++){
-                        sum+=buf[l+lk][c+ck]*buf[i+l][j+c];
+                        sum+=buf[l+lk][c+ck]*src[i+l][j+c];
                     }
                 }
                 S[i][j] = sum/coef;
