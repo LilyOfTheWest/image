@@ -19,12 +19,14 @@ public:
     double *rgb_YUV_pixel(QRgb *pixel_src);*/
     QImage *resize(QImage *src, int pct_V, int pct_H);
 
-    int get_YVal_Pixel(QRgb pixel_src);
-    int get_UVal_Pixel(QRgb pixel_src);
-    int get_VVal_Pixel(QRgb pixel_src);
-    int get_RVal_Pixel(QRgb pixel_src);
-    int get_GVal_Pixel(QRgb pixel_src);
-    int get_BVal_Pixel(QRgb pixel_src);
+    int get_YVal_Pixel_FromRgb(QRgb pixel_src);
+    int get_UVal_Pixel_FromRgb(QRgb pixel_src);
+    int get_VVal_Pixel_FromRgb(QRgb pixel_src);
+    int get_RVal_Pixel_FromYuv(QRgb pixel_src);
+    int get_GVal_Pixel_FromYuv(QRgb pixel_src);
+    int get_BVal_Pixel_FromYuv(QRgb pixel_src);
+    QImage *convertRgbToYuv(QImage *src);
+    QImage *convertYuvToRgb(QImage *src);
 
 signals:
 

@@ -13,6 +13,7 @@ ImageAnalyse::ImageAnalyse(QImage *qimageRgbSrc,QObject *parent) : QObject(paren
             dataRGB->setPixel(j,i,color2);
         }
     }
+    tc = new TransfoCouleur;
 }
 
 ImageAnalyse::~ImageAnalyse()
@@ -20,42 +21,18 @@ ImageAnalyse::~ImageAnalyse()
 
 }
 
-void ImageAnalyse::convertRgbToYuv()
+void ImageAnalyse::initYuvImagris()
 {
-    /*QRgb color,color2;
-    int r,g,b,alpha;
-    TransfoCouleur *tc = new TransfoCouleur;
-    dataYUV = new QImage(qimageRgbSrc->width(),qimageRgbSrc->height(),qimageRgbSrc->format());
-    imagris = new double*[dataRGB->height()];
-    for (int i=0; i< dataRGB->height() ; i++) {
-        imagris[i] = new double[dataRGB->width()];
-        for (int j=0; j<dataRGB->width() ; j++) {
-            color=dataRGB->pixel(j,i);
-            r=tc->get_YVal_Pixel(color);
-            g=tc->get_UVal_Pixel(color);
-            b=tc->get_VVal_Pixel(color);
-            alpha=qAlpha(color);
-            color2=qRgba(r,g,b,alpha);
-            dataYUV->setPixel(j,i,color2);
+    QRgb color;
+    int r;
+    dataYUV = tc->convertRgbToYuv(dataRGB);
+    imagris = new double*[dataYUV->height()];
+    for (int i=0; i< dataYUV->height() ; i++) {
+        imagris[i] = new double[dataYUV->width()];
+        for (int j=0; j<dataYUV->width() ; j++) {
+            color=dataYUV->pixel(j,i);
+            r=qRed(color);
             imagris[i][j] = r;
-        }
-    }*/
-}
-
-void ImageAnalyse::convertYuvToRgb()
-{
-    QRgb color,color2;
-    int r,g,b,alpha;
-    TransfoCouleur *tc = new TransfoCouleur;
-    for (int i=0; i< dataRGB->height() ; i++) {
-        for (int j=0; j<dataRGB->width() ; j++) {
-            color=dataRGB->pixel(j,i);
-            /*r=tc->get_RVal_Pixel(color);
-            g=tc->get_GVal_Pixel(color);
-            b=tc->get_BVal_Pixel(color);*/
-            alpha=qAlpha(color);
-            color2=qRgba(r,g,b,alpha);
-            dataYUV->setPixel(j,i,color2);
         }
     }
 }

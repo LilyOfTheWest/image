@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QImage>
+#include "TransfoCouleur.h"
 
 class ImageAnalyse : public QObject
 {
@@ -11,8 +12,7 @@ class ImageAnalyse : public QObject
 public:
     explicit ImageAnalyse(QImage *qimageRgbSrc,QObject *parent = 0);
     ~ImageAnalyse();
-    void convertRgbToYuv();
-    void convertYuvToRgb();
+    void initYuvImagris();
     void calculHisto();
 signals:
 
@@ -26,6 +26,7 @@ int histo_rgb[255][3];
 int histo_yuv[255][3];
 double **d_x;
 double **d_y;
+TransfoCouleur *tc;
 };
 
 #endif // IMAGEANALYSE_H

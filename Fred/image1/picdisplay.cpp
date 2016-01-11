@@ -48,11 +48,11 @@ void PicDisplay::refreshPixelProperties()
         ui->libCoul2->setText("U:");
         ui->libCoul3->setText("V:");
         TransfoCouleur *tc = new TransfoCouleur;
-        val1= QString::number(tc->get_YVal_Pixel(color));
+        val1= QString::number(tc->get_YVal_Pixel_FromRgb(color));
         ui->valCoul1->setText(val1);
-        val2= QString::number(tc->get_UVal_Pixel(color));
+        val2= QString::number(tc->get_UVal_Pixel_FromRgb(color));
         ui->valCoul2->setText(val2);
-        val3= QString::number(tc->get_VVal_Pixel(color));
+        val3= QString::number(tc->get_VVal_Pixel_FromRgb(color));
         ui->valCoul3->setText(val3);
     }
 }
