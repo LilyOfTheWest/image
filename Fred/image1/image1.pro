@@ -8,7 +8,8 @@ HEADERS       = \
     kernelconv.h \
     mainwindow.h \
     imageanalyse.h \
-    kernelconvmoyenneur.h
+    kernelconvmoyenneur.h \
+    kernelconvbinomial.h
 SOURCES       = \
                 main.cpp \
     picdisplay.cpp \
@@ -17,7 +18,8 @@ SOURCES       = \
     kernelconv.cpp \
     mainwindow.cpp \
     imageanalyse.cpp \
-    kernelconvmoyenneur.cpp
+    kernelconvmoyenneur.cpp \
+    kernelconvbinomial.cpp
 
 # install
 target.path = $$[QT_INSTALL_EXAMPLES]/widgets/widgets/imageviewer
