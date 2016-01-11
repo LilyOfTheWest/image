@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/group1">
+        <file>pipette-icon.png</file>
+    </qresource>
+</RCC>
