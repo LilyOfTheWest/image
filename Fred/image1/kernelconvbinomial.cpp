@@ -24,7 +24,7 @@ KernelConvBinomial::KernelConvBinomial(int ordre) : KernelConv(ordre)
 
     for(int i=0;i<ordre;i++){
         for(int j=0;j<ordre;j++){
-            buf[i][j]/=coef();
+            buf[i][j]=buf[i][j]/coef;
         }
     }
 }
