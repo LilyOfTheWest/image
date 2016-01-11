@@ -69,11 +69,11 @@ bool MainWindow::loadFile(const QString &fileName)
     p.end();*/
     const QImage image = image2;
 
-    imageLabel->setPrincipal(&image2);
+    imageLabel->addImage(&image2);
     //const QImage imageCst = *principal;
 
     //this->setPixmap(QPixmap::fromImage(imageCst));
-    imageLabel->setPixmap(QPixmap::fromImage(image));
+      //imageLabel->setPixmap(QPixmap::fromImage(image));
     //imageLabel->setPixmap(QPixmap::fromImage(image));
     scaleFactor = 1.0;
 
