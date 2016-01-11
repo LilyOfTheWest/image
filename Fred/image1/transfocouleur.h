@@ -28,6 +28,8 @@ public:
     QImage *convertRgbToYuv(QImage *src);
     QImage *convertYuvToRgb(QImage *src);
 
+private:
+    int normalizeColorValue(double val);
 signals:
 
 public slots:

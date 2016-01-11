@@ -38,8 +38,8 @@ QImage *TransfoCouleur::convertYuvToRgb(QImage *src)
         for (int j=0; j<src->width() ; j++) {
             color=src->pixel(j,i);
             r=get_RVal_Pixel_FromYuv(color);
-            g=r=get_GVal_Pixel_FromYuv(color);
-            b=r=get_BVal_Pixel_FromYuv(color);
+            g=get_GVal_Pixel_FromYuv(color);
+            b=get_BVal_Pixel_FromYuv(color);
             alpha=qAlpha(color);
             color2=qRgba(r,g,b,alpha);
             ret->setPixel(j,i,color2);
@@ -50,26 +50,24 @@ QImage *TransfoCouleur::convertYuvToRgb(QImage *src)
 
 QImage *TransfoCouleur::flou(QImage *src)
 {
-    /* Test de base */
-//    QImage *tmp = convertRgbToYuv(src);
-//    QImage *ret = convertYuvToRgb(tmp);
+    /* Test de base
+    QImage *tmp = convertRgbToYuv(src);
+    QImage *ret = convertYuvToRgb(tmp);
 
-//    int r,g,b,y,u,v;
-//    QRgb color1,color2,color3;
-//    color1 = src->pixel(430,145);
-//    r=qRed(color1);
-//    g=qGreen(color1);
-//    b=qBlue(color1);
-//    color2 = tmp->pixel(430,145);
-//    r=qRed(color2);
-//    g=qGreen(color2);
-//    b=qBlue(color2);
-//    color3 = ret->pixel(430,145);
-//    r=qRed(color3);
-//    g=qGreen(color3);
-//    b=qBlue(color3);
-//    return ret;
-
+    int r,g,b,r2,g2,b2,r3,g3,b3,y,u,v;
+    QRgb color1,color2,color3;
+    color1 = src->pixel(206,156);
+    r=qRed(color1);
+    g=qGreen(color1);
+    b=qBlue(color1);
+    color2 = tmp->pixel(206,156);
+    r2=qRed(color2);
+    g2=qGreen(color2);
+    b2=qBlue(color2);
+    color3 = ret->pixel(206,156);
+    r3=qRed(color3);
+    g3=qGreen(color3);
+    b3=qBlue(color3);*/
 
     /* Final test */
     // appel dialog pour properties /
@@ -111,7 +109,7 @@ int TransfoCouleur::get_YVal_Pixel_FromRgb(QRgb pixel_src)
 {
     double tmp = 0;
     tmp = 0.299*qRed(pixel_src)+0.587*qGreen(pixel_src)+0.114*qBlue(pixel_src);
-    int ret = qRound(tmp);
+    int ret = normalizeColorValue(tmp);
     return ret;
 }
 
@@ -119,7 +117,7 @@ int TransfoCouleur::get_UVal_Pixel_FromRgb(QRgb pixel_src)
 {
     double tmp = 0;
     tmp = -0.168*qRed(pixel_src)-0.331*qGreen(pixel_src)+0.5*qBlue(pixel_src)+128;
-    int ret = qRound(tmp);
+    int ret = normalizeColorValue(tmp);
     return ret;
 }
 
@@ -127,31 +125,31 @@ int TransfoCouleur::get_VVal_Pixel_FromRgb(QRgb pixel_src)
 {
     double tmp = 0;
     tmp = 0.5*qRed(pixel_src)-0.4187*qGreen(pixel_src)-0.0813*qBlue(pixel_src)+128;
-    int ret = qRound(tmp);
+    int ret = normalizeColorValue(tmp);
     return ret;
 }
 
 int TransfoCouleur::get_RVal_Pixel_FromYuv(QRgb pixel_src)
 {
     double tmp = 0;
-    tmp = qRed(pixel_src)+1.13983*(qBlue(pixel_src)-128);
-    int ret = qRound(tmp);
+    tmp = qRed(pixel_src)+1.402*(qBlue(pixel_src)-128);
+    int ret = normalizeColorValue(tmp);
     return ret;
 }
 
 int TransfoCouleur::get_GVal_Pixel_FromYuv(QRgb pixel_src)
 {
     double tmp = 0;
-    tmp = qRed(pixel_src)-0.394651*(qGreen(pixel_src)-128)-0.58060*(qBlue(pixel_src)-128);
-    int ret = qRound(tmp);
+    tmp = qRed(pixel_src)-0.344136*(qGreen(pixel_src)-128)-0.714136*(qBlue(pixel_src)-128);
+    int ret = normalizeColorValue(tmp);
     return ret;
 }
 
 int TransfoCouleur::get_BVal_Pixel_FromYuv(QRgb pixel_src)
 {
     double tmp = 0;
-    tmp = qRed(pixel_src)+2.03211*(qGreen(pixel_src)-128);
-    int ret = qRound(tmp);
+    tmp = qRed(pixel_src)+1.772*(qGreen(pixel_src)-128);
+    int ret = normalizeColorValue(tmp);
     return ret;
 }
 
@@ -162,3 +160,13 @@ int TransfoCouleur::get_BVal_Pixel_FromYuv(QRgb pixel_src)
     }
     return M;
 }*/
+
+int TransfoCouleur::normalizeColorValue(double val)
+{
+    int ret = qRound(val);
+    if (ret < 0)
+        ret=0;
+    if (ret > 255)
+        ret=255;
+    return ret;
+}
