@@ -297,7 +297,13 @@ void MainWindow::prodConv()
 
 void MainWindow::on_actionFlouter_triggered()
 {
-    zoomIn();
+    TransfoCouleur *tc = new TransfoCouleur;
+    //PictLabel *jj = static_cast<PictLabel*>(ui->scrollAreaPict->widget());
+    QImage *imageFloutee = tc->flou(imageLabel->getPrincipal());
+    imageLabel->setPrincipal(imageFloutee);
+    const QImage imageConv = *imageLabel->getPrincipal();
+    imageLabel->setPixmap(QPixmap::fromImage(imageConv));
+    scaleFactor = 1.0;//scaleImage(1.5);
 }
 
 void MainWindow::on_action_Open_triggered()

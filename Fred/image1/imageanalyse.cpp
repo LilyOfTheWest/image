@@ -6,7 +6,6 @@ ImageAnalyse::ImageAnalyse(QImage *qimageRgbSrc,QObject *parent) : QObject(paren
 {
     QRgb color,color2;
     dataRGB = new QImage(qimageRgbSrc->width(),qimageRgbSrc->height(),qimageRgbSrc->format());
-    dataYUV = new QImage(qimageRgbSrc->width(),qimageRgbSrc->height(),qimageRgbSrc->format());
     for (int i=0; i< qimageRgbSrc->height() ; i++) {
         for (int j=0; j<qimageRgbSrc->width() ; j++) {
             color=qimageRgbSrc->pixel(j,i);
@@ -23,10 +22,13 @@ ImageAnalyse::~ImageAnalyse()
 
 void ImageAnalyse::convertRgbToYuv()
 {
-    QRgb color,color2;
+    /*QRgb color,color2;
     int r,g,b,alpha;
     TransfoCouleur *tc = new TransfoCouleur;
+    dataYUV = new QImage(qimageRgbSrc->width(),qimageRgbSrc->height(),qimageRgbSrc->format());
+    imagris = new double*[dataRGB->height()];
     for (int i=0; i< dataRGB->height() ; i++) {
+        imagris[i] = new double[dataRGB->width()];
         for (int j=0; j<dataRGB->width() ; j++) {
             color=dataRGB->pixel(j,i);
             r=tc->get_YVal_Pixel(color);
@@ -35,8 +37,9 @@ void ImageAnalyse::convertRgbToYuv()
             alpha=qAlpha(color);
             color2=qRgba(r,g,b,alpha);
             dataYUV->setPixel(j,i,color2);
+            imagris[i][j] = r;
         }
-    }
+    }*/
 }
 
 void ImageAnalyse::convertYuvToRgb()
@@ -47,9 +50,9 @@ void ImageAnalyse::convertYuvToRgb()
     for (int i=0; i< dataRGB->height() ; i++) {
         for (int j=0; j<dataRGB->width() ; j++) {
             color=dataRGB->pixel(j,i);
-            r=tc->get_YVal_Pixel(color);
-            g=tc->get_UVal_Pixel(color);
-            b=tc->get_VVal_Pixel(color);
+            /*r=tc->get_RVal_Pixel(color);
+            g=tc->get_GVal_Pixel(color);
+            b=tc->get_BVal_Pixel(color);*/
             alpha=qAlpha(color);
             color2=qRgba(r,g,b,alpha);
             dataYUV->setPixel(j,i,color2);

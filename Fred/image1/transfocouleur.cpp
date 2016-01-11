@@ -7,6 +7,17 @@ TransfoCouleur::TransfoCouleur(QObject *parent) : QObject(parent)
 
 }
 
+QImage *TransfoCouleur::flou(QImage *src)
+{
+    // appel dialog pour properties /
+    // new imageAnalyse -> imagris Y
+    // new KernelConv()
+    // double **produitConv(double **src);
+    // tc . algo
+    // -> nvle image flouter ; passe pictlabel ; undo + ;
+    // delete de tous les new créés.
+}
+
 QImage *TransfoCouleur::inverseColor(QImage *src) {
     QRgb color,color2;
     int r,g,b,alpha;

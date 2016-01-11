@@ -22,6 +22,9 @@ public:
     int get_YVal_Pixel(QRgb pixel_src);
     int get_UVal_Pixel(QRgb pixel_src);
     int get_VVal_Pixel(QRgb pixel_src);
+    int get_RVal_Pixel(QRgb pixel_src);
+    int get_GVal_Pixel(QRgb pixel_src);
+    int get_BVal_Pixel(QRgb pixel_src);
 
 signals:
 
