@@ -6,37 +6,106 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>860</width>
-    <height>625</height>
+    <width>800</width>
+    <height>600</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
-  <widget class="QWidget" name="centralwidget">
-   <widget class="QScrollArea" name="scrollAreaPict">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>0</y>
-      <width>831</width>
-      <height>591</height>
-     </rect>
+  <widget class="QWidget" name="centralwidget"/>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>800</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuTest">
+    <property name="title">
+     <string>&amp;Fichier</string>
     </property>
-    <property name="widgetResizable">
-     <bool>true</bool>
-    </property>
-    <widget class="QWidget" name="scrollAreaWidgetContents">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>0</y>
-       <width>829</width>
-       <height>589</height>
-      </rect>
-     </property>
-    </widget>
+    <addaction name="action_Nouveau"/>
+    <addaction name="action_Ouvrir"/>
+    <addaction name="action_Fermer"/>
+    <addaction name="separator"/>
+    <addaction name="action_Enregistrer"/>
+    <addaction name="action_Enregistrer_sous"/>
+    <addaction name="separator"/>
+    <addaction name="action_Imprimer"/>
+    <addaction name="separator"/>
+    <addaction name="actionExit"/>
    </widget>
+   <widget class="QMenu" name="menu_Edition">
+    <property name="title">
+     <string>&amp;Edition</string>
+    </property>
+    <addaction name="action_Annuler"/>
+    <addaction name="separator"/>
+    <addaction name="action_Couper"/>
+    <addaction name="action_Copier"/>
+    <addaction name="action_Coller"/>
+    <addaction name="separator"/>
+   </widget>
+   <widget class="QMenu" name="menu_Affichage">
+    <property name="title">
+     <string>&amp;Affichage</string>
+    </property>
+    <addaction name="actionZoom_avant"/>
+    <addaction name="action_Zoom_arriere"/>
+   </widget>
+   <widget class="QMenu" name="menu_Image">
+    <property name="title">
+     <string>&amp;Image</string>
+    </property>
+    <addaction name="actionRotation_180"/>
+    <addaction name="actionRotation_90_Horaire"/>
+    <addaction name="action_Rotation_90_antihoraire"/>
+   </widget>
+   <widget class="QMenu" name="menu_Effet">
+    <property name="title">
+     <string>&amp;Effet</string>
+    </property>
+    <widget class="QMenu" name="menu_Flou">
+     <property name="title">
+      <string>&amp;Flou</string>
+     </property>
+     <addaction name="action_Flou_gaussien"/>
+     <addaction name="action_Flou_moyenneur"/>
+     <addaction name="action_Personnalis_flou"/>
+     <addaction name="separator"/>
+     <addaction name="action_Taille_filtre"/>
+    </widget>
+    <widget class="QMenu" name="menu_Datetction_de_contours">
+     <property name="title">
+      <string>&amp;Datetction de contours</string>
+     </property>
+     <addaction name="action_Flou_Sobel"/>
+     <addaction name="action_Flou_Roberts"/>
+     <addaction name="action_Personnalis_Detec"/>
+     <addaction name="separator"/>
+    </widget>
+    <addaction name="menu_Flou"/>
+    <addaction name="menu_Datetction_de_contours"/>
+   </widget>
+   <widget class="QMenu" name="menu_Fen_tre">
+    <property name="title">
+     <string>&amp;Fenêtre</string>
+    </property>
+    <addaction name="actionFusion"/>
+    <addaction name="actionBarre_d_outil"/>
+    <addaction name="actionBarre_de_menu"/>
+    <addaction name="actionCouleurs"/>
+    <addaction name="actionHistogramme"/>
+   </widget>
+   <addaction name="menuTest"/>
+   <addaction name="menu_Edition"/>
+   <addaction name="menu_Affichage"/>
+   <addaction name="menu_Image"/>
+   <addaction name="menu_Effet"/>
+   <addaction name="menu_Fen_tre"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QToolBar" name="toolBar">
@@ -44,93 +113,354 @@
     <string>toolBar</string>
    </property>
    <attribute name="toolBarArea">
-    <enum>LeftToolBarArea</enum>
+    <enum>TopToolBarArea</enum>
    </attribute>
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
-   <addaction name="actionFlouter"/>
-   <addaction name="actionPick_Color"/>
-   <addaction name="actionSelect"/>
+   <addaction name="action_Nouveau"/>
+   <addaction name="action_Ouvrir"/>
+   <addaction name="action_Enregistrer"/>
+   <addaction name="separator"/>
+   <addaction name="action_Imprimer"/>
+   <addaction name="separator"/>
+   <addaction name="action_Couper"/>
+   <addaction name="action_Copier"/>
+   <addaction name="action_Coller"/>
   </widget>
-  <widget class="QMenuBar" name="menuBar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>860</width>
-     <height>21</height>
-    </rect>
+  <widget class="QToolBar" name="toolBar_2">
+   <property name="windowTitle">
+    <string>toolBar_2</string>
    </property>
-   <widget class="QMenu" name="menu_File">
-    <property name="title">
-     <string>&amp;File</string>
-    </property>
-    <addaction name="action_Open"/>
-    <addaction name="action_Print"/>
-    <addaction name="separator"/>
-    <addaction name="action_Exit"/>
-   </widget>
-   <addaction name="menu_File"/>
+   <attribute name="toolBarArea">
+    <enum>LeftToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>true</bool>
+   </attribute>
+   <addaction name="action_Selection"/>
+   <addaction name="actionDeplacement"/>
+   <addaction name="actionPipette"/>
+   <addaction name="actionCrop"/>
+   <addaction name="actionFlou"/>
+   <addaction name="actionSeamCarving"/>
+   <addaction name="actionZoom_avant"/>
   </widget>
-  <action name="action_Open">
+  <action name="action_Nouveau">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/Edition/Menu Edition/new file.png</normaloff>:/Edition/Menu Edition/new file.png</iconset>
+   </property>
    <property name="text">
-    <string>&amp;Open</string>
+    <string>&amp;Nouveau</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
+   </property>
+  </action>
+  <action name="action_Ouvrir">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/Edition/Menu Edition/Open.png</normaloff>:/Edition/Menu Edition/Open.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Ouvrir</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+O</string>
    </property>
   </action>
-  <action name="actionFlouter">
+  <action name="action_Fermer">
    <property name="icon">
-    <iconset theme="group1/pipette-icon.png" resource="res.qrc">
-     <normaloff>:/group1/pipette-icon.png</normaloff>:/group1/pipette-icon.png</iconset>
+    <iconset resource="res.qrc">
+     <normaloff>:/Edition/Menu Edition/Close file.png</normaloff>:/Edition/Menu Edition/Close file.png</iconset>
    </property>
    <property name="text">
-    <string>Flouter</string>
-   </property>
-   <property name="toolTip">
-    <string>Flouter l'image</string>
+    <string>&amp;Fermer</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+F</string>
+    <string>Ctrl+W</string>
    </property>
   </action>
-  <action name="action_Print">
+  <action name="action_Enregistrer">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/Edition/Menu Edition/Save.png</normaloff>:/Edition/Menu Edition/Save.png</iconset>
+   </property>
    <property name="text">
-    <string>&amp;Print</string>
+    <string>&amp;Enregistrer</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="action_Enregistrer_sous">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/Edition/Menu Edition/Save as.png</normaloff>:/Edition/Menu Edition/Save as.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Enregistrer sous</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+S</string>
+   </property>
+  </action>
+  <action name="action_Imprimer">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/Edition/Menu Edition/Print.png</normaloff>:/Edition/Menu Edition/Print.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Imprimer</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+P</string>
    </property>
   </action>
-  <action name="action_Exit">
+  <action name="actionExit">
    <property name="text">
-    <string>&amp;Exit</string>
+    <string>Exit</string>
    </property>
   </action>
-  <action name="actionPick_Color">
+  <action name="action_Annuler">
    <property name="icon">
-    <iconset theme="group1/pipette-icon.png" resource="res.qrc">
-     <normaloff>:/group1/pipette-icon.png</normaloff>:/group1/pipette-icon.png</iconset>
+    <iconset resource="res.qrc">
+     <normaloff>:/File/Menu File/Undo.png</normaloff>:/File/Menu File/Undo.png</iconset>
    </property>
    <property name="text">
-    <string>Pick Color</string>
+    <string>&amp;Annuler</string>
    </property>
-   <property name="toolTip">
-    <string>Affichage couleur d'un pixel</string>
+   <property name="shortcut">
+    <string>Ctrl+Z</string>
    </property>
   </action>
-  <action name="actionSelect">
+  <action name="action_Couper">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/File/Menu File/couper.png</normaloff>:/File/Menu File/couper.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Couper</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+X</string>
+   </property>
+  </action>
+  <action name="action_Copier">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/File/Menu File/copier.png</normaloff>:/File/Menu File/copier.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Copier</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+C</string>
+   </property>
+  </action>
+  <action name="action_Coller">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/File/Menu File/Paste.png</normaloff>:/File/Menu File/Paste.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Coller</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+V</string>
+   </property>
+  </action>
+  <action name="actionZoom_avant">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/Affichage/Menu Afichage/Zoom avant.png</normaloff>:/Affichage/Menu Afichage/Zoom avant.png</iconset>
+   </property>
+   <property name="text">
+    <string>Zoom avant</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl++</string>
+   </property>
+  </action>
+  <action name="action_Zoom_arriere">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/Affichage/Menu Afichage/Zoom arriere.png</normaloff>:/Affichage/Menu Afichage/Zoom arriere.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Zoom arrière</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+-</string>
+   </property>
+  </action>
+  <action name="actionRotation_90_Horaire">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/Image/Menu Image/Rotation clock.png</normaloff>:/Image/Menu Image/Rotation clock.png</iconset>
+   </property>
+   <property name="text">
+    <string>Rotation 90° Horaire</string>
+   </property>
+  </action>
+  <action name="action_Rotation_90_antihoraire">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/Image/Menu Image/Rotation otherclock.png</normaloff>:/Image/Menu Image/Rotation otherclock.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Rotation 90° antihoraire</string>
+   </property>
+  </action>
+  <action name="actionRotation_180">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/Image/Menu Image/Rotation 180.png</normaloff>:/Image/Menu Image/Rotation 180.png</iconset>
+   </property>
+   <property name="text">
+    <string>Rotation 180°</string>
+   </property>
+  </action>
+  <action name="action_Flou_gaussien">
+   <property name="text">
+    <string>&amp;Flou gaussien </string>
+   </property>
+  </action>
+  <action name="action_Flou_moyenneur">
+   <property name="text">
+    <string>&amp;Flou moyenneur</string>
+   </property>
+  </action>
+  <action name="action_Personnalis_flou">
+   <property name="text">
+    <string>&amp;Personnalisé...</string>
+   </property>
+  </action>
+  <action name="action_Flou_Sobel">
+   <property name="text">
+    <string>&amp;Flou Sobel</string>
+   </property>
+  </action>
+  <action name="action_Flou_Roberts">
+   <property name="text">
+    <string>&amp;Flou Roberts</string>
+   </property>
+  </action>
+  <action name="action_Personnalis_Detec">
+   <property name="text">
+    <string>&amp;Personnalisé...</string>
+   </property>
+  </action>
+  <action name="actionFusion">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Fusion</string>
+   </property>
+  </action>
+  <action name="actionBarre_d_outil">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Barre d'outil</string>
+   </property>
+  </action>
+  <action name="actionBarre_de_menu">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Barre de menu</string>
+   </property>
+  </action>
+  <action name="actionCouleurs">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Couleurs</string>
+   </property>
+  </action>
+  <action name="actionHistogramme">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Histogramme</string>
+   </property>
+  </action>
+  <action name="action_Taille_filtre">
+   <property name="text">
+    <string>&amp;Taille filtre</string>
+   </property>
+  </action>
+  <action name="action_Selection">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/Barre outil/Tool bar/Selection.png</normaloff>:/Barre outil/Tool bar/Selection.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Selection</string>
+   </property>
+  </action>
+  <action name="actionDeplacement">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/Barre outil/Tool bar/Deplacement.png</normaloff>:/Barre outil/Tool bar/Deplacement.png</iconset>
+   </property>
+   <property name="text">
+    <string>Deplacement</string>
+   </property>
+  </action>
+  <action name="actionCrop">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/Barre outil/Tool bar/Crop.png</normaloff>:/Barre outil/Tool bar/Crop.png</iconset>
+   </property>
+   <property name="text">
+    <string>Crop</string>
+   </property>
+  </action>
+  <action name="actionFlou">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/Barre outil/Tool bar/Flou.png</normaloff>:/Barre outil/Tool bar/Flou.png</iconset>
+   </property>
+   <property name="text">
+    <string>Flou</string>
+   </property>
+  </action>
+  <action name="actionSeamCarving">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/Barre outil/Tool bar/Seamcarving.png</normaloff>:/Barre outil/Tool bar/Seamcarving.png</iconset>
+   </property>
+   <property name="text">
+    <string>SeamCarving</string>
+   </property>
+  </action>
+  <action name="actionPipette">
    <property name="icon">
     <iconset resource="res.qrc">
      <normaloff>:/group1/pipette-icon.png</normaloff>:/group1/pipette-icon.png</iconset>
    </property>
    <property name="text">
-    <string>Select</string>
-   </property>
-   <property name="toolTip">
-    <string>Sélection souris</string>
+    <string>Pipette</string>
    </property>
   </action>
  </widget>
