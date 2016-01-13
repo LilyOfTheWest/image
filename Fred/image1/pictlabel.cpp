@@ -11,6 +11,9 @@ PictLabel::PictLabel(QWidget *parent) :
     origin_select.setX(0);
     origin_select.setY(0);
     mouseListenerState=11;
+    principal = NULL;
+    second = NULL;
+    end_select = NULL;
 }
 
 PictLabel::~PictLabel()

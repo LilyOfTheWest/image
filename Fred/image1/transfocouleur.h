@@ -28,8 +28,6 @@ public:
     QImage *convertRgbToYuv(QImage *src);
     QImage *convertYuvToRgb(QImage *src);
     QImage *extractSubImage(QImage *src,QPoint *origin_select,QPoint *end_select);
-
-private:
     int normalizeColorValue(double val);
 signals:
 

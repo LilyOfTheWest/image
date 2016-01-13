@@ -21,8 +21,8 @@ QImage *TransfoCouleur::convertRgbToYuv(QImage *src)
             r=get_YVal_Pixel_FromRgb(color);
             g=get_UVal_Pixel_FromRgb(color);
             b=get_VVal_Pixel_FromRgb(color);
-            alpha=qAlpha(color);
-            color2=qRgba(r,g,b,alpha);
+//            alpha=qAlpha(color);
+            color2=qRgb(r,g,b);
             ret->setPixel(j,i,color2);
         }
     }
@@ -40,8 +40,8 @@ QImage *TransfoCouleur::convertYuvToRgb(QImage *src)
             r=get_RVal_Pixel_FromYuv(color);
             g=get_GVal_Pixel_FromYuv(color);
             b=get_BVal_Pixel_FromYuv(color);
-            alpha=qAlpha(color);
-            color2=qRgba(r,g,b,alpha);
+//            alpha=qAlpha(color);
+            color2=qRgb(r,g,b);
             ret->setPixel(j,i,color2);
         }
     }
@@ -91,13 +91,18 @@ QImage *TransfoCouleur::flou(QImage *src)
     /* Final test */
     // appel dialog pour properties /
     // new KernelConv()
+    // TODO : régler bug des kernel autre que taille 3
     KernelConv *kMoy = new KernelConvBinomial(3);
     // new imageAnalyse -> imagris Y
     ImageAnalyse *imA = new ImageAnalyse(src);
     imA->initYuvImagris();
+
+
     // double **produitConv(double **src);
     imA->setImagris(kMoy->produitConv(imA->getImagris(), src->width(), src->height()));
+//    imA->setImagris(imA->getImagris());
     // -> nvle image flouter ; passe pictlabel ; undo + ;
+    imA->fromYuvToRgb();
 
     return imA->getDataRGB();
     // delete de tous les new créés.
@@ -114,8 +119,8 @@ QImage *TransfoCouleur::inverseColor(QImage *src) {
             r=255-qRed(color);
             g=255-qGreen(color);
             b=255-qBlue(color);
-            alpha=qAlpha(color);
-            color2=qRgba(r,g,b,alpha);
+            //alpha=qAlpha(color);
+            color2=qRgb(r,g,b);
             ret->setPixel(j,i,color2);
         }
     }
