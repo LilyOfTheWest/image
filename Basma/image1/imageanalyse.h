@@ -13,6 +13,7 @@ public:
     explicit ImageAnalyse(QImage *qimageRgbSrc,QObject *parent = 0);
     ~ImageAnalyse();
     void initYuvImagris();
+    void fromYuvToRgb();
     void calculHisto();
 
     /* Getters & Setters */
@@ -21,7 +22,7 @@ public:
     QImage * getDataYUV();
     void setDataYUV(QImage *i);
     double ** getImagris();
-    void setImagris(double ** i);
+    void setImagris(double ** img);
     double ** getD_x();
     void setD_x(double ** dx);
     double ** getD_y();

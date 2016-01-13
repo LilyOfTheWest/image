@@ -27,6 +27,8 @@ public:
     ~PictLabel();
     void undoLast();
     void setPrincipal(QImage *principal);
+    void addImage(QImage *src);
+    void drawImage();
     QImage *getPrincipal();
     QRgb getColorPicked();
     QPoint getPixelPicked();
@@ -44,11 +46,15 @@ protected:
     virtual void mousePressEvent ( QMouseEvent * event ) Q_DECL_OVERRIDE;
     virtual void mouseReleaseEvent ( QMouseEvent * event ) Q_DECL_OVERRIDE;
     void saveTemp();
-    void drawSelection ( QMouseEvent * event );
+    void drawSelection ();
+    void setSelection(QMouseEvent * event);
+    void moveSelection(QMouseEvent * event);
 
     QRubberBand *rubberBand;
     QPoint origin_select;
-    QPoint end_select;
+    QPoint *end_select;
+    QPoint mouse_origin;
+    QPoint *mouse_end;
     QStack<QImage> *undo;
     QImage *principal;
     QImage *second;

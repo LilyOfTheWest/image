@@ -136,7 +136,7 @@
     <enum>LeftToolBarArea</enum>
    </attribute>
    <attribute name="toolBarBreak">
-    <bool>true</bool>
+    <bool>false</bool>
    </attribute>
    <addaction name="action_Selection"/>
    <addaction name="actionDeplacement"/>
@@ -147,6 +147,9 @@
    <addaction name="actionZoom_avant"/>
   </widget>
   <action name="action_Nouveau">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="res.qrc">
      <normaloff>:/Edition/Menu Edition/new file.png</normaloff>:/Edition/Menu Edition/new file.png</iconset>
@@ -171,6 +174,9 @@
    </property>
   </action>
   <action name="action_Fermer">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="res.qrc">
      <normaloff>:/Edition/Menu Edition/Close file.png</normaloff>:/Edition/Menu Edition/Close file.png</iconset>
@@ -183,6 +189,9 @@
    </property>
   </action>
   <action name="action_Enregistrer">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="res.qrc">
      <normaloff>:/Edition/Menu Edition/Save.png</normaloff>:/Edition/Menu Edition/Save.png</iconset>
@@ -195,6 +204,9 @@
    </property>
   </action>
   <action name="action_Enregistrer_sous">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="res.qrc">
      <normaloff>:/Edition/Menu Edition/Save as.png</normaloff>:/Edition/Menu Edition/Save as.png</iconset>
@@ -207,6 +219,9 @@
    </property>
   </action>
   <action name="action_Imprimer">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="res.qrc">
      <normaloff>:/Edition/Menu Edition/Print.png</normaloff>:/Edition/Menu Edition/Print.png</iconset>
@@ -455,6 +470,9 @@
    </property>
   </action>
   <action name="actionPipette">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="res.qrc">
      <normaloff>:/group1/pipette-icon.png</normaloff>:/group1/pipette-icon.png</iconset>
