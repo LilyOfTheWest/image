@@ -33,8 +33,6 @@ MainWindow::MainWindow(QWidget *parent) :
     //ui->scrollAreaPict->setWidgetResizable(false); AVOIR !!!
 
     //ui->statusbar->insertWidget(0,new PicDisplay());
-    createActions();
-    createMenus();
     resize(QGuiApplication::primaryScreen()->availableSize() * 3 / 5);
 }
 
@@ -79,11 +77,11 @@ bool MainWindow::loadFile(const QString &fileName)
 
     pdis->resizeScrollArea(imageLabel);
 
-    printAct->setEnabled(true);
-    fitToWindowAct->setEnabled(true);
+    //printAct->setEnabled(true);
+    //fitToWindowAct->setEnabled(true);
     updateActions();
 
-    if (!fitToWindowAct->isChecked())
+    //if (!fitToWindowAct->isChecked())
         imageLabel->adjustSize();
 
     setWindowFilePath(fileName);
@@ -141,7 +139,7 @@ void MainWindow::normalSize()
 void MainWindow::fitToWindow()
 {
     bool fitToWindow = fitToWindowAct->isChecked();
-    ui->scrollAreaPict->setWidgetResizable(fitToWindow);
+    //ui->scrollAreaPict->setWidgetResizable(fitToWindow);
     if (!fitToWindow) {
         normalSize();
     }
@@ -164,91 +162,60 @@ void MainWindow::about()
                "zooming and scaling features. </p><p>In addition the example "
                "shows how to use QPainter to print an image.</p>"));
 }
-void MainWindow::createActions()
-{
-    openAct = new QAction(tr("&Open..."), this);
-    openAct->setShortcut(tr("Ctrl+O"));
-    connect(openAct, SIGNAL(triggered()), this, SLOT(open()));
+//void MainWindow::createActions()
+//{
+//    inverseColorAct = new QAction(tr("Inverseur des couleurs"), this);
+//    inverseColorAct->setShortcut(tr("Ctrl+N"));
+//    inverseColorAct->setEnabled(false);
+//    connect(inverseColorAct, SIGNAL(triggered()), this, SLOT(inverseColor()));
 
-    printAct = new QAction(tr("&Print..."), this);
-    printAct->setShortcut(tr("Ctrl+P"));
-    printAct->setEnabled(false);
-    connect(printAct, SIGNAL(triggered()), this, SLOT(print()));
+//    prodConvAct = new QAction(tr("Produit convolution Moyenneur rudimentaire"), this);
+//    prodConvAct->setShortcut(tr("Ctrl+W"));
+//    prodConvAct->setEnabled(false);
+//    connect(prodConvAct, SIGNAL(triggered()), this, SLOT(prodConv()));
 
-    exitAct = new QAction(tr("E&xit"), this);
-    exitAct->setShortcut(tr("Ctrl+Q"));
-    connect(exitAct, SIGNAL(triggered()), this, SLOT(close()));
+//    zoomInAct = new QAction(tr("Zoom &In (25%)"), this);
+//    zoomInAct->setShortcut(tr("Ctrl++"));
+//    zoomInAct->setEnabled(false);
+//    connect(zoomInAct, SIGNAL(triggered()), this, SLOT(zoomIn()));
 
-    inverseColorAct = new QAction(tr("Inverseur des couleurs"), this);
-    inverseColorAct->setShortcut(tr("Ctrl+N"));
-    inverseColorAct->setEnabled(false);
-    connect(inverseColorAct, SIGNAL(triggered()), this, SLOT(inverseColor()));
+//    zoomOutAct = new QAction(tr("Zoom &Out (25%)"), this);
+//    zoomOutAct->setShortcut(tr("Ctrl+-"));
+//    zoomOutAct->setEnabled(false);
+//    connect(zoomOutAct, SIGNAL(triggered()), this, SLOT(zoomOut()));
 
-    prodConvAct = new QAction(tr("Produit convolution Moyenneur rudimentaire"), this);
-    prodConvAct->setShortcut(tr("Ctrl+W"));
-    prodConvAct->setEnabled(false);
-    connect(prodConvAct, SIGNAL(triggered()), this, SLOT(prodConv()));
+//    normalSizeAct = new QAction(tr("&Normal Size"), this);
+//    normalSizeAct->setShortcut(tr("Ctrl+S"));
+//    normalSizeAct->setEnabled(false);
+//    connect(normalSizeAct, SIGNAL(triggered()), this, SLOT(normalSize()));
 
-    zoomInAct = new QAction(tr("Zoom &In (25%)"), this);
-    zoomInAct->setShortcut(tr("Ctrl++"));
-    zoomInAct->setEnabled(false);
-    connect(zoomInAct, SIGNAL(triggered()), this, SLOT(zoomIn()));
+//    fitToWindowAct = new QAction(tr("&Fit to Window"), this);
+//    fitToWindowAct->setEnabled(false);
+//    fitToWindowAct->setCheckable(true);
+//    fitToWindowAct->setShortcut(tr("Ctrl+F"));
+//    connect(fitToWindowAct, SIGNAL(triggered()), this, SLOT(fitToWindow()));
 
-    zoomOutAct = new QAction(tr("Zoom &Out (25%)"), this);
-    zoomOutAct->setShortcut(tr("Ctrl+-"));
-    zoomOutAct->setEnabled(false);
-    connect(zoomOutAct, SIGNAL(triggered()), this, SLOT(zoomOut()));
+//    aboutAct = new QAction(tr("&About"), this);
+//    connect(aboutAct, SIGNAL(triggered()), this, SLOT(about()));
 
-    normalSizeAct = new QAction(tr("&Normal Size"), this);
-    normalSizeAct->setShortcut(tr("Ctrl+S"));
-    normalSizeAct->setEnabled(false);
-    connect(normalSizeAct, SIGNAL(triggered()), this, SLOT(normalSize()));
-
-    fitToWindowAct = new QAction(tr("&Fit to Window"), this);
-    fitToWindowAct->setEnabled(false);
-    fitToWindowAct->setCheckable(true);
-    fitToWindowAct->setShortcut(tr("Ctrl+F"));
-    connect(fitToWindowAct, SIGNAL(triggered()), this, SLOT(fitToWindow()));
-
-    aboutAct = new QAction(tr("&About"), this);
-    connect(aboutAct, SIGNAL(triggered()), this, SLOT(about()));
-
-    aboutQtAct = new QAction(tr("About &Qt"), this);
-    connect(aboutQtAct, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
-}
-void MainWindow::createMenus()
-{
-    fileMenu = new QMenu(tr("&File"), this);
-    fileMenu->addAction(openAct);
-    fileMenu->addAction(printAct);
-    fileMenu->addSeparator();
-    fileMenu->addAction(exitAct);
-
-    viewMenu = new QMenu(tr("&View"), this);
-    viewMenu->addAction(inverseColorAct);
-    viewMenu->addAction(prodConvAct);
-    viewMenu->addAction(zoomInAct);
-    viewMenu->addAction(zoomOutAct);
-    viewMenu->addAction(normalSizeAct);
-    viewMenu->addSeparator();
-    viewMenu->addAction(fitToWindowAct);
-
-    helpMenu = new QMenu(tr("&Help"), this);
-    helpMenu->addAction(aboutAct);
-    helpMenu->addAction(aboutQtAct);
-
-    menuBar()->addMenu(fileMenu);
-    menuBar()->addMenu(viewMenu);
-    menuBar()->addMenu(helpMenu);
-}
+//    aboutQtAct = new QAction(tr("About &Qt"), this);
+//    connect(aboutQtAct, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
+//}
 
 void MainWindow::updateActions()
 {
-    inverseColorAct->setEnabled(!fitToWindowAct->isChecked());
-    prodConvAct->setEnabled(!fitToWindowAct->isChecked());
-    zoomInAct->setEnabled(!fitToWindowAct->isChecked());
-    zoomOutAct->setEnabled(!fitToWindowAct->isChecked());
-    normalSizeAct->setEnabled(!fitToWindowAct->isChecked());
+    ui->action_Fermer->setEnabled(true);
+    ui->action_Imprimer->setEnabled(true);
+    ui->actionPipette->setEnabled(true);
+    ui->action_Selection->setEnabled(true);
+    ui->actionZoom_avant->setEnabled(true);
+    ui->action_Zoom_arriere->setEnabled(true);
+    ui->actionSeamCarving->setEnabled(true);
+//    inverseColorAct->setEnabled(!fitToWindowAct->isChecked());
+//    prodConvAct->setEnabled(!fitToWindowAct->isChecked());
+//    zoomInAct->setEnabled(!fitToWindowAct->isChecked());
+//    zoomOutAct->setEnabled(!fitToWindowAct->isChecked());
+//    normalSizeAct->setEnabled(!fitToWindowAct->isChecked());
 }
 
 void MainWindow::scaleImage(double factor)
@@ -295,7 +262,32 @@ void MainWindow::prodConv()
     scaleFactor = 1.0;//scaleImage(1.5);*/
 }
 
-void MainWindow::on_actionFlouter_triggered()
+void MainWindow::on_action_Ouvrir_triggered()
+{
+    open();
+}
+
+void MainWindow::on_action_Fermer_triggered()
+{
+    close();
+}
+
+void MainWindow::on_action_Imprimer_triggered()
+{
+    print();
+}
+
+void MainWindow::on_actionZoom_avant_triggered()
+{
+    zoomIn();
+}
+
+void MainWindow::on_action_Zoom_arriere_triggered()
+{
+    zoomOut();
+}
+
+void MainWindow::on_actionFlou_triggered()
 {
     TransfoCouleur *tc = new TransfoCouleur;
     //PictLabel *jj = static_cast<PictLabel*>(ui->scrollAreaPict->widget());
@@ -306,17 +298,29 @@ void MainWindow::on_actionFlouter_triggered()
     scaleFactor = 1.0;//scaleImage(1.5);
 }
 
-void MainWindow::on_action_Open_triggered()
-{
-    open();
-}
-
-void MainWindow::on_actionPick_Color_triggered()
+void MainWindow::on_actionPipette_triggered()
 {
     imageLabel->setMouseListenerState(10);
 }
 
-void MainWindow::on_actionSelect_triggered()
+void MainWindow::on_actionSeamCarving_triggered()
+{
+    TransfoCouleur *tc = new TransfoCouleur;
+    //PictLabel *jj = static_cast<PictLabel*>(ui->scrollAreaPict->widget());
+    QImage *imageInversee = tc->inverseColor(imageLabel->getPrincipal());
+    imageLabel->setPrincipal(imageInversee);
+    const QImage imageConv = *imageLabel->getPrincipal();
+    imageLabel->setPixmap(QPixmap::fromImage(imageConv));
+    scaleFactor = 1.0;//scaleImage(1.5);
+}
+
+void MainWindow::on_actionDeplacement_triggered()
+{
+
+}
+
+void MainWindow::on_action_Selection_triggered()
 {
     imageLabel->setMouseListenerState(11);
 }
+

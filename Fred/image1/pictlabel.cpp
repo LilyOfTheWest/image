@@ -158,7 +158,6 @@ void PictLabel::setSelection(QMouseEvent * event)
 {
     end_select = new QPoint(event->pos());
     rubberBand->hide();
-    mouseListenerState=12;
     TransfoCouleur *tc = new TransfoCouleur;
     second =tc->extractSubImage(principal,&origin_select,end_select);
     origin_position_relative_second.setX(0);

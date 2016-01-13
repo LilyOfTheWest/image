@@ -2,4 +2,34 @@
     <qresource prefix="/group1">
         <file>pipette-icon.png</file>
     </qresource>
+    <qresource prefix="/File">
+        <file>Menu File/copier.png</file>
+        <file>Menu File/couper.png</file>
+        <file>Menu File/Paste.png</file>
+        <file>Menu File/Undo.png</file>
+    </qresource>
+    <qresource prefix="/Edition">
+        <file>Menu Edition/new file.png</file>
+        <file>Menu Edition/Open.png</file>
+        <file>Menu Edition/Print.png</file>
+        <file>Menu Edition/Save as.png</file>
+        <file>Menu Edition/Save.png</file>
+        <file>Menu Edition/Close file.png</file>
+    </qresource>
+    <qresource prefix="/Image">
+        <file>Menu Image/Rotation 180.png</file>
+        <file>Menu Image/Rotation clock.png</file>
+        <file>Menu Image/Rotation otherclock.png</file>
+    </qresource>
+    <qresource prefix="/Affichage">
+        <file>Menu Afichage/Zoom arriere.png</file>
+        <file>Menu Afichage/Zoom avant.png</file>
+    </qresource>
+    <qresource prefix="/Barre outil">
+        <file>Tool bar/Crop.png</file>
+        <file>Tool bar/Deplacement.png</file>
+        <file>Tool bar/Seamcarving.png</file>
+        <file>Tool bar/Selection.png</file>
+        <file>Tool bar/Flou.png</file>
+    </qresource>
 </RCC>
