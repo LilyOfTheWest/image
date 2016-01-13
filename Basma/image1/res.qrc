@@ -31,5 +31,7 @@
         <file>Tool bar/Seamcarving.png</file>
         <file>Tool bar/Selection.png</file>
         <file>Tool bar/Flou.png</file>
+        <file>Tool bar/negatif couleur.png</file>
+        <file>Tool bar/imagegris.png</file>
     </qresource>
 </RCC>
