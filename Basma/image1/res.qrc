@@ -33,5 +33,6 @@
         <file>Tool bar/Flou.png</file>
         <file>Tool bar/negatif couleur.png</file>
         <file>Tool bar/imagegris.png</file>
+        <file>Tool bar/Fusion.png</file>
     </qresource>
 </RCC>

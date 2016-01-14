@@ -60,6 +60,8 @@
     <property name="title">
      <string>&amp;Image</string>
     </property>
+    <addaction name="actionRecadrer"/>
+    <addaction name="separator"/>
     <addaction name="actionRotation_180"/>
     <addaction name="actionRotation_90_Horaire"/>
     <addaction name="action_Rotation_90_antihoraire"/>
@@ -146,6 +148,7 @@
    <addaction name="actionSeamCarving"/>
    <addaction name="actionInverseCoul"/>
    <addaction name="actionImageGris"/>
+   <addaction name="actionFusion_2"/>
    <addaction name="actionZoom_avant"/>
   </widget>
   <action name="action_Nouveau">
@@ -499,6 +502,20 @@
    </property>
    <property name="text">
     <string>ImageGris</string>
+   </property>
+  </action>
+  <action name="actionFusion_2">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/Barre outil/Tool bar/Fusion.png</normaloff>:/Barre outil/Tool bar/Fusion.png</iconset>
+   </property>
+   <property name="text">
+    <string>Fusion</string>
+   </property>
+  </action>
+  <action name="actionRecadrer">
+   <property name="text">
+    <string>Recadrer</string>
    </property>
   </action>
  </widget>
