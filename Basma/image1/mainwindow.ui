@@ -129,6 +129,8 @@
    <addaction name="action_Couper"/>
    <addaction name="action_Copier"/>
    <addaction name="action_Coller"/>
+   <addaction name="action_Annuler"/>
+   <addaction name="actionValider"/>
   </widget>
   <widget class="QToolBar" name="toolBar_2">
    <property name="windowTitle">
@@ -149,6 +151,7 @@
    <addaction name="actionInverseCoul"/>
    <addaction name="actionImageGris"/>
    <addaction name="actionFusion_2"/>
+   <addaction name="actionHistogramme_2"/>
    <addaction name="actionZoom_avant"/>
   </widget>
   <action name="action_Nouveau">
@@ -516,6 +519,24 @@
   <action name="actionRecadrer">
    <property name="text">
     <string>Recadrer</string>
+   </property>
+  </action>
+  <action name="actionValider">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/Barre outil/Tool bar/valider.png</normaloff>:/Barre outil/Tool bar/valider.png</iconset>
+   </property>
+   <property name="text">
+    <string>Valider</string>
+   </property>
+  </action>
+  <action name="actionHistogramme_2">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/Barre outil/Tool bar/Histogramme.png</normaloff>:/Barre outil/Tool bar/Histogramme.png</iconset>
+   </property>
+   <property name="text">
+    <string>Histogramme</string>
    </property>
   </action>
  </widget>
