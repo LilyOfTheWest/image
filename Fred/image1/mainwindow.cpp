@@ -62,7 +62,7 @@ bool MainWindow::loadFile(const QString &fileName)
 
     const QImage image = image2;
 
-    imageLabel->addImage(&image2);
+    imageLabel->setPrincipal(&image2);
     //const QImage imageCst = *principal;
 
     //this->setPixmap(QPixmap::fromImage(imageCst));
@@ -79,6 +79,19 @@ bool MainWindow::loadFile(const QString &fileName)
         imageLabel->adjustSize();
 
     setWindowFilePath(fileName);
+    return true;
+}
+
+bool MainWindow::loadFileToMerge(const QString &fileName)
+{
+    QImageReader reader(fileName);
+    reader.setAutoTransform(true);
+
+    QImage image2 = reader.read();
+    const QImage image = image2;
+    imageLabel->addImageToMerge(&image2);
+    pdis->resizeScrollArea(imageLabel);
+    //updateActionsWithImage();
     return true;
 }
 
@@ -286,13 +299,18 @@ void MainWindow::on_actionPipette_triggered()
 
 void MainWindow::on_actionSeamCarving_triggered()
 {
-    TransfoCouleur *tc = new TransfoCouleur;
-    //PictLabel *jj = static_cast<PictLabel*>(ui->scrollAreaPict->widget());
-    QImage *imageInversee = tc->inverseColor(imageLabel->getPrincipal());
-    imageLabel->setPrincipal(imageInversee);
-    const QImage imageConv = *imageLabel->getPrincipal();
-    imageLabel->setPixmap(QPixmap::fromImage(imageConv));
-    scaleFactor = 1.0;//scaleImage(1.5);
+    QStringList mimeTypeFilters;
+    foreach (const QByteArray &mimeTypeName, QImageReader::supportedMimeTypes())
+        mimeTypeFilters.append(mimeTypeName);
+    mimeTypeFilters.sort();
+    const QStringList picturesLocations = QStandardPaths::standardLocations(QStandardPaths::PicturesLocation);
+    QFileDialog dialog(this, tr("Open File"),
+                       picturesLocations.isEmpty() ? QDir::currentPath() : picturesLocations.last());
+    dialog.setAcceptMode(QFileDialog::AcceptOpen);
+    dialog.setMimeTypeFilters(mimeTypeFilters);
+    dialog.selectMimeTypeFilter("image/jpeg");
+
+    while (dialog.exec() == QDialog::Accepted && !loadFileToMerge(dialog.selectedFiles().first())) {}
 }
 
 void MainWindow::on_actionDeplacement_triggered()

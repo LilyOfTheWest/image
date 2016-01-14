@@ -27,7 +27,7 @@ public:
     ~PictLabel();
     void undoLast();
     void setPrincipal(QImage *principal);
-    void addImage(QImage *src);
+    void addImageToMerge(QImage *src);
     void drawImage();
     QImage *getPrincipal();
     QRgb getColorPicked();
@@ -49,8 +49,9 @@ protected:
     void saveTemp();
     void drawSelection ();
     void setSelection(QMouseEvent * event);
-    void moveSelection(QMouseEvent * event);
+    void moveSelection(QMouseEvent * event,QImage *imgToMove,QPoint &positionRelative);
     QPoint resizeWithScaling(QPoint mousePointed);
+    void setCouperMode(bool couperMode);
 
     QRubberBand *rubberBand;
     QPoint origin_select;
@@ -64,6 +65,11 @@ protected:
     int mouseListenerState;
     QRgb colorPicked;
     double scaleFactor;
+    bool couperMode;
+    // Variables pour fusion 2 images
+    QImage *fusion1;
+    QPoint origin_position_relative_fusion1;
+    bool fusion1Selected;
 };
 
 #endif // PICTLABEL_H

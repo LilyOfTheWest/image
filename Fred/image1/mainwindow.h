@@ -70,7 +70,7 @@ private:
     void updateActions();
     void scaleImage(double factor);
     void adjustScrollBar(QScrollBar *scrollBar, double factor);
-
+    bool loadFileToMerge(const QString &fileName);
     PictLabel *imageLabel;
     QScrollArea *scrollArea;
     PicDisplay *pdis;
