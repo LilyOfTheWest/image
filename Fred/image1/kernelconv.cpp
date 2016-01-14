@@ -29,13 +29,13 @@ double ** KernelConv::produitConv(double **src, int n, int m) {
 
     int lk = (w-1)/2;
     int ck = (w-1)/2;
-    int sum;
+    int sum, x1, y1;
 
     /* Régler problème des tailles de noyau sup */
     for(int i=0;i<m;i++){
         for(int j=0;j<n;j++){
             // Pour ne pas prendre en compte les bords
-            if(i==0 || i == m-1 || j== 0 || j == n-1){
+            if(i<=lk-1 || i >= m-lk || j <= ck-1 || j >= n-ck){
                 S[i][j] = src[i][j];
 
             }
@@ -120,6 +120,19 @@ void KernelConv::genereSobelHori(){
             buf[i][j]=D[i]*S[j];
         }
     }
+}
+
+int KernelConv::reflect(int M, int x)
+{
+    if(x < 0)
+    {
+        return -x - 1;
+    }
+    if(x >= M)
+    {
+        return 2*M - x - 1;
+    }
+   return x;
 }
 
 /* Getters & Setters */

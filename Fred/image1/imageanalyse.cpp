@@ -33,16 +33,10 @@ void ImageAnalyse::initYuvImagris()
 {
     QRgb color;
     int r;
-    int g,b,r2,g2,b2,y,u,v;
     double point;
-    QRgb color1,color2;
-
 
     dataYUV = tc->convertRgbToYuv(dataRGB);
-    color1 = dataYUV->pixel(216,156);
-    r=qRed(color1);
-    g=qGreen(color1);
-    b=qBlue(color1);
+
     imagris = new double*[dataYUV->height()];
     for (int i=0; i< dataYUV->height() ; i++) {
         imagris[i] = new double[dataYUV->width()];
@@ -54,12 +48,6 @@ void ImageAnalyse::initYuvImagris()
             r = qRed(color);
         }
     }
-
-    color2 = dataYUV->pixel(216,156);
-    r2=qRed(color2);
-    g2=qGreen(color2);
-    b2=qBlue(color2);
-
 }
 
 void ImageAnalyse::calculHisto()
@@ -68,7 +56,7 @@ void ImageAnalyse::calculHisto()
 }
 
 void ImageAnalyse::calculgradient(){
-    int ordre;
+    int ordre = 3;
     KernelConv *SobelX = new KernelConv(ordre);
     KernelConv *SobelY = new KernelConv(ordre);
 
@@ -122,16 +110,7 @@ void ImageAnalyse::setImagris(double ** img){
     }
 
     QRgb color,color2;
-
-    int r;
-    int g,b,r2,g2,b2;
     double point;
-    QRgb color1;
-    color1 = dataYUV->pixel(216,156);
-    r=qRed(color1);
-    g=qGreen(color1);
-    b=qBlue(color1);
-
 
     int y, u, v,alpha;
     for (int i=0; i< dataYUV->height() ; i++) {
@@ -146,11 +125,6 @@ void ImageAnalyse::setImagris(double ** img){
             dataYUV->setPixel(j,i,color2);
         }
     }
-
-    color2 = dataYUV->pixel(216,156);
-    r2=qRed(color2);
-    g2=qGreen(color2);
-    b2=qBlue(color2);
 }
 
 double ** ImageAnalyse::getD_x(){

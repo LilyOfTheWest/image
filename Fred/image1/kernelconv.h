@@ -14,6 +14,7 @@ public:
     void genereImp();
     void genereSobelVert();
     void genereSobelHori();
+    int reflect(int M, int x);
     /* Getters & Setters */
     int getW();
     int getCoef();

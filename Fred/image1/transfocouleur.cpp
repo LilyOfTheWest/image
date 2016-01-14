@@ -91,17 +91,11 @@ QImage *TransfoCouleur::flou(QImage *src)
 
     /* Final test */
     // appel dialog pour properties /
-    // new KernelConv()
-    // TODO : régler bug des kernel autre que taille 3
     KernelConv *kMoy = new KernelConvBinomial(3);
-    // new imageAnalyse -> imagris Y
     ImageAnalyse *imA = new ImageAnalyse(src);
     imA->initYuvImagris();
 
-
-    // double **produitConv(double **src);
     imA->setImagris(kMoy->produitConv(imA->getImagris(), src->width(), src->height()));
-//    imA->setImagris(imA->getImagris());
     // -> nvle image flouter ; passe pictlabel ; undo + ;
     imA->fromYuvToRgb();
 
