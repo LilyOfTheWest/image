@@ -3,6 +3,7 @@
 #include "kernelconvbinomial.h"
 #include "imageanalyse.h"
 #include "qglobal.h"
+#include <math.h>
 
 TransfoCouleur::TransfoCouleur(QObject *parent) : QObject(parent)
 {
@@ -127,7 +128,7 @@ QImage *TransfoCouleur::inverseColor(QImage *src) {
     return ret;
 }
 
-QImage *rehaussement(QImage *src){
+QImage * TransfoCouleur::rehaussement(QImage *src){
     int ordre = 3;
     // Filtre Passe Bas
     KernelConv *kerPB = new KernelConvBinomial(ordre);
@@ -167,6 +168,28 @@ QImage *rehaussement(QImage *src){
     return imA->getDataRGB();
 }
 
+QImage * TransfoCouleur::contour(QImage *src){
+    double ** norm = new double*[src->height()];
+    for(int i=0;i<src->height();i++){
+        norm[i] = new double[src->width()];
+    }
+
+    ImageAnalyse *imA = new ImageAnalyse(src);
+    imA->initYuvImagris();
+    imA->calculgradient();
+
+    for(int i=0;i<src->height();i++){
+        for(int j=0;j<src->width();j++){
+            norm[i][j]=sqrt(pow(imA->getDxIndex(i,j), 2)+pow(imA->getDyIndex(i,j), 2));
+        }
+    }
+
+    imA->setImagris(norm);
+
+    imA->fromYuvToRgb();
+
+    return imA->getDataRGB();
+}
 
 int TransfoCouleur::get_YVal_Pixel_FromRgb(QRgb pixel_src)
 {

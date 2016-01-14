@@ -1,6 +1,7 @@
 #include "imageanalyse.h"
 #include "transfocouleur.h"
 #include "qglobal.h"
+#include "kernelconv.h"
 
 ImageAnalyse::ImageAnalyse(QImage *qimageRgbSrc,QObject *parent) : QObject(parent)//,dataRGB(qimageRgbSrc)
 {
@@ -64,6 +65,26 @@ void ImageAnalyse::initYuvImagris()
 void ImageAnalyse::calculHisto()
 {
 
+}
+
+void ImageAnalyse::calculgradient(){
+    int ordre;
+    KernelConv *SobelX = new KernelConv(ordre);
+    KernelConv *SobelY = new KernelConv(ordre);
+
+    SobelX->genereSobelHori();
+    SobelY->genereSobelVert();
+
+    d_x = new double *[dataRGB->height()];
+    d_y = new double *[dataRGB->height()];
+
+    for(int i=0;i<dataRGB->height();i++){
+        d_x[i] = new double[dataRGB->width()];
+        d_y[i] = new double[dataRGB->width()];
+    }
+
+    d_x = SobelX->produitConv(imagris, dataRGB->width(), dataRGB->height());
+    d_y = SobelY->produitConv(imagris, dataRGB->width(), dataRGB->height());
 }
 
 QImage * ImageAnalyse::getDataRGB(){
@@ -146,4 +167,20 @@ double ** ImageAnalyse::getD_y(){
 
 void ImageAnalyse::setD_y(double ** dy){
     d_y = dy;
+}
+
+double ImageAnalyse::getDxIndex(int x, int y){
+    return d_x[x][y];
+}
+
+double ImageAnalyse::getDyIndex(int x, int y){
+    return d_y[x][y];
+}
+
+void ImageAnalyse::setDxIndex(double n, int x, int y){
+    d_x[x][y] = n;
+}
+
+void ImageAnalyse::setDyIndex(double n, int x, int y){
+    d_y[x][y] = n;
 }

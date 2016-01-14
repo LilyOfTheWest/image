@@ -13,6 +13,7 @@ public:
     QImage *inverseColor(QImage *src);
     QImage *flou(QImage *src);
     QImage *rehaussement(QImage *src);
+    QImage *contour(QImage *src);
     /* A mettre dans imageanalyse !!
      * double *rgb_YUV_image(QImage *src);
     double **get_YBuf_image(QImage *src);

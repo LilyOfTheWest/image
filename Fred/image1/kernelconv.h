@@ -12,6 +12,8 @@ public:
     void retournement();
     void sommeCoef();
     void genereImp();
+    void genereSobelVert();
+    void genereSobelHori();
     /* Getters & Setters */
     int getW();
     int getCoef();

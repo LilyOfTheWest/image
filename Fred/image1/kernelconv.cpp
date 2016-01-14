@@ -102,6 +102,26 @@ void KernelConv::genereImp(){
     }
 }
 
+void KernelConv::genereSobelVert(){
+    double S[3]={1,2,1};
+    double D[3]={1,0,-1};
+    for(int i=0;i<w;i++){
+        for(int j=0;j<w;j++){
+            buf[i][j]=S[i]*D[j];
+        }
+    }
+}
+
+void KernelConv::genereSobelHori(){
+    double S[3]={1,2,1};
+    double D[3]={1,0,-1};
+    for(int i=0;i<w;i++){
+        for(int j=0;j<w;j++){
+            buf[i][j]=D[i]*S[j];
+        }
+    }
+}
+
 /* Getters & Setters */
 int KernelConv::getW(){
     return w;
