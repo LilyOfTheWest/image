@@ -65,6 +65,20 @@ private slots:
     void on_actionDeplacement_triggered();
 
 
+    void on_action_Copier_triggered();
+
+    void on_action_Coller_triggered();
+
+    void on_action_Couper_triggered();
+
+    void on_actionImageGris_triggered();
+
+    void on_actionInverseCoul_triggered();
+
+    void on_actionFusion_2_triggered();
+
+    void on_actionCrop_triggered();
+
 private:
     Ui::MainWindow *ui;
     void updateActions();

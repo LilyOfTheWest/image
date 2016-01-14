@@ -225,7 +225,7 @@
   </action>
   <action name="action_Imprimer">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="icon">
     <iconset resource="res.qrc">
@@ -257,7 +257,7 @@
   </action>
   <action name="action_Couper">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="icon">
     <iconset resource="res.qrc">
@@ -272,7 +272,7 @@
   </action>
   <action name="action_Copier">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="icon">
     <iconset resource="res.qrc">
@@ -287,7 +287,7 @@
   </action>
   <action name="action_Coller">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="icon">
     <iconset resource="res.qrc">

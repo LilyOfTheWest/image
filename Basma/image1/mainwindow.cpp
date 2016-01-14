@@ -19,7 +19,7 @@ MainWindow::MainWindow(QWidget *parent) :
     imageLabel->setScaledContents(true);
 
     scrollArea = new QScrollArea;
-    scrollArea->setWidget(imageLabel);
+
 
     //ui->scrollAreaPict->setWidget(imageLabel);
     //PictLabel jj = (PictLabel) ui->scrollAreaPict->widget();
@@ -27,7 +27,10 @@ MainWindow::MainWindow(QWidget *parent) :
     //setCentralWidget(ui->scrollAreaPict);
     pdis =new PicDisplay();
     pdis->setScrollArea(imageLabel);
-    setCentralWidget(pdis);
+
+    scrollArea->setWidget(pdis);
+
+    setCentralWidget(scrollArea);
     QObject::connect(imageLabel,SIGNAL(signalNewPixelPicked()),pdis,SLOT(on_refreshPixelProperties()));
     updateActionsWithoutImage();
 
@@ -77,6 +80,7 @@ bool MainWindow::loadFile(const QString &fileName)
 
     //if (!fitToWindowAct->isChecked())
         imageLabel->adjustSize();
+        pdis->adjustSize();
 
     setWindowFilePath(fileName);
     return true;
@@ -200,6 +204,10 @@ void MainWindow::updateActionsWithoutImage()
     ui->actionZoom_avant->setEnabled(false);
     ui->action_Zoom_arriere->setEnabled(false);
     ui->actionSeamCarving->setVisible(false);
+    ui->action_Copier->setVisible(false);
+    ui->action_Couper->setVisible(false);
+    ui->action_Coller->setVisible(false);
+
 }
 
 
@@ -268,7 +276,10 @@ void MainWindow::on_action_Fermer_triggered()
 
 void MainWindow::on_action_Imprimer_triggered()
 {
-    print();
+    //print();
+    ui->action_Copier->setVisible(false);
+    ui->action_Couper->setVisible(false);
+    ui->action_Coller->setVisible(false);
 }
 
 void MainWindow::on_actionZoom_avant_triggered()
@@ -299,18 +310,7 @@ void MainWindow::on_actionPipette_triggered()
 
 void MainWindow::on_actionSeamCarving_triggered()
 {
-    QStringList mimeTypeFilters;
-    foreach (const QByteArray &mimeTypeName, QImageReader::supportedMimeTypes())
-        mimeTypeFilters.append(mimeTypeName);
-    mimeTypeFilters.sort();
-    const QStringList picturesLocations = QStandardPaths::standardLocations(QStandardPaths::PicturesLocation);
-    QFileDialog dialog(this, tr("Open File"),
-                       picturesLocations.isEmpty() ? QDir::currentPath() : picturesLocations.last());
-    dialog.setAcceptMode(QFileDialog::AcceptOpen);
-    dialog.setMimeTypeFilters(mimeTypeFilters);
-    dialog.selectMimeTypeFilter("image/jpeg");
 
-    while (dialog.exec() == QDialog::Accepted && !loadFileToMerge(dialog.selectedFiles().first())) {}
 }
 
 void MainWindow::on_actionDeplacement_triggered()
@@ -321,5 +321,67 @@ void MainWindow::on_actionDeplacement_triggered()
 void MainWindow::on_action_Selection_triggered()
 {
     imageLabel->setMouseListenerState(11);
+    ui->action_Copier->setVisible(true);
+    ui->action_Couper->setVisible(true);
+    ui->action_Coller->setVisible(true);
 }
 
+
+void MainWindow::on_action_Copier_triggered()
+{
+    imageLabel->setMouseListenerState(12);
+}
+
+void MainWindow::on_action_Coller_triggered()
+{
+    imageLabel->pasteSelection();
+}
+
+void MainWindow::on_action_Couper_triggered()
+{
+    imageLabel->setCouperMode(true);
+    imageLabel->setMouseListenerState(18);
+}
+
+void MainWindow::on_actionImageGris_triggered()
+{
+    TransfoCouleur *tc = new TransfoCouleur;
+    //PictLabel *jj = static_cast<PictLabel*>(ui->scrollAreaPict->widget());
+    QImage *imageInversee = tc->inverseColor(imageLabel->getPrincipal());
+    imageLabel->setPrincipal(imageInversee);
+    const QImage imageConv = *imageLabel->getPrincipal();
+    imageLabel->setPixmap(QPixmap::fromImage(imageConv));
+    scaleFactor = 1.0;//scaleImage(1.5);
+}
+
+void MainWindow::on_actionInverseCoul_triggered()
+{
+    TransfoCouleur *tc = new TransfoCouleur;
+    //PictLabel *jj = static_cast<PictLabel*>(ui->scrollAreaPict->widget());
+    QImage *imageInversee = tc->inverseColor(imageLabel->getPrincipal());
+    imageLabel->setPrincipal(imageInversee);
+    const QImage imageConv = *imageLabel->getPrincipal();
+    imageLabel->setPixmap(QPixmap::fromImage(imageConv));
+    scaleFactor = 1.0;//scaleImage(1.5);
+}
+
+void MainWindow::on_actionFusion_2_triggered()
+{
+    QStringList mimeTypeFilters;
+    foreach (const QByteArray &mimeTypeName, QImageReader::supportedMimeTypes())
+        mimeTypeFilters.append(mimeTypeName);
+    mimeTypeFilters.sort();
+    const QStringList picturesLocations = QStandardPaths::standardLocations(QStandardPaths::PicturesLocation);
+    QFileDialog dialog(this, tr("Open second File to merge"),
+                       picturesLocations.isEmpty() ? QDir::currentPath() : picturesLocations.last());
+    dialog.setAcceptMode(QFileDialog::AcceptOpen);
+    dialog.setMimeTypeFilters(mimeTypeFilters);
+    dialog.selectMimeTypeFilter("image/jpeg");
+
+    while (dialog.exec() == QDialog::Accepted && !loadFileToMerge(dialog.selectedFiles().first())) {}
+}
+
+void MainWindow::on_actionCrop_triggered()
+{
+    imageLabel->setMouseListenerState(11);
+}

@@ -10,10 +10,10 @@ PictLabel::PictLabel(QWidget *parent) :
 {
     origin_select.setX(0);
     origin_select.setY(0);
-    mouseListenerState=11;
+    mouseListenerState=0;
     principal = NULL;
-    second = NULL;
-    fusion1 = NULL;
+    secondImg = NULL;
+    firstImg = NULL;
     end_select = NULL;
     scaleFactor = 1;
     setCouperMode(false);
@@ -24,18 +24,20 @@ PictLabel::~PictLabel()
     delete principal;
 }
 
+
 void PictLabel::addImageToMerge(QImage *src)
 {
-    fusion1=principal;
-    fusion1Selected=false;
-    origin_position_relative_fusion1.setX(0);
-    origin_position_relative_fusion1.setY(0);
+    firstImgSelected=false;
+    position_firstImg.setX(0);
+    position_firstImg.setY(0);
     end_select = NULL;
 
-    // Install background ; principal devient fusion1
-    int totalWidth = fusion1->width() + src->width();
-    int totalHeight = fusion1->height() + src->height();
+    // Install background ; principal devient firstImg
+    int totalWidth = firstImg->width() + src->width();
+    int totalHeight = firstImg->height() + src->height();
     QRgb backgroundColor = qRgb(255,255,255);
+    if (principal != NULL)
+        delete principal;
     principal = new QImage(totalWidth,totalHeight,principal->format());
     for (int i=0; i< principal->height() ; i++) {
         for (int j=0; j<principal->width() ; j++) {
@@ -43,14 +45,14 @@ void PictLabel::addImageToMerge(QImage *src)
         }
     }
 
-    second = new QImage(src->width(),src->height(),src->format());
+    secondImg = new QImage(src->width(),src->height(),src->format());
     for (int i=0; i< src->height() ; i++) {
         for (int j=0; j<src->width() ; j++) {
-            second->setPixel(j,i,src->pixel(j,i));
+            secondImg->setPixel(j,i,src->pixel(j,i));
         }
     }
-    origin_position_relative_second.setX(0);
-    origin_position_relative_second.setY(0);
+    position_secondImg.setX(0);
+    position_secondImg.setY(0);
     mouse_origin.setX(0);
     mouse_origin.setY(0);
     mouseListenerState=21;
@@ -60,10 +62,16 @@ void PictLabel::addImageToMerge(QImage *src)
 
 void PictLabel::setPrincipal(QImage *src)
 {
+    // Install background ; principal devient firstImg
+    QRgb backgroundColor = qRgb(255,255,255);
+    if (principal != NULL)
+        delete principal;
     principal = new QImage(src->width(),src->height(),src->format());
+    firstImg = new QImage(src->width(),src->height(),src->format());
     for (int i=0; i< src->height() ; i++) {
         for (int j=0; j<src->width() ; j++) {
-            principal->setPixel(j,i,src->pixel(j,i));
+            firstImg->setPixel(j,i,src->pixel(j,i));
+            principal->setPixel(j,i,backgroundColor);
         }
     }
     drawImage();
@@ -71,7 +79,7 @@ void PictLabel::setPrincipal(QImage *src)
 
 QImage *PictLabel::getPrincipal()
 {
-    return principal;
+    return firstImg;
 
 }
 
@@ -102,25 +110,31 @@ void PictLabel::mouseMoveEvent ( QMouseEvent * event )
 
 void PictLabel::mousePressEvent ( QMouseEvent * event )
 {
+    QPoint mouse_position = resizeWithScaling(event->pos());
     switch(mouseListenerState){
-    case 10:
-        mouse_origin = resizeWithScaling(event->pos());
-        colorPicked = principal->pixel(mouse_origin);
+    case 10: // Pipette
+        //colorPicked = principal->pixel(mouse_position);
+        //if (isPicked(resizeWithScaling(event->pos()),firstImg,&position_firstImg)==true) {
+
+        //}
         signalNewPixelPicked();
         break;
-    case 11:
-        origin_select = resizeWithScaling(event->pos());
+    case 11: // Select
+        origin_select = mouse_position;
         rubberBand = new QRubberBand(QRubberBand::Rectangle, this);
         rubberBand->setGeometry(QRect(event->pos(), QSize()));
         rubberBand->show();
         break;
-    case 12:
+    case 12: // Deplace première image
         mouse_origin = resizeWithScaling(event->pos());
         break;
-    case 21:
+    case 18: // Deplace seconde image suite Couper/Copier
         mouse_origin = resizeWithScaling(event->pos());
         break;
-    case 22:
+    case 21: // Deplace seconde image
+        mouse_origin = resizeWithScaling(event->pos());
+        break;
+    case 22: // Deplace première image
         mouse_origin = resizeWithScaling(event->pos());
         break;
     }
@@ -128,6 +142,7 @@ void PictLabel::mousePressEvent ( QMouseEvent * event )
 
 void PictLabel::mouseReleaseEvent ( QMouseEvent * event )
 {
+    QPoint *mouse_end = new QPoint(resizeWithScaling(event->pos()));
     switch(mouseListenerState){
     case 10:
 
@@ -135,15 +150,17 @@ void PictLabel::mouseReleaseEvent ( QMouseEvent * event )
     case 11:
         setSelection(event);
         break;
-
     case 12:
-        moveSelection(event,second,origin_position_relative_second);
+        moveSelection(mouse_end,firstImg,position_firstImg);
+        break;
+    case 18:
+        moveSelection(mouse_end,secondImg,position_secondImg);
         break;
     case 21:
-        moveSelection(event,second,origin_position_relative_second);
+        moveSelection(mouse_end,secondImg,position_secondImg);
         break;
     case 22:
-        moveSelection(event,fusion1,origin_position_relative_fusion1);
+        moveSelection(mouse_end,firstImg,position_firstImg);
         break;
     }
 }
@@ -152,25 +169,38 @@ void PictLabel::setSelection(QMouseEvent * event)
 {
     end_select = new QPoint(resizeWithScaling(event->pos()));
     rubberBand->hide();
-    TransfoCouleur *tc = new TransfoCouleur;
-    second =tc->extractSubImage(principal,&origin_select,end_select);
-    origin_position_relative_second.setX(0);
-    origin_position_relative_second.setY(0);
-    drawImage();
+    secondImg=NULL;
     delete rubberBand;
+    drawImage();
 }
 
-void PictLabel::moveSelection(QMouseEvent * event,QImage *imgToMove,QPoint &positionRelative)
+void PictLabel::pasteSelection()
 {
-    mouse_end = new QPoint(resizeWithScaling(event->pos()));
+    if (end_select != NULL) {
+        TransfoCouleur *tc = new TransfoCouleur;
+        secondImg =tc->extractSubImage(firstImg,&origin_select,end_select);
+        position_secondImg.setX(0);
+        position_secondImg.setY(0);
+        drawImage();
+        mouseListenerState=18;
+    }
+}
+
+bool PictLabel::isPicked(QPoint mousePosition,QImage *imgToMove,QPoint *positionRelative)
+{
+    return false;
+}
+
+void PictLabel::moveSelection(QPoint *mouse_end,QImage *imgToMove,QPoint &positionRelative)
+{
     int x_pos = positionRelative.x() + mouse_end->x() - mouse_origin.x();
     int y_pos = positionRelative.y() + mouse_end->y() - mouse_origin.y();
-    if (x_pos < 0)
-        x_pos = 0;
-    if (y_pos < 0)
-        y_pos = 0;
-    int xMax = principal->width()-imgToMove->width();
-    int yMax = principal->height()-imgToMove->height();
+    if (x_pos < -imgToMove->width())
+        x_pos = 3-imgToMove->width();
+    if (y_pos < -imgToMove->height())
+        y_pos = 3-imgToMove->height();
+    int xMax = principal->width()-3;
+    int yMax = principal->height()-3;
     if (x_pos > xMax)
         x_pos = xMax;
     if (y_pos > yMax)
@@ -240,26 +270,26 @@ void PictLabel::drawImage()
     p.begin(&image2);
     p.setPen(QColor(Qt::color0));
     p.setBrush(Qt::NoBrush);
-    if (fusion1 != NULL)
+    if (firstImg != NULL)
     {
-        const QImage imageFirstFusion1 = *fusion1;
-        p.drawPixmap(origin_position_relative_fusion1.x(),
-                     origin_position_relative_fusion1.y(),
-                     fusion1->width(),
-                     fusion1->height(),
-                     QPixmap::fromImage(imageFirstFusion1));
+        const QImage imageFirstFirstImg = *firstImg;
+        p.drawPixmap(position_firstImg.x(),
+                     position_firstImg.y(),
+                     firstImg->width(),
+                     firstImg->height(),
+                     QPixmap::fromImage(imageFirstFirstImg));
     }
 
     if (end_select != NULL)
         p.drawRect(QRect(origin_select,*end_select));
-    if (second != NULL)
+    if (secondImg != NULL)
     {
-        const QImage imageSeconde = *second;
-        p.drawPixmap(origin_position_relative_second.x(),
-                     origin_position_relative_second.y(),
-                     second->width(),
-                     second->height(),
-                     QPixmap::fromImage(imageSeconde));
+        const QImage imageSecondImge = *secondImg;
+        p.drawPixmap(position_secondImg.x(),
+                     position_secondImg.y(),
+                     secondImg->width(),
+                     secondImg->height(),
+                     QPixmap::fromImage(imageSecondImge));
     }
     p.end();
     const QImage image = image2;

@@ -34,6 +34,8 @@ public:
     QPoint getPixelPicked();
     void setScaleFactor(double scaleFactor);
     void setMouseListenerState(int mouseListenerStateVal);
+    void setCouperMode(bool couperMode);
+    void pasteSelection();
 
 signals:
     void signalNewPixelPicked();
@@ -49,9 +51,9 @@ protected:
     void saveTemp();
     void drawSelection ();
     void setSelection(QMouseEvent * event);
-    void moveSelection(QMouseEvent * event,QImage *imgToMove,QPoint &positionRelative);
+    bool isPicked(QPoint mousePosition,QImage *imgToMove,QPoint *positionRelative);
+    void moveSelection(QPoint *mouse_end,QImage *imgToMove,QPoint &positionRelative);
     QPoint resizeWithScaling(QPoint mousePointed);
-    void setCouperMode(bool couperMode);
 
     QRubberBand *rubberBand;
     QPoint origin_select;
@@ -60,16 +62,15 @@ protected:
     QPoint *mouse_end;
     QStack<QImage> *undo;
     QImage *principal;
-    QImage *second;
-    QPoint origin_position_relative_second;
+    QImage *firstImg;
+    QImage *secondImg;
+    QPoint position_firstImg;
+    QPoint position_secondImg;
     int mouseListenerState;
     QRgb colorPicked;
     double scaleFactor;
     bool couperMode;
-    // Variables pour fusion 2 images
-    QImage *fusion1;
-    QPoint origin_position_relative_fusion1;
-    bool fusion1Selected;
+    bool firstImgSelected;
 };
 
 #endif // PICTLABEL_H
