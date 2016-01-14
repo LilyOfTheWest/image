@@ -92,6 +92,16 @@ void KernelConv::sommeCoef(){
     }
 }
 
+void KernelConv::genereImp(){
+    for(int i=0;i<w;i++){
+        for(int j=0;j<w;j++){
+            if((i == (w/2)+1) && (j == (w/2)+1))
+                buf[i][j]=1;
+            else buf[i][j]=0;
+        }
+    }
+}
+
 /* Getters & Setters */
 int KernelConv::getW(){
     return w;
@@ -105,6 +115,10 @@ double ** KernelConv::getBuf(){
     return buf;
 }
 
+double KernelConv::getIndex(int x, int y){
+    return buf[x][y];
+}
+
 void KernelConv::setW(int n){
     w = n;
 }
@@ -115,4 +129,8 @@ void KernelConv::setCoef(int c){
 
 void KernelConv::setBuf(double ** b){
     buf = b;
+}
+
+void KernelConv::setIndex(double n, int x, int y){
+    buf[x][y]=n;
 }

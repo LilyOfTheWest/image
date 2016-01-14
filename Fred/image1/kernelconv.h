@@ -11,13 +11,16 @@ public:
     double * convLinear(double * M, double * K, int n, int k);
     void retournement();
     void sommeCoef();
+    void genereImp();
     /* Getters & Setters */
     int getW();
     int getCoef();
     double ** getBuf();
+    double getIndex(int x, int y);
     void setW(int n);
     void setCoef(int c);
     void setBuf(double ** b);
+    void setIndex(double n, int x, int y);
 
 protected:
     int w;  // convolution kernel size

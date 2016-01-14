@@ -127,6 +127,45 @@ QImage *TransfoCouleur::inverseColor(QImage *src) {
     return ret;
 }
 
+QImage *rehaussement(QImage *src){
+    int ordre = 3;
+    // Filtre Passe Bas
+    KernelConv *kerPB = new KernelConvBinomial(ordre);
+    // On génère notre noyau impulsionnel
+    KernelConv *kerImp = new KernelConv(ordre);
+    kerImp->genereImp();
+    // Filtre Passe Haut
+    KernelConv *kerPH = new KernelConv(ordre);
+
+    for(int i=0;i<ordre;i++){
+        for(int j=0;j<ordre;j++){
+            kerPH->setIndex((kerImp->getIndex(i,j))-(kerPB->getIndex(i,j)),i,j);
+        }
+    }
+
+    /* Image filtrée passe haut ??? */
+//    ImageAnalyse *imA = new ImageAnalyse(src);
+//    imA->initYuvImagris();
+//    imA->setImagris(kerPH->produitConv(imA->getImagris(), src->width(), src->height()));
+//    imA->fromYuvToRgb();
+
+    double alpha = 0.5;
+
+    KernelConv *kerRH = new KernelConv(ordre);
+    for(int i=0;i<ordre;i++){
+        for(int j=0;j<ordre;j++){
+            kerRH->setIndex((kerImp->getIndex(i,j)) + (alpha * kerPH->getIndex(i,j)),i,j);
+        }
+    }
+
+    ImageAnalyse *imA = new ImageAnalyse(src);
+    imA->initYuvImagris();
+
+    imA->setImagris(kerRH->produitConv(imA->getImagris(), src->width(), src->height()));
+    imA->fromYuvToRgb();
+
+    return imA->getDataRGB();
+}
 
 
 int TransfoCouleur::get_YVal_Pixel_FromRgb(QRgb pixel_src)
