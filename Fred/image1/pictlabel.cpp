@@ -14,6 +14,7 @@ PictLabel::PictLabel(QWidget *parent) :
     principal = NULL;
     second = NULL;
     end_select = NULL;
+    scaleFactor = 1;
 }
 
 PictLabel::~PictLabel()
@@ -75,7 +76,8 @@ void PictLabel::mouseMoveEvent ( QMouseEvent * event )
 
         break;
     case 11:
-        rubberBand->setGeometry(QRect(origin_select, event->pos()).normalized());
+        //rubberBand->setGeometry(QRect(resizeWithScaling(origin_select), event->pos()).normalized());
+        rubberBand->setGeometry(QRect(rubberBand->geometry().topLeft(), event->pos()).normalized());
         break;
     case 12:
         break;
@@ -88,18 +90,18 @@ void PictLabel::mousePressEvent ( QMouseEvent * event )
 {
     switch(mouseListenerState){
     case 10:
-        mouse_origin = event->pos();
-        colorPicked = principal->pixel(origin_select);
+        mouse_origin = resizeWithScaling(event->pos());
+        colorPicked = principal->pixel(mouse_origin);
         signalNewPixelPicked();
         break;
     case 11:
-        origin_select = event->pos();
+        origin_select = resizeWithScaling(event->pos());
         rubberBand = new QRubberBand(QRubberBand::Rectangle, this);
-        rubberBand->setGeometry(QRect(origin_select, QSize()));
+        rubberBand->setGeometry(QRect(event->pos(), QSize()));
         rubberBand->show();
         break;
     case 12:
-        origin_select = event->pos();
+        mouse_origin = resizeWithScaling(event->pos());
         break;
     }
 }
@@ -156,7 +158,7 @@ void PictLabel::drawImage()
 
 void PictLabel::setSelection(QMouseEvent * event)
 {
-    end_select = new QPoint(event->pos());
+    end_select = new QPoint(resizeWithScaling(event->pos()));
     rubberBand->hide();
     TransfoCouleur *tc = new TransfoCouleur;
     second =tc->extractSubImage(principal,&origin_select,end_select);
@@ -168,7 +170,7 @@ void PictLabel::setSelection(QMouseEvent * event)
 
 void PictLabel::moveSelection(QMouseEvent * event)
 {
-    mouse_end = new QPoint(event->pos());
+    mouse_end = new QPoint(resizeWithScaling(event->pos()));
     int x_pos = origin_position_relative_second.x() + mouse_end->x() - mouse_origin.x();
     int y_pos = origin_position_relative_second.y() + mouse_end->y() - mouse_origin.y();
     if (x_pos < 0)
@@ -226,6 +228,20 @@ QRgb PictLabel::getColorPicked()
 
 QPoint PictLabel::getPixelPicked()
 {
-    return origin_select;
+    return mouse_origin;
 }
 
+void PictLabel::setScaleFactor(double scaleFactor)
+{
+    this->scaleFactor = scaleFactor;
+}
+
+QPoint PictLabel::resizeWithScaling(QPoint mousePointed)
+{
+    QPoint ret;
+    int scaled = mousePointed.x()/scaleFactor;
+    ret.setX(scaled);
+    scaled = mousePointed.y()/scaleFactor;
+    ret.setY(scaled);
+    return ret;
+}

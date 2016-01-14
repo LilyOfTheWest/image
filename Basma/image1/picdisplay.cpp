@@ -117,6 +117,6 @@ void PicDisplay::on_radioButton_YUV_clicked()
 
 void PicDisplay::on_refreshPixelProperties()
 {
-    ui->libLibre->setText("HY§YEAH !");
+    ui->libLibre->setText("AA !");
     refreshPixelProperties();
 }

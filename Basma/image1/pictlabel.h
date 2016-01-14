@@ -32,6 +32,7 @@ public:
     QImage *getPrincipal();
     QRgb getColorPicked();
     QPoint getPixelPicked();
+    void setScaleFactor(double scaleFactor);
     void setMouseListenerState(int mouseListenerStateVal);
 
 signals:
@@ -49,6 +50,7 @@ protected:
     void drawSelection ();
     void setSelection(QMouseEvent * event);
     void moveSelection(QMouseEvent * event);
+    QPoint resizeWithScaling(QPoint mousePointed);
 
     QRubberBand *rubberBand;
     QPoint origin_select;
@@ -61,6 +63,7 @@ protected:
     QPoint origin_position_relative_second;
     int mouseListenerState;
     QRgb colorPicked;
+    double scaleFactor;
 };
 
 #endif // PICTLABEL_H

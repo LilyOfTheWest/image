@@ -36,7 +36,8 @@ private slots:
     void open();
     void print();
     void inverseColor();
-    void prodConv();
+    void updateActionsWithoutImage();
+    void updateActionsWithImage();
     void zoomIn();
     void zoomOut();
     void normalSize();
@@ -78,15 +79,6 @@ private:
 #ifndef QT_NO_PRINTER
     QPrinter printer;
 #endif
-
-    QAction *inverseColorAct;
-    QAction *prodConvAct;
-    QAction *zoomInAct;
-    QAction *zoomOutAct;
-    QAction *normalSizeAct;
-    QAction *fitToWindowAct;
-    QAction *aboutAct;
-    QAction *aboutQtAct;
 
 };
 

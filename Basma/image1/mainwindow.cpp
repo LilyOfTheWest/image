@@ -29,11 +29,13 @@ MainWindow::MainWindow(QWidget *parent) :
     pdis->setScrollArea(imageLabel);
     setCentralWidget(pdis);
     QObject::connect(imageLabel,SIGNAL(signalNewPixelPicked()),pdis,SLOT(on_refreshPixelProperties()));
+    updateActionsWithoutImage();
 
     //ui->scrollAreaPict->setWidgetResizable(false); AVOIR !!!
 
     //ui->statusbar->insertWidget(0,new PicDisplay());
     resize(QGuiApplication::primaryScreen()->availableSize() * 3 / 5);
+    scaleFactor = 1;
 }
 
 MainWindow::~MainWindow()
@@ -58,13 +60,6 @@ bool MainWindow::loadFile(const QString &fileName)
         return false;
     }
 
-    //Exemple de code de dessin - substitut au calque
-    /*QPainter p;
-    p.begin(&image2);
-    p.setPen(QColor(Qt::color0));
-    p.setBrush(Qt::NoBrush);
-    p.drawRect(QRect(30,30,400,400));
-    p.end();*/
     const QImage image = image2;
 
     imageLabel->addImage(&image2);
@@ -73,13 +68,12 @@ bool MainWindow::loadFile(const QString &fileName)
     //this->setPixmap(QPixmap::fromImage(imageCst));
       //imageLabel->setPixmap(QPixmap::fromImage(image));
     //imageLabel->setPixmap(QPixmap::fromImage(image));
-    scaleFactor = 1.0;
 
     pdis->resizeScrollArea(imageLabel);
 
     //printAct->setEnabled(true);
     //fitToWindowAct->setEnabled(true);
-    updateActions();
+    updateActionsWithImage();
 
     //if (!fitToWindowAct->isChecked())
         imageLabel->adjustSize();
@@ -133,17 +127,18 @@ void MainWindow::zoomOut()
 
 void MainWindow::normalSize()
 {
-    imageLabel->adjustSize();
     scaleFactor = 1.0;
+    imageLabel->setScaleFactor(scaleFactor);
+    imageLabel->adjustSize();
 }
 void MainWindow::fitToWindow()
 {
-    bool fitToWindow = fitToWindowAct->isChecked();
+    //bool fitToWindow = fitToWindowAct->isChecked();
     //ui->scrollAreaPict->setWidgetResizable(fitToWindow);
-    if (!fitToWindow) {
-        normalSize();
-    }
-    updateActions();
+    //if (!fitToWindow) {
+    //    normalSize();
+    //}
+    updateActionsWithImage();
 }
 
 void MainWindow::about()
@@ -164,26 +159,6 @@ void MainWindow::about()
 }
 //void MainWindow::createActions()
 //{
-//    inverseColorAct = new QAction(tr("Inverseur des couleurs"), this);
-//    inverseColorAct->setShortcut(tr("Ctrl+N"));
-//    inverseColorAct->setEnabled(false);
-//    connect(inverseColorAct, SIGNAL(triggered()), this, SLOT(inverseColor()));
-
-//    prodConvAct = new QAction(tr("Produit convolution Moyenneur rudimentaire"), this);
-//    prodConvAct->setShortcut(tr("Ctrl+W"));
-//    prodConvAct->setEnabled(false);
-//    connect(prodConvAct, SIGNAL(triggered()), this, SLOT(prodConv()));
-
-//    zoomInAct = new QAction(tr("Zoom &In (25%)"), this);
-//    zoomInAct->setShortcut(tr("Ctrl++"));
-//    zoomInAct->setEnabled(false);
-//    connect(zoomInAct, SIGNAL(triggered()), this, SLOT(zoomIn()));
-
-//    zoomOutAct = new QAction(tr("Zoom &Out (25%)"), this);
-//    zoomOutAct->setShortcut(tr("Ctrl+-"));
-//    zoomOutAct->setEnabled(false);
-//    connect(zoomOutAct, SIGNAL(triggered()), this, SLOT(zoomOut()));
-
 //    normalSizeAct = new QAction(tr("&Normal Size"), this);
 //    normalSizeAct->setShortcut(tr("Ctrl+S"));
 //    normalSizeAct->setEnabled(false);
@@ -202,15 +177,28 @@ void MainWindow::about()
 //    connect(aboutQtAct, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
 //}
 
-void MainWindow::updateActions()
+
+void MainWindow::updateActionsWithoutImage()
+{
+    ui->action_Fermer->setEnabled(false);
+    ui->action_Imprimer->setEnabled(false);
+    ui->actionPipette->setVisible(false);
+    ui->action_Selection->setVisible(false);
+    ui->actionZoom_avant->setEnabled(false);
+    ui->action_Zoom_arriere->setEnabled(false);
+    ui->actionSeamCarving->setVisible(false);
+}
+
+
+void MainWindow::updateActionsWithImage()
 {
     ui->action_Fermer->setEnabled(true);
     ui->action_Imprimer->setEnabled(true);
-    ui->actionPipette->setEnabled(true);
-    ui->action_Selection->setEnabled(true);
+    ui->actionPipette->setVisible(true);
+    ui->action_Selection->setVisible(true);
     ui->actionZoom_avant->setEnabled(true);
     ui->action_Zoom_arriere->setEnabled(true);
-    ui->actionSeamCarving->setEnabled(true);
+    ui->actionSeamCarving->setVisible(true);
 //    inverseColorAct->setEnabled(!fitToWindowAct->isChecked());
 //    prodConvAct->setEnabled(!fitToWindowAct->isChecked());
 //    zoomInAct->setEnabled(!fitToWindowAct->isChecked());
@@ -222,13 +210,14 @@ void MainWindow::scaleImage(double factor)
 {
     Q_ASSERT(imageLabel->pixmap());
     scaleFactor *= factor;
+    imageLabel->setScaleFactor(scaleFactor);
     imageLabel->resize(scaleFactor * imageLabel->pixmap()->size());
 
     //adjustScrollBar(ui->scrollAreaPict->horizontalScrollBar(), factor);
     //adjustScrollBar(ui->scrollAreaPict->verticalScrollBar(), factor);
 
-    zoomInAct->setEnabled(scaleFactor < 3.0);
-    zoomOutAct->setEnabled(scaleFactor > 0.333);
+    ui->actionZoom_avant->setEnabled(scaleFactor < 3.0);
+    ui->action_Zoom_arriere->setEnabled(scaleFactor > 0.333);
 }
 
 void MainWindow::adjustScrollBar(QScrollBar *scrollBar, double factor)
@@ -252,14 +241,6 @@ void MainWindow::inverseColor()
     const QImage imageConv = *imageLabel->getPrincipal();
     imageLabel->setPixmap(QPixmap::fromImage(imageConv));
     scaleFactor = 1.0;//scaleImage(1.5);
-}
-
-void MainWindow::prodConv()
-{
-    /**imageL = kernelConv->produitConv(imageLabel->setPrincipal();
-    const QImage imageConv = *imageL;
-    imageLabel->setPixmap(QPixmap::fromImage(imageConv));
-    scaleFactor = 1.0;//scaleImage(1.5);*/
 }
 
 void MainWindow::on_action_Ouvrir_triggered()
@@ -316,7 +297,7 @@ void MainWindow::on_actionSeamCarving_triggered()
 
 void MainWindow::on_actionDeplacement_triggered()
 {
-
+    imageLabel->setMouseListenerState(12);
 }
 
 void MainWindow::on_action_Selection_triggered()
