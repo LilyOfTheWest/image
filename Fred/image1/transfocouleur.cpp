@@ -218,7 +218,10 @@ QImage *TransfoCouleur::etalement(QImage *src){
 }
 
 QImage *egalisation(QImage *src){
-
+    int nbr_pixels = src->height()*src->width();
+    ImageAnalyse *imA = new ImageAnalyse(src);
+    imA->initYuvImagris();
+    double lut = 255/nbr_pixels*imA->cumsum(imA->get)
 }
 
 int TransfoCouleur::get_YVal_Pixel_FromRgb(QRgb pixel_src)

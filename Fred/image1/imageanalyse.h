@@ -16,8 +16,9 @@ public:
     void fromYuvToRgb();
     void calculHisto();
     void calculgradient();
-    void min();
-    void max();
+    int min();
+    int max();
+    int ** cumsum();
 
     /* Getters & Setters */
     QImage * getDataRGB();
@@ -34,6 +35,10 @@ public:
     double getDyIndex(int x, int y);
     void setDxIndex(double n, int x, int y);
     void setDyIndex(double n, int x, int y);
+    int ** getHistoRgb();
+    void setHistoRgb(int ** h);
+    int ** getHistoYuv();
+    void setHistoYuv(int ** h);
 signals:
 
 public slots:

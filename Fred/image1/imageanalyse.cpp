@@ -136,6 +136,16 @@ int ImageAnalyse::max(){
     return max;
 }
 
+int * ImageAnalyse::cumsum(int * h){
+    int * sum = new int[256];
+    sum[0]=h[0];
+    for(int i=1;i<256;i++){
+        sum[i]=sum[i-1]+h[i];
+    }
+
+    return sum;
+}
+
 QImage * ImageAnalyse::getDataRGB(){
     return dataRGB;
 }
@@ -218,4 +228,34 @@ void ImageAnalyse::setDxIndex(double n, int x, int y){
 
 void ImageAnalyse::setDyIndex(double n, int x, int y){
     d_y[x][y] = n;
+}
+
+int ** ImageAnalyse::getHistoRgb(){
+    int ** h = new int *[3];
+    for(int i=0;i<3;i++){
+        h[i] = new int[256];
+    }
+
+    h=histo_rgb;
+
+    return h;
+}
+
+void ImageAnalyse::setHistoRgb(int ** h){
+
+}
+
+int ** ImageAnalyse::getHistoYuv(){
+    int ** h = new int *[3];
+    for(int i=0;i<3;i++){
+        h[i] = new int[256];
+    }
+
+    h=histo_yuv;
+
+    return h;
+}
+
+void ImageAnalyse::setHistoYuv(int ** h){
+
 }
