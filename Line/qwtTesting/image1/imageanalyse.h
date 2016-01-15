@@ -16,8 +16,6 @@ public:
     void fromYuvToRgb();
     void calculHisto();
     void calculgradient();
-    void min();
-    void max();
 
     /* Getters & Setters */
     QImage * getDataRGB();

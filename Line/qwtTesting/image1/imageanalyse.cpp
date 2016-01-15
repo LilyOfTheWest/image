@@ -15,13 +15,6 @@ ImageAnalyse::ImageAnalyse(QImage *qimageRgbSrc,QObject *parent) : QObject(paren
         }
     }
     tc = new TransfoCouleur;
-
-    for(int i=0;i<256;i++){
-        for(j=0;j<3;j++){
-            histo_rgb[i][j]=0;
-            histo_yuv[i][j]=0;
-        }
-    }
 //    dataYUV=NULL;
 //    d_x=NULL;
 //    d_y=NULL;
@@ -59,29 +52,7 @@ void ImageAnalyse::initYuvImagris()
 
 void ImageAnalyse::calculHisto()
 {
-    QRgb color, color2;
-    int r,g,b;
-    // Pour initialiser dataYUV
-    initYuvImagris();
-    for(int i=0;i<dataRGB->height();i++){
-        for(int j=0;j<dataRGB->width();j++){
-            color=dataRGB->pixel(j,i);
-            r=qRed(color);
-            b=qBlue(color);
-            g=gGreen(color);
-            histo_rgb[r][1]++;
-            histo_rgb[g][2]++;
-            histo_rgb[b][3]++;
 
-            color2=dataYUV->pixel(j,i);
-            y=qRed(color2);
-            v=qBlue(color2);
-            u=gGreen(color2);
-            histo_yuv[y][1]++;
-            histo_yuv[u][2]++;
-            histo_yuv[v][3]++;
-        }
-    }
 }
 
 void ImageAnalyse::calculgradient(){
@@ -102,38 +73,6 @@ void ImageAnalyse::calculgradient(){
 
     d_x = SobelX->produitConv(imagris, dataRGB->width(), dataRGB->height());
     d_y = SobelY->produitConv(imagris, dataRGB->width(), dataRGB->height());
-}
-
-int ImageAnalyse::min(){
-    int min = 255;
-    QRgb color;
-    int r;
-    for(int i=0;i<dataYUV->height();i++){
-        for(int j=0;i<dataYUV->width();j++){
-            color=dataYUV->pixel(j,i);
-            r=qRed(color);
-            if(r <= min){
-                min = r;
-            }
-        }
-    }
-    return min;
-}
-
-int ImageAnalyse::max(){
-    int max = 0;
-    QRgb color;
-    int r;
-    for(int i=0;i<dataYUV->height();i++){
-        for(int j=0;i<dataYUV->width();j++){
-            color=dataYUV->pixel(j,i);
-            r=qRed(color);
-            if(r >= max){
-                max = r;
-            }
-        }
-    }
-    return max;
 }
 
 QImage * ImageAnalyse::getDataRGB(){

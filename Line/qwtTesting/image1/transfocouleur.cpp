@@ -185,28 +185,6 @@ QImage * TransfoCouleur::contour(QImage *src){
     return imA->getDataRGB();
 }
 
-QImage *gris(QImage *src){
-    //TODO voir qGray ?
-}
-
-QImage *etalement(QImage *src){
-    double pic_min, pic_max;
-    double beta, alpha;
-    beta = 1;
-    alpha = 1.5;
-    ImageAnalyse *imA = new ImageAnalyse(src);
-    imA->initYuvImagris();
-    int min = imA->min();
-    int max = imA->max();
-    double pic_min = beta * min;
-    double pic_max =(1/alpha)*
-    imA->fromYuvToRgb();
-}
-
-QImage *egalisation(QImage *src){
-
-}
-
 int TransfoCouleur::get_YVal_Pixel_FromRgb(QRgb pixel_src)
 {
     double tmp = 0;
