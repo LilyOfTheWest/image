@@ -185,12 +185,11 @@ QImage * TransfoCouleur::contour(QImage *src){
     return imA->getDataRGB();
 }
 
-QImage *gris(QImage *src){
+QImage *TransfoCouleur::gris(QImage *src){
     //TODO voir qGray ?
 }
 
-QImage *etalement(QImage *src){
-    double pic_min, pic_max;
+QImage *TransfoCouleur::etalement(QImage *src){
     double beta, alpha;
     beta = 1;
     alpha = 1.5;
@@ -199,8 +198,23 @@ QImage *etalement(QImage *src){
     int min = imA->min();
     int max = imA->max();
     double pic_min = beta * min;
-    double pic_max =(1/alpha)*
+    double pic_max =(1/alpha)*max;
+    double ** pic = imA->getImagris();
+    double ** ret = new double *[src->height()];
+    for(int i=0;i<src->height();i++){
+        ret[i]=new double[src->width()];
+    }
+
+    for(int i=0;i<src->height();i++){
+        for(int j=0;j<src->width();j++){
+            ret[i][j] = normalizeColorValue(255*((pic[i][j]-pic_min)/(pic_max/pic_min)));
+        }
+    }
+
+    imA->setImagris(ret);
     imA->fromYuvToRgb();
+
+    return imA->getDataRGB();
 }
 
 QImage *egalisation(QImage *src){
