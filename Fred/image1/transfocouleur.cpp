@@ -221,7 +221,25 @@ QImage *egalisation(QImage *src){
     int nbr_pixels = src->height()*src->width();
     ImageAnalyse *imA = new ImageAnalyse(src);
     imA->initYuvImagris();
-    double lut = 255/nbr_pixels*imA->cumsum(imA->get)
+    int **hYUV = imA->getHistoYuv();
+    int *hY = hYUV[0];
+    int *phi = new int[256];
+    int *sum = new int[256];
+    sum=imA->cumsum(hY);
+    for(int i=0;i<256;i++){
+        phi[i] = qRound(255.0/nbr_pixels*(sum[i]));
+    }
+    double ** yuv=imA->getImagris();
+    int y;
+    for(int i=0;i<src->height();i++){
+        for(int j=0;j<src->width();j++){
+            y=qRound(yuv[i][j]);
+            yuv[i][j]=phi[y];
+        }
+    }
+
+    imA->setImagris(yuv);
+    imA->fromYuvToRgb();
 }
 
 int TransfoCouleur::get_YVal_Pixel_FromRgb(QRgb pixel_src)

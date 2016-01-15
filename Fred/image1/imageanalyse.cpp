@@ -16,8 +16,15 @@ ImageAnalyse::ImageAnalyse(QImage *qimageRgbSrc,QObject *parent) : QObject(paren
     }
     tc = new TransfoCouleur;
 
-    for(int i=0;i<256;i++){
-        for(j=0;j<3;j++){
+    histo_rgb = new int *[3];
+    histo_yuv = new int *[3];
+    for(int i=0; i < 3; i++) {
+        histo_rgb[i] = new int[256];
+        histo_yuv[i] = new int[256];
+    }
+
+    for(int i=0;i<3;i++){
+        for(int j=0;j<256;j++){
             histo_rgb[i][j]=0;
             histo_yuv[i][j]=0;
         }
@@ -60,7 +67,7 @@ void ImageAnalyse::initYuvImagris()
 void ImageAnalyse::calculHisto()
 {
     QRgb color, color2;
-    int r,g,b;
+    int r,g,b,y,u,v;
     // Pour initialiser dataYUV
     initYuvImagris();
     for(int i=0;i<dataRGB->height();i++){
@@ -68,18 +75,18 @@ void ImageAnalyse::calculHisto()
             color=dataRGB->pixel(j,i);
             r=qRed(color);
             b=qBlue(color);
-            g=gGreen(color);
-            histo_rgb[r][1]++;
-            histo_rgb[g][2]++;
-            histo_rgb[b][3]++;
+            g=qGreen(color);
+            histo_rgb[0][r]++;
+            histo_rgb[1][g]++;
+            histo_rgb[2][b]++;
 
             color2=dataYUV->pixel(j,i);
             y=qRed(color2);
             v=qBlue(color2);
-            u=gGreen(color2);
-            histo_yuv[y][1]++;
-            histo_yuv[u][2]++;
-            histo_yuv[v][3]++;
+            u=qGreen(color2);
+            histo_yuv[0][y]++;
+            histo_yuv[1][u]++;
+            histo_yuv[2][v]++;
         }
     }
 }
@@ -136,7 +143,7 @@ int ImageAnalyse::max(){
     return max;
 }
 
-int * ImageAnalyse::cumsum(int * h){
+int * ImageAnalyse::cumsum(int *h){
     int * sum = new int[256];
     sum[0]=h[0];
     for(int i=1;i<256;i++){
@@ -231,31 +238,31 @@ void ImageAnalyse::setDyIndex(double n, int x, int y){
 }
 
 int ** ImageAnalyse::getHistoRgb(){
-    int ** h = new int *[3];
-    for(int i=0;i<3;i++){
-        h[i] = new int[256];
-    }
+//    int ** h = new int *[3];
+//    for(int i=0;i<3;i++){
+//        h[i] = new int[256];
+//    }
 
-    h=histo_rgb;
+//    h=histo_rgb;
 
-    return h;
+    return histo_rgb;
 }
 
 void ImageAnalyse::setHistoRgb(int ** h){
-
+    histo_rgb=h;
 }
 
 int ** ImageAnalyse::getHistoYuv(){
-    int ** h = new int *[3];
-    for(int i=0;i<3;i++){
-        h[i] = new int[256];
-    }
+//    int ** h = new int *[3];
+//    for(int i=0;i<3;i++){
+//        h[i] = new int[256];
+//    }
 
-    h=histo_yuv;
+//    h=histo_yuv;
 
-    return h;
+    return histo_yuv;
 }
 
 void ImageAnalyse::setHistoYuv(int ** h){
-
+    histo_yuv=h;
 }

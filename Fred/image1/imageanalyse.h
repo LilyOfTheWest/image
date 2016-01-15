@@ -18,7 +18,7 @@ public:
     void calculgradient();
     int min();
     int max();
-    int ** cumsum();
+    int * cumsum(int h[]);
 
     /* Getters & Setters */
     QImage * getDataRGB();
@@ -47,8 +47,8 @@ private:
 QImage *dataRGB;
 QImage *dataYUV; //On stocke du YUV dans la structure QRgb - 3 int [0-255] pour décrire
 double **imagris; //en entrée pour les convolutions de Line ;
-int histo_rgb[255][3];
-int histo_yuv[255][3];
+int **histo_rgb;
+int **histo_yuv;
 double **d_x;
 double **d_y;
 TransfoCouleur *tc;
