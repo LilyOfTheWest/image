@@ -27,6 +27,7 @@ public:
     explicit PictLabel(QWidget *parent = 0);
     ~PictLabel();
     void undoLast();
+    void setInitialContext();
     void setPrincipal(QImage *principal);
     void addImageToMerge(QImage *src);
     void drawImage();
@@ -51,7 +52,6 @@ protected:
     virtual void mouseMoveEvent ( QMouseEvent * event ) Q_DECL_OVERRIDE;
     virtual void mousePressEvent ( QMouseEvent * event ) Q_DECL_OVERRIDE;
     virtual void mouseReleaseEvent ( QMouseEvent * event ) Q_DECL_OVERRIDE;
-    void setInitialContext();
     void saveTemp();
     void drawSelection ();
     void setSelection(QMouseEvent * event);

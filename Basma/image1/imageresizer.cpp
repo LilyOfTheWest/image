@@ -24,3 +24,32 @@ QImage *ImageResizer::extractSubImage(QImage *src,QPoint *origin_select,QPoint *
     return ret;
 }
 
+QImage *ImageResizer::rotateImage90(QImage *src,bool horaire)
+{
+    QRgb color;
+    QImage *ret = new QImage(src->height(),src->width(),src->format());
+    for (int i=0; i<src->height()  ; i++) {
+        for (int j=0; j<src->width(); j++) {
+            color = src->pixel(j,i);
+            if (horaire == true)
+                ret->setPixel(i,src->width()-1-j,color);
+            else
+                ret->setPixel(src->height()-1-i,j,color);
+        }
+    }
+    return ret;
+}
+
+QImage *ImageResizer::rotateImage180(QImage *src)
+{
+    QRgb color;
+    QImage *ret = new QImage(src->width(),src->height(),src->format());
+    for (int i=0; i<src->height()  ; i++) {
+        for (int j=0; j<src->width(); j++) {
+            color = src->pixel(j,i);
+            ret->setPixel(src->width()-1-j,src->height()-1-i,color);
+        }
+    }
+    return ret;
+}
+

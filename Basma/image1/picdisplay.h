@@ -28,10 +28,9 @@ class PicDisplay : public QWidget
     Q_OBJECT
 
 public:
-    explicit PicDisplay(QWidget *parent = 0);
+    explicit PicDisplay(PictLabel *imageLabel, QWidget *parent = 0);
     ~PicDisplay();
-    void setScrollArea(PictLabel *imageLabel);
-    void resizeScrollArea(PictLabel *imageLabel);
+    void resizePictureArea();
     void scaleImage(double factor);
 
 private slots:
@@ -43,8 +42,9 @@ private slots:
 
 private:
     Ui::PicDisplay *ui;
+    PictLabel *imageLabel;
     void refreshPixelProperties();
-    void adjustScrollBar(QScrollBar *scrollBar, double factor);
+    //void adjustScrollBar(QScrollBar *scrollBar, double factor);
 };
 
 #endif // PICDISPLAY_H

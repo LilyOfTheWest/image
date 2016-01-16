@@ -83,6 +83,12 @@ private slots:
 
     void on_actionValider_triggered();
 
+    void on_actionRotation_90_Horaire_triggered();
+
+    void on_action_Rotation_90_antihoraire_triggered();
+
+    void on_actionRotation_180_triggered();
+
 private:
     Ui::MainWindow *ui;
     void updateActions();
@@ -90,7 +96,7 @@ private:
     void adjustScrollBar(QScrollBar *scrollBar, double factor);
     bool loadFileToMerge(const QString &fileName);
     PictLabel *imageLabel;
-    QScrollArea *scrollArea;
+    //QScrollArea *scrollArea;
     PicDisplay *pdis;
     double scaleFactor;
 

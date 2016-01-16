@@ -18,27 +18,12 @@ MainWindow::MainWindow(QWidget *parent) :
     imageLabel = new PictLabel;
     imageLabel->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
     imageLabel->setScaledContents(true);
-
-    scrollArea = new QScrollArea;
-
-
-    //ui->scrollAreaPict->setWidget(imageLabel);
-    //PictLabel jj = (PictLabel) ui->scrollAreaPict->widget();
-
-    //setCentralWidget(ui->scrollAreaPict);
-    pdis =new PicDisplay();
-    pdis->setScrollArea(imageLabel);
-
+    QScrollArea *scrollArea = new QScrollArea(this);
+    pdis =new PicDisplay(imageLabel,this);
     scrollArea->setWidget(pdis);
-
-
     setCentralWidget(scrollArea);
     QObject::connect(imageLabel,SIGNAL(signalNewPixelPicked()),pdis,SLOT(on_refreshPixelProperties()));
     updateActionsWithoutImage();
-
-    //ui->scrollAreaPict->setWidgetResizable(false); AVOIR !!!
-
-    //ui->statusbar->insertWidget(0,new PicDisplay());
     resize(QGuiApplication::primaryScreen()->availableSize() * 3 / 5);
     scaleFactor = 1;
 }
@@ -46,8 +31,6 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete ui;
-    delete imageLabel;
-    delete scrollArea;
 }
 
 bool MainWindow::loadFile(const QString &fileName)
@@ -66,23 +49,17 @@ bool MainWindow::loadFile(const QString &fileName)
     }
 
     const QImage image = image2;
-
     imageLabel->setPrincipal(&image2);
-    //const QImage imageCst = *principal;
-
-    //this->setPixmap(QPixmap::fromImage(imageCst));
-      //imageLabel->setPixmap(QPixmap::fromImage(image));
-    //imageLabel->setPixmap(QPixmap::fromImage(image));
-
-    pdis->resizeScrollArea(imageLabel);
-
-    //printAct->setEnabled(true);
-    //fitToWindowAct->setEnabled(true);
+    //imageLabel->adjustSize();
+    pdis->resizePictureArea();
     updateActionsWithImage();
 
     //if (!fitToWindowAct->isChecked())
-        imageLabel->adjustSize();
-        pdis->adjustSize();
+
+        //imageLabel->adjustSize();
+        //QWidget *uu=ui->centralwidget();
+        //uu->resize(image2.width(),image2.height());
+        //pdis->adjustSize();
 
     setWindowFilePath(fileName);
     return true;
@@ -96,7 +73,7 @@ bool MainWindow::loadFileToMerge(const QString &fileName)
     QImage image2 = reader.read();
     const QImage image = image2;
     imageLabel->addImageToMerge(&image2);
-    pdis->resizeScrollArea(imageLabel);
+    pdis->resizePictureArea();//resizeScrollArea(imageLabel);
     //updateActionsWithImage();
     return true;
 }
@@ -404,6 +381,35 @@ void MainWindow::on_actionRecadrer_triggered()
 void MainWindow::on_actionValider_triggered()
 {
     imageLabel->validateTransfo();
-    imageLabel->adjustSize();
-    pdis->adjustSize();
+    pdis->resizePictureArea();//imageLabel->adjustSize();
+    //pdis->adjustSize();
+}
+
+void MainWindow::on_actionRotation_90_Horaire_triggered()
+{
+    ImageResizer *resizer = new ImageResizer;
+    QImage *rotatedImg =resizer->rotateImage90(imageLabel->getSelectedImage(),true);
+    imageLabel->setPrincipal(rotatedImg);
+    imageLabel->setInitialContext();
+    pdis->resizePictureArea();
+}
+
+
+void MainWindow::on_action_Rotation_90_antihoraire_triggered()
+{
+    ImageResizer *resizer = new ImageResizer;
+    QImage *rotatedImg =resizer->rotateImage90(imageLabel->getSelectedImage(),false);
+    imageLabel->setPrincipal(rotatedImg);
+    imageLabel->setInitialContext();
+    pdis->resizePictureArea();
+}
+
+
+void MainWindow::on_actionRotation_180_triggered()
+{
+    ImageResizer *resizer = new ImageResizer;
+    QImage *rotatedImg =resizer->rotateImage180(imageLabel->getSelectedImage());
+    imageLabel->setPrincipal(rotatedImg);
+    imageLabel->setInitialContext();
+    pdis->resizePictureArea();
 }

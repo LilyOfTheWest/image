@@ -4,12 +4,15 @@
 #include "TransfoCouleur.h"
 #include <QScrollBar>
 
-PicDisplay::PicDisplay(QWidget *parent) :
+PicDisplay::PicDisplay(PictLabel *imageLabel, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::PicDisplay)
 {
     ui->setupUi(this);
-    ui->radioButtonRGB->setChecked(true);
+    ui->scrollAreaP->setWidgetResizable(false);
+        ui->scrollAreaP->setWidget(imageLabel);
+    this->imageLabel=imageLabel;
+        ui->radioButtonRGB->setChecked(true);
 }
 
 PicDisplay::~PicDisplay()
@@ -68,28 +71,20 @@ void PicDisplay::on_pushButton_clicked()
     }
 }
 
-void PicDisplay::setScrollArea(PictLabel *imageLabel)
+/*void PicDisplay::setScrollArea(PictLabel *imageLabel)
 {
     ui->scrollAreaP->setWidgetResizable(false);
     ui->scrollAreaP->setWidget(imageLabel);
-    ui->scrollAreaP->setMinimumHeight(500);
-    ui->scrollAreaP->setMinimumWidth(10000);
-    ui->libLibre->setText("YEAH !");
-}
+}*/
 
-void PicDisplay::resizeScrollArea(PictLabel *imageLabel)
+void PicDisplay::resizePictureArea()
 {
-    ui->scrollAreaP->setWidgetResizable(false);
-    int y = imageLabel->height();
-    ui->scrollAreaP->setMinimumHeight(500);
-    ui->scrollAreaP->setMinimumWidth(imageLabel->width());
-    ui->libLibre->setText("Y§YEAH !");
-}
-
-void PicDisplay::adjustScrollBar(QScrollBar *scrollBar, double factor)
-{
-    scrollBar->setValue(int(factor * scrollBar->value()
-                            + ((factor - 1) * scrollBar->pageStep()/2)));
+    this->imageLabel->adjustSize();
+    QImage *imgMax = this->imageLabel->getPrincipal();
+    ui->scrollAreaP->resize(imgMax->width()+5,imgMax->height()+5);
+    this->adjustSize();
+    this->imageLabel->adjustSize();
+    this->imageLabel->drawImage();
 }
 
 void PicDisplay::scaleImage(double factor)
@@ -98,8 +93,8 @@ void PicDisplay::scaleImage(double factor)
     scaleFactor *= factor;
     imageLabel->resize(scaleFactor * imageLabel->pixmap()->size());*/
 
-    adjustScrollBar( ui->scrollAreaP->horizontalScrollBar(), factor);
-    adjustScrollBar( ui->scrollAreaP->verticalScrollBar(), factor);
+      //adjustScrollBar( ui->scrollAreaP->horizontalScrollBar(), factor);
+       //adjustScrollBar( ui->scrollAreaP->verticalScrollBar(), factor);
 /*
     zoomInAct->setEnabled(scaleFactor < 3.0);
     zoomOutAct->setEnabled(scaleFactor > 0.333);*/
