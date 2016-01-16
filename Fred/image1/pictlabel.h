@@ -33,6 +33,7 @@ public:
     void drawImage();
     QImage *getPrincipal();
     QImage *getSelectedImage();
+    void setSelectedImage(QImage *selectImg);
     QRgb getColorPicked();
     QPoint getPixelPicked();
     void setScaleFactor(double scaleFactor);

@@ -27,6 +27,8 @@ void PictLabel::setInitialContext()
     secondImg = NULL;
     setCouperMode(false);
     end_select = NULL;
+    position_firstImg.setX(0);
+    position_firstImg.setY(0);
     position_secondImg.setX(0);
     position_secondImg.setY(0);
 }
@@ -80,19 +82,28 @@ void PictLabel::setPrincipal(QImage *src)
             principal->setPixel(j,i,backgroundColor);
         }
     }
+    setInitialContext();
     drawImage();
 }
 
 QImage *PictLabel::getPrincipal()
 {
-    return firstImg;
-
+    return principal;
 }
 
 QImage *PictLabel::getSelectedImage()
 {
     return firstImg;
+}
 
+void PictLabel::setSelectedImage(QImage *selectImg)
+{
+    firstImg = new QImage(selectImg->width(),selectImg->height(),selectImg->format());
+    for (int i=0; i< selectImg->height() ; i++) {
+        for (int j=0; j<selectImg->width() ; j++) {
+            firstImg->setPixel(j,i,selectImg->pixel(j,i));
+        }
+    }
 }
 
 /*void PictLabel::enterEvent ( QEvent * event )
@@ -173,7 +184,7 @@ void PictLabel::mouseReleaseEvent ( QMouseEvent * event )
         setSelection(event);
         break;
     case 12: // Deplace première image
-
+        moveSelection(mouse_end,firstImg,position_firstImg);
         break;
     case 18: // Deplace seconde image suite Couper/Copier
         moveSelection(mouse_end,secondImg,position_secondImg);
@@ -325,24 +336,29 @@ void PictLabel::drawImage()
 
 void PictLabel::validateTransfo()
 {
+    ImageResizer *resizer = new ImageResizer;
+    QImage *displacedImg,*croppedImg,*pastedImage;
     switch(mouseListenerState){
     case 12: // Deplace première image
-
+        displacedImg =resizer->displaceImage(principal,firstImg,position_firstImg,NULL,position_secondImg);
+        setPrincipal(displacedImg);
         break;
     case 18: // Deplace seconde image suite Couper/Copier
-
+        pastedImage =resizer->displaceImage(principal,firstImg,position_firstImg,secondImg,position_secondImg);
+        setPrincipal(pastedImage);
         break;
     case 21: // Deplace seconde image
-
+        pastedImage =resizer->displaceImage(principal,firstImg,position_firstImg,secondImg,position_secondImg);
+        setPrincipal(pastedImage);
         break;
     case 22: // Deplace première image
-
+        pastedImage =resizer->displaceImage(principal,firstImg,position_firstImg,secondImg,position_secondImg);
+        setPrincipal(pastedImage);
         break;
     case 110: // Crop select
-        ImageResizer *resizer = new ImageResizer;
-        QImage *croppedImg =resizer->extractSubImage(firstImg,&origin_select,end_select);
+        croppedImg =resizer->extractSubImage(firstImg,&origin_select,end_select);
         setPrincipal(croppedImg);
-        setInitialContext();
+        //setInitialContext();
         drawImage();
         break;
     }

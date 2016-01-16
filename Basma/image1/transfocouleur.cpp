@@ -22,8 +22,8 @@ QImage *TransfoCouleur::convertRgbToYuv(QImage *src)
             r=get_YVal_Pixel_FromRgb(color);
             g=get_UVal_Pixel_FromRgb(color);
             b=get_VVal_Pixel_FromRgb(color);
-//            alpha=qAlpha(color);
-            color2=qRgb(r,g,b);
+            alpha=qAlpha(color);
+            color2=qRgba(r,g,b,alpha);
             ret->setPixel(j,i,color2);
         }
     }
@@ -41,8 +41,8 @@ QImage *TransfoCouleur::convertYuvToRgb(QImage *src)
             r=get_RVal_Pixel_FromYuv(color);
             g=get_GVal_Pixel_FromYuv(color);
             b=get_BVal_Pixel_FromYuv(color);
-//            alpha=qAlpha(color);
-            color2=qRgb(r,g,b);
+            alpha=qAlpha(color);
+            color2=qRgba(r,g,b,alpha);
             ret->setPixel(j,i,color2);
         }
     }
@@ -95,8 +95,8 @@ QImage *TransfoCouleur::inverseColor(QImage *src) {
             r=255-qRed(color);
             g=255-qGreen(color);
             b=255-qBlue(color);
-            //alpha=qAlpha(color);
-            color2=qRgb(r,g,b);
+            alpha=qAlpha(color);
+            color2=qRgba(r,g,b,alpha);
             ret->setPixel(j,i,color2);
         }
     }

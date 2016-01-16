@@ -236,9 +236,9 @@ void MainWindow::inverseColor()
 {
     TransfoCouleur *tc = new TransfoCouleur;
     //PictLabel *jj = static_cast<PictLabel*>(ui->scrollAreaPict->widget());
-    QImage *imageInversee = tc->inverseColor(imageLabel->getPrincipal());
-    imageLabel->setPrincipal(imageInversee);
-    const QImage imageConv = *imageLabel->getPrincipal();
+    QImage *imageInversee = tc->inverseColor(imageLabel->getSelectedImage());
+    imageLabel->setSelectedImage(imageInversee);
+    const QImage imageConv = *imageLabel->getSelectedImage();
     imageLabel->setPixmap(QPixmap::fromImage(imageConv));
     scaleFactor = 1.0;//scaleImage(1.5);
 }
@@ -275,9 +275,9 @@ void MainWindow::on_actionFlou_triggered()
 {
     TransfoCouleur *tc = new TransfoCouleur;
     //PictLabel *jj = static_cast<PictLabel*>(ui->scrollAreaPict->widget());
-    QImage *imageFloutee = tc->flou(imageLabel->getPrincipal());
-    imageLabel->setPrincipal(imageFloutee);
-    const QImage imageConv = *imageLabel->getPrincipal();
+    QImage *imageFloutee = tc->flou(imageLabel->getSelectedImage());
+    imageLabel->setSelectedImage(imageFloutee);
+    const QImage imageConv = *imageLabel->getSelectedImage();
     imageLabel->setPixmap(QPixmap::fromImage(imageConv));
     scaleFactor = 1.0;//scaleImage(1.5);
 }
@@ -331,7 +331,7 @@ void MainWindow::on_actionImageGris_triggered()
         //PictLabel *jj = static_cast<PictLabel*>(ui->scrollAreaPict->widget());
         QImage *imageInversee = tc->inverseColor(imageSrc);
         imageLabel->setPrincipal(imageInversee);
-        const QImage imageConv = *imageLabel->getPrincipal();
+        const QImage imageConv = *imageLabel->getSelectedImage();
         imageLabel->setPixmap(QPixmap::fromImage(imageConv));
         scaleFactor = 1.0;//scaleImage(1.5);
     }
@@ -344,9 +344,9 @@ void MainWindow::on_actionInverseCoul_triggered()
     {
         TransfoCouleur *tc = new TransfoCouleur;
         //PictLabel *jj = static_cast<PictLabel*>(ui->scrollAreaPict->widget());
-        QImage *imageInversee = tc->inverseColor(imageLabel->getPrincipal());
+        QImage *imageInversee = tc->inverseColor(imageLabel->getSelectedImage());
         imageLabel->setPrincipal(imageInversee);
-        const QImage imageConv = *imageLabel->getPrincipal();
+        const QImage imageConv = *imageLabel->getSelectedImage();
         imageLabel->setPixmap(QPixmap::fromImage(imageConv));
         scaleFactor = 1.0;//scaleImage(1.5);
     }
@@ -381,8 +381,7 @@ void MainWindow::on_actionRecadrer_triggered()
 void MainWindow::on_actionValider_triggered()
 {
     imageLabel->validateTransfo();
-    pdis->resizePictureArea();//imageLabel->adjustSize();
-    //pdis->adjustSize();
+    pdis->resizePictureArea();
 }
 
 void MainWindow::on_actionRotation_90_Horaire_triggered()

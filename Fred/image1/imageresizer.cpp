@@ -24,6 +24,57 @@ QImage *ImageResizer::extractSubImage(QImage *src,QPoint *origin_select,QPoint *
     return ret;
 }
 
+QImage *ImageResizer::displaceImage(QImage *principal, QImage *img1,QPoint pos_rel1,QImage *img2,QPoint pos_rel2)
+{
+    int x1_min = qMax(pos_rel1.x(),0);
+    int x1_max = qMin(pos_rel1.x()+img1->width(),principal->width());
+    int y1_min = qMax(pos_rel1.y(),0);
+    int y1_max = qMin(pos_rel1.y()+img1->height(),principal->height());
+    int x_min = x1_min;
+    int x_max = x1_max;
+    int y_min = y1_min;
+    int y_max = y1_max;
+
+    if (img2 != NULL)
+    {
+        int x2_min = qMax(pos_rel2.x(),0);
+        int x2_max = qMin(pos_rel2.x()+img2->width(),principal->width());
+        int y2_min = qMax(pos_rel2.y(),0);
+        int y2_max = qMin(pos_rel2.y()+img2->height(),principal->height());
+        x_min = qMin(x1_min,x2_min);
+        x_max = qMax(x1_max,x2_max);
+        y_min = qMin(y1_min,y2_min);;
+        y_max = qMax(y1_max,y2_max);
+    }
+
+    int ret_width = x_max - x_min;
+    int ret_height = y_max - y_min;
+    int x_in_img1, y_in_img1, x_in_img2, y_in_img2;
+    QImage *ret = new QImage(ret_width,ret_height,principal->format());
+    QRgb color;
+
+    for (int i=0 ; i<ret_height; i++) {
+        for (int j=0 ; j<ret_width ; j++)
+        {
+            color = qRgba(255,255,255,255);
+            x_in_img1 = x_min+j-pos_rel1.x();
+            y_in_img1 = y_min+i-pos_rel1.y();
+            if ((x_in_img1 < img1->width()) && (x_in_img1  >= 0) && (y_in_img1 < img1->height()) && (y_in_img1  >= 0))
+                color = img1->pixel(x_in_img1,y_in_img1);
+            if (img2 != NULL)
+            {
+                x_in_img2 = x_min+j-pos_rel2.x();
+                y_in_img2 = y_min+i-pos_rel2.y();
+                if ((x_in_img2 < img2->width()) && (x_in_img2 >=0) && (y_in_img2 < img2->height()) && (y_in_img2 >= 0))
+                    color=img2->pixel(x_in_img2,y_in_img2);
+            }
+            ret->setPixel(j,i,color);
+        }
+    }
+    return ret;
+}
+
+
 QImage *ImageResizer::rotateImage90(QImage *src,bool horaire)
 {
     QRgb color;
