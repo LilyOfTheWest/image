@@ -29,13 +29,13 @@ double ** KernelConv::produitConv(double **src, int n, int m) {
 
     int lk = (w-1)/2;
     int ck = (w-1)/2;
-    int sum;
+    int sum, x1, y1;
 
     /* Régler problème des tailles de noyau sup */
     for(int i=0;i<m;i++){
         for(int j=0;j<n;j++){
             // Pour ne pas prendre en compte les bords
-            if(i==0 || i == m-1 || j== 0 || j == n-1){
+            if(i<=lk-1 || i >= m-lk || j <= ck-1 || j >= n-ck){
                 S[i][j] = src[i][j];
 
             }
@@ -92,6 +92,49 @@ void KernelConv::sommeCoef(){
     }
 }
 
+void KernelConv::genereImp(){
+    for(int i=0;i<w;i++){
+        for(int j=0;j<w;j++){
+            if((i == (w/2)+1) && (j == (w/2)+1))
+                buf[i][j]=1;
+            else buf[i][j]=0;
+        }
+    }
+}
+
+void KernelConv::genereSobelVert(){
+    double S[3]={1,2,1};
+    double D[3]={1,0,-1};
+    for(int i=0;i<w;i++){
+        for(int j=0;j<w;j++){
+            buf[i][j]=S[i]*D[j];
+        }
+    }
+}
+
+void KernelConv::genereSobelHori(){
+    double S[3]={1,2,1};
+    double D[3]={1,0,-1};
+    for(int i=0;i<w;i++){
+        for(int j=0;j<w;j++){
+            buf[i][j]=D[i]*S[j];
+        }
+    }
+}
+
+int KernelConv::reflect(int M, int x)
+{
+    if(x < 0)
+    {
+        return -x - 1;
+    }
+    if(x >= M)
+    {
+        return 2*M - x - 1;
+    }
+   return x;
+}
+
 /* Getters & Setters */
 int KernelConv::getW(){
     return w;
@@ -105,6 +148,10 @@ double ** KernelConv::getBuf(){
     return buf;
 }
 
+double KernelConv::getIndex(int x, int y){
+    return buf[x][y];
+}
+
 void KernelConv::setW(int n){
     w = n;
 }
@@ -115,4 +162,8 @@ void KernelConv::setCoef(int c){
 
 void KernelConv::setBuf(double ** b){
     buf = b;
+}
+
+void KernelConv::setIndex(double n, int x, int y){
+    buf[x][y]=n;
 }

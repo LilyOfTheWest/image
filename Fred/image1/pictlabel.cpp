@@ -151,7 +151,7 @@ void PictLabel::mouseReleaseEvent ( QMouseEvent * event )
         setSelection(event);
         break;
     case 12:
-        moveSelection(mouse_end,firstImg,position_firstImg);
+
         break;
     case 18:
         moveSelection(mouse_end,secondImg,position_secondImg);

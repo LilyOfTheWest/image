@@ -1,6 +1,7 @@
 #include "imageanalyse.h"
 #include "transfocouleur.h"
 #include "qglobal.h"
+#include "kernelconv.h"
 
 ImageAnalyse::ImageAnalyse(QImage *qimageRgbSrc,QObject *parent) : QObject(parent)//,dataRGB(qimageRgbSrc)
 {
@@ -14,6 +15,20 @@ ImageAnalyse::ImageAnalyse(QImage *qimageRgbSrc,QObject *parent) : QObject(paren
         }
     }
     tc = new TransfoCouleur;
+
+    histo_rgb = new int *[3];
+    histo_yuv = new int *[3];
+    for(int i=0; i < 3; i++) {
+        histo_rgb[i] = new int[256];
+        histo_yuv[i] = new int[256];
+    }
+
+    for(int i=0;i<3;i++){
+        for(int j=0;j<256;j++){
+            histo_rgb[i][j]=0;
+            histo_yuv[i][j]=0;
+        }
+    }
 //    dataYUV=NULL;
 //    d_x=NULL;
 //    d_y=NULL;
@@ -32,16 +47,10 @@ void ImageAnalyse::initYuvImagris()
 {
     QRgb color;
     int r;
-    int g,b,r2,g2,b2,y,u,v;
     double point;
-    QRgb color1,color2;
-
 
     dataYUV = tc->convertRgbToYuv(dataRGB);
-    color1 = dataYUV->pixel(216,156);
-    r=qRed(color1);
-    g=qGreen(color1);
-    b=qBlue(color1);
+
     imagris = new double*[dataYUV->height()];
     for (int i=0; i< dataYUV->height() ; i++) {
         imagris[i] = new double[dataYUV->width()];
@@ -53,17 +62,95 @@ void ImageAnalyse::initYuvImagris()
             r = qRed(color);
         }
     }
-
-    color2 = dataYUV->pixel(216,156);
-    r2=qRed(color2);
-    g2=qGreen(color2);
-    b2=qBlue(color2);
-
 }
 
 void ImageAnalyse::calculHisto()
 {
+    QRgb color, color2;
+    int r,g,b,y,u,v;
+    // Pour initialiser dataYUV
+    initYuvImagris();
+    for(int i=0;i<dataRGB->height();i++){
+        for(int j=0;j<dataRGB->width();j++){
+            color=dataRGB->pixel(j,i);
+            r=qRed(color);
+            b=qBlue(color);
+            g=qGreen(color);
+            histo_rgb[0][r]++;
+            histo_rgb[1][g]++;
+            histo_rgb[2][b]++;
 
+            color2=dataYUV->pixel(j,i);
+            y=qRed(color2);
+            v=qBlue(color2);
+            u=qGreen(color2);
+            histo_yuv[0][y]++;
+            histo_yuv[1][u]++;
+            histo_yuv[2][v]++;
+        }
+    }
+}
+
+void ImageAnalyse::calculgradient(){
+    int ordre = 3;
+    KernelConv *SobelX = new KernelConv(ordre);
+    KernelConv *SobelY = new KernelConv(ordre);
+
+    SobelX->genereSobelHori();
+    SobelY->genereSobelVert();
+
+    d_x = new double *[dataRGB->height()];
+    d_y = new double *[dataRGB->height()];
+
+    for(int i=0;i<dataRGB->height();i++){
+        d_x[i] = new double[dataRGB->width()];
+        d_y[i] = new double[dataRGB->width()];
+    }
+
+    d_x = SobelX->produitConv(imagris, dataRGB->width(), dataRGB->height());
+    d_y = SobelY->produitConv(imagris, dataRGB->width(), dataRGB->height());
+}
+
+int ImageAnalyse::min(){
+    int min = 255;
+    QRgb color;
+    int r;
+    for(int i=0;i<dataYUV->height();i++){
+        for(int j=0;i<dataYUV->width();j++){
+            color=dataYUV->pixel(j,i);
+            r=qRed(color);
+            if(r <= min){
+                min = r;
+            }
+        }
+    }
+    return min;
+}
+
+int ImageAnalyse::max(){
+    int max = 0;
+    QRgb color;
+    int r;
+    for(int i=0;i<dataYUV->height();i++){
+        for(int j=0;i<dataYUV->width();j++){
+            color=dataYUV->pixel(j,i);
+            r=qRed(color);
+            if(r >= max){
+                max = r;
+            }
+        }
+    }
+    return max;
+}
+
+int * ImageAnalyse::cumsum(int *h){
+    int * sum = new int[256];
+    sum[0]=h[0];
+    for(int i=1;i<256;i++){
+        sum[i]=sum[i-1]+h[i];
+    }
+
+    return sum;
 }
 
 QImage * ImageAnalyse::getDataRGB(){
@@ -101,16 +188,7 @@ void ImageAnalyse::setImagris(double ** img){
     }
 
     QRgb color,color2;
-
-    int r;
-    int g,b,r2,g2,b2;
     double point;
-    QRgb color1;
-    color1 = dataYUV->pixel(216,156);
-    r=qRed(color1);
-    g=qGreen(color1);
-    b=qBlue(color1);
-
 
     int y, u, v,alpha;
     for (int i=0; i< dataYUV->height() ; i++) {
@@ -125,11 +203,6 @@ void ImageAnalyse::setImagris(double ** img){
             dataYUV->setPixel(j,i,color2);
         }
     }
-
-    color2 = dataYUV->pixel(216,156);
-    r2=qRed(color2);
-    g2=qGreen(color2);
-    b2=qBlue(color2);
 }
 
 double ** ImageAnalyse::getD_x(){
@@ -146,4 +219,50 @@ double ** ImageAnalyse::getD_y(){
 
 void ImageAnalyse::setD_y(double ** dy){
     d_y = dy;
+}
+
+double ImageAnalyse::getDxIndex(int x, int y){
+    return d_x[x][y];
+}
+
+double ImageAnalyse::getDyIndex(int x, int y){
+    return d_y[x][y];
+}
+
+void ImageAnalyse::setDxIndex(double n, int x, int y){
+    d_x[x][y] = n;
+}
+
+void ImageAnalyse::setDyIndex(double n, int x, int y){
+    d_y[x][y] = n;
+}
+
+int ** ImageAnalyse::getHistoRgb(){
+//    int ** h = new int *[3];
+//    for(int i=0;i<3;i++){
+//        h[i] = new int[256];
+//    }
+
+//    h=histo_rgb;
+
+    return histo_rgb;
+}
+
+void ImageAnalyse::setHistoRgb(int ** h){
+    histo_rgb=h;
+}
+
+int ** ImageAnalyse::getHistoYuv(){
+//    int ** h = new int *[3];
+//    for(int i=0;i<3;i++){
+//        h[i] = new int[256];
+//    }
+
+//    h=histo_yuv;
+
+    return histo_yuv;
+}
+
+void ImageAnalyse::setHistoYuv(int ** h){
+    histo_yuv=h;
 }

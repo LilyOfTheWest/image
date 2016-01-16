@@ -15,6 +15,10 @@ public:
     void initYuvImagris();
     void fromYuvToRgb();
     void calculHisto();
+    void calculgradient();
+    int min();
+    int max();
+    int * cumsum(int h[]);
 
     /* Getters & Setters */
     QImage * getDataRGB();
@@ -27,6 +31,14 @@ public:
     void setD_x(double ** dx);
     double ** getD_y();
     void setD_y(double ** dy);
+    double getDxIndex(int x, int y);
+    double getDyIndex(int x, int y);
+    void setDxIndex(double n, int x, int y);
+    void setDyIndex(double n, int x, int y);
+    int ** getHistoRgb();
+    void setHistoRgb(int ** h);
+    int ** getHistoYuv();
+    void setHistoYuv(int ** h);
 signals:
 
 public slots:
@@ -35,8 +47,8 @@ private:
 QImage *dataRGB;
 QImage *dataYUV; //On stocke du YUV dans la structure QRgb - 3 int [0-255] pour décrire
 double **imagris; //en entrée pour les convolutions de Line ;
-int histo_rgb[255][3];
-int histo_yuv[255][3];
+int **histo_rgb;
+int **histo_yuv;
 double **d_x;
 double **d_y;
 TransfoCouleur *tc;

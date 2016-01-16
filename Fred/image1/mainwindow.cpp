@@ -9,6 +9,7 @@
 #endif
 #include "kernelconv.h"
 
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -29,6 +30,7 @@ MainWindow::MainWindow(QWidget *parent) :
     pdis->setScrollArea(imageLabel);
 
     scrollArea->setWidget(pdis);
+
 
     setCentralWidget(scrollArea);
     QObject::connect(imageLabel,SIGNAL(signalNewPixelPicked()),pdis,SLOT(on_refreshPixelProperties()));
@@ -384,4 +386,9 @@ void MainWindow::on_actionFusion_2_triggered()
 void MainWindow::on_actionCrop_triggered()
 {
     imageLabel->setMouseListenerState(11);
+}
+
+void MainWindow::on_actionRecadrer_triggered()
+{
+
 }

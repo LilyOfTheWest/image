@@ -79,6 +79,8 @@ private slots:
 
     void on_actionCrop_triggered();
 
+    void on_actionRecadrer_triggered();
+
 private:
     Ui::MainWindow *ui;
     void updateActions();
