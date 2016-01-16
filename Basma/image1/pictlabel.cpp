@@ -8,15 +8,10 @@
 PictLabel::PictLabel(QWidget *parent) :
     QLabel(parent),colorPicked(qRgb(0,0,0))
 {
-    origin_select.setX(0);
-    origin_select.setY(0);
-    mouseListenerState=0;
     principal = NULL;
-    secondImg = NULL;
     firstImg = NULL;
-    end_select = NULL;
     scaleFactor = 1;
-    setCouperMode(false);
+    setInitialContext();
 }
 
 PictLabel::~PictLabel()
@@ -24,6 +19,17 @@ PictLabel::~PictLabel()
     delete principal;
 }
 
+void PictLabel::setInitialContext()
+{
+    origin_select.setX(0);
+    origin_select.setY(0);
+    mouseListenerState=0;
+    secondImg = NULL;
+    setCouperMode(false);
+    end_select = NULL;
+    position_secondImg.setX(0);
+    position_secondImg.setY(0);
+}
 
 void PictLabel::addImageToMerge(QImage *src)
 {
@@ -83,6 +89,12 @@ QImage *PictLabel::getPrincipal()
 
 }
 
+QImage *PictLabel::getSelectedImage()
+{
+    return firstImg;
+
+}
+
 /*void PictLabel::enterEvent ( QEvent * event )
 {
 }
@@ -94,14 +106,18 @@ void PictLabel::leaveEvent ( QEvent * event )
 void PictLabel::mouseMoveEvent ( QMouseEvent * event )
 {
     switch(mouseListenerState){
-    case 10:
+    case 10: // Pipette
 
         break;
-    case 11:
+    case 11: // Select
         //rubberBand->setGeometry(QRect(resizeWithScaling(origin_select), event->pos()).normalized());
         rubberBand->setGeometry(QRect(rubberBand->geometry().topLeft(), event->pos()).normalized());
         break;
-    case 12:
+    case 12: // Deplace première image
+        break;
+    case 110: // Crop select
+        //rubberBand->setGeometry(QRect(resizeWithScaling(origin_select), event->pos()).normalized());
+        rubberBand->setGeometry(QRect(rubberBand->geometry().topLeft(), event->pos()).normalized());
         break;
     }
 
@@ -137,6 +153,12 @@ void PictLabel::mousePressEvent ( QMouseEvent * event )
     case 22: // Deplace première image
         mouse_origin = resizeWithScaling(event->pos());
         break;
+    case 110: // Crop select
+        origin_select = mouse_position;
+        rubberBand = new QRubberBand(QRubberBand::Rectangle, this);
+        rubberBand->setGeometry(QRect(event->pos(), QSize()));
+        rubberBand->show();
+        break;
     }
 }
 
@@ -147,21 +169,25 @@ void PictLabel::mouseReleaseEvent ( QMouseEvent * event )
     case 10:
 
         break;
-    case 11:
+    case 11: // Select
         setSelection(event);
         break;
-    case 12:
+    case 12: // Deplace première image
 
         break;
-    case 18:
+    case 18: // Deplace seconde image suite Couper/Copier
         moveSelection(mouse_end,secondImg,position_secondImg);
         break;
-    case 21:
+    case 21: // Deplace seconde image
         moveSelection(mouse_end,secondImg,position_secondImg);
         break;
-    case 22:
+    case 22: // Deplace première image
         moveSelection(mouse_end,firstImg,position_firstImg);
         break;
+    case 110: // Crop select
+        setSelection(event);
+        break;
+
     }
 }
 
@@ -177,8 +203,8 @@ void PictLabel::setSelection(QMouseEvent * event)
 void PictLabel::pasteSelection()
 {
     if (end_select != NULL) {
-        TransfoCouleur *tc = new TransfoCouleur;
-        secondImg =tc->extractSubImage(firstImg,&origin_select,end_select);
+        ImageResizer *resizer = new ImageResizer;
+        secondImg =resizer->extractSubImage(firstImg,&origin_select,end_select);
         position_secondImg.setX(0);
         position_secondImg.setY(0);
         drawImage();
@@ -296,3 +322,31 @@ void PictLabel::drawImage()
     //    this->setPixmap(QPixmap::fromImage(image));
     this->setPixmap(QPixmap::fromImage(image));
 }
+
+void PictLabel::validateTransfo()
+{
+    switch(mouseListenerState){
+    case 12: // Deplace première image
+
+        break;
+    case 18: // Deplace seconde image suite Couper/Copier
+
+        break;
+    case 21: // Deplace seconde image
+
+        break;
+    case 22: // Deplace première image
+
+        break;
+    case 110: // Crop select
+        ImageResizer *resizer = new ImageResizer;
+        QImage *croppedImg =resizer->extractSubImage(firstImg,&origin_select,end_select);
+        setPrincipal(croppedImg);
+        setInitialContext();
+        drawImage();
+        break;
+    }
+}
+
+
+

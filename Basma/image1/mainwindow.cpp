@@ -347,24 +347,32 @@ void MainWindow::on_action_Couper_triggered()
 
 void MainWindow::on_actionImageGris_triggered()
 {
-    TransfoCouleur *tc = new TransfoCouleur;
-    //PictLabel *jj = static_cast<PictLabel*>(ui->scrollAreaPict->widget());
-    QImage *imageInversee = tc->inverseColor(imageLabel->getPrincipal());
-    imageLabel->setPrincipal(imageInversee);
-    const QImage imageConv = *imageLabel->getPrincipal();
-    imageLabel->setPixmap(QPixmap::fromImage(imageConv));
-    scaleFactor = 1.0;//scaleImage(1.5);
+    QImage *imageSrc = imageLabel->getSelectedImage();
+    if (imageSrc != NULL)
+    {
+        TransfoCouleur *tc = new TransfoCouleur;
+        //PictLabel *jj = static_cast<PictLabel*>(ui->scrollAreaPict->widget());
+        QImage *imageInversee = tc->inverseColor(imageSrc);
+        imageLabel->setPrincipal(imageInversee);
+        const QImage imageConv = *imageLabel->getPrincipal();
+        imageLabel->setPixmap(QPixmap::fromImage(imageConv));
+        scaleFactor = 1.0;//scaleImage(1.5);
+    }
 }
 
 void MainWindow::on_actionInverseCoul_triggered()
 {
-    TransfoCouleur *tc = new TransfoCouleur;
-    //PictLabel *jj = static_cast<PictLabel*>(ui->scrollAreaPict->widget());
-    QImage *imageInversee = tc->inverseColor(imageLabel->getPrincipal());
-    imageLabel->setPrincipal(imageInversee);
-    const QImage imageConv = *imageLabel->getPrincipal();
-    imageLabel->setPixmap(QPixmap::fromImage(imageConv));
-    scaleFactor = 1.0;//scaleImage(1.5);
+    QImage *imageSrc = imageLabel->getSelectedImage();
+    if (imageSrc != NULL)
+    {
+        TransfoCouleur *tc = new TransfoCouleur;
+        //PictLabel *jj = static_cast<PictLabel*>(ui->scrollAreaPict->widget());
+        QImage *imageInversee = tc->inverseColor(imageLabel->getPrincipal());
+        imageLabel->setPrincipal(imageInversee);
+        const QImage imageConv = *imageLabel->getPrincipal();
+        imageLabel->setPixmap(QPixmap::fromImage(imageConv));
+        scaleFactor = 1.0;//scaleImage(1.5);
+    }
 }
 
 void MainWindow::on_actionFusion_2_triggered()
@@ -385,10 +393,17 @@ void MainWindow::on_actionFusion_2_triggered()
 
 void MainWindow::on_actionCrop_triggered()
 {
-    imageLabel->setMouseListenerState(11);
+    imageLabel->setMouseListenerState(110);
 }
 
 void MainWindow::on_actionRecadrer_triggered()
 {
 
+}
+
+void MainWindow::on_actionValider_triggered()
+{
+    imageLabel->validateTransfo();
+    imageLabel->adjustSize();
+    pdis->adjustSize();
 }

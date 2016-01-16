@@ -31,7 +31,6 @@ public:
     int get_BVal_Pixel_FromYuv(QRgb pixel_src);
     QImage *convertRgbToYuv(QImage *src);
     QImage *convertYuvToRgb(QImage *src);
-    QImage *extractSubImage(QImage *src,QPoint *origin_select,QPoint *end_select);
     int normalizeColorValue(double val);
 signals:
 

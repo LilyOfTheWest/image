@@ -81,6 +81,8 @@ private slots:
 
     void on_actionRecadrer_triggered();
 
+    void on_actionValider_triggered();
+
 private:
     Ui::MainWindow *ui;
     void updateActions();

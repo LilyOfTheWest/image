@@ -8,7 +8,8 @@
 #include <QRubberBand>
 #include <QImage>
 #include <QStack>
-#include "TransfoCouleur.h"
+#include "transfocouleur.h"
+#include "imageresizer.h"
 
 /*QT_BEGIN_NAMESPACE
 class QWidget;
@@ -30,12 +31,14 @@ public:
     void addImageToMerge(QImage *src);
     void drawImage();
     QImage *getPrincipal();
+    QImage *getSelectedImage();
     QRgb getColorPicked();
     QPoint getPixelPicked();
     void setScaleFactor(double scaleFactor);
     void setMouseListenerState(int mouseListenerStateVal);
     void setCouperMode(bool couperMode);
     void pasteSelection();
+    void validateTransfo();
 
 signals:
     void signalNewPixelPicked();
@@ -48,6 +51,7 @@ protected:
     virtual void mouseMoveEvent ( QMouseEvent * event ) Q_DECL_OVERRIDE;
     virtual void mousePressEvent ( QMouseEvent * event ) Q_DECL_OVERRIDE;
     virtual void mouseReleaseEvent ( QMouseEvent * event ) Q_DECL_OVERRIDE;
+    void setInitialContext();
     void saveTemp();
     void drawSelection ();
     void setSelection(QMouseEvent * event);
@@ -64,6 +68,7 @@ protected:
     QImage *principal;
     QImage *firstImg;
     QImage *secondImg;
+    QImage *selectedImg;
     QPoint position_firstImg;
     QPoint position_secondImg;
     int mouseListenerState;
