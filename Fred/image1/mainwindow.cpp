@@ -23,9 +23,12 @@ MainWindow::MainWindow(QWidget *parent) :
     scrollArea->setWidget(pdis);
     setCentralWidget(scrollArea);
     QObject::connect(imageLabel,SIGNAL(signalNewPixelPicked()),pdis,SLOT(on_refreshPixelProperties()));
+    QObject::connect(imageLabel,SIGNAL(signalResizingRequired()),pdis,SLOT(on_resizingRequired()));
     updateActionsWithoutImage();
     resize(QGuiApplication::primaryScreen()->availableSize() * 3 / 5);
     scaleFactor = 1;
+
+    on_actionRecadrer_triggered();
 }
 
 MainWindow::~MainWindow()
@@ -373,11 +376,6 @@ void MainWindow::on_actionCrop_triggered()
     imageLabel->setMouseListenerState(110);
 }
 
-void MainWindow::on_actionRecadrer_triggered()
-{
-
-}
-
 void MainWindow::on_actionValider_triggered()
 {
     imageLabel->validateTransfo();
@@ -412,3 +410,19 @@ void MainWindow::on_actionRotation_180_triggered()
     imageLabel->setInitialContext();
     pdis->resizePictureArea();
 }
+
+void MainWindow::on_action_Annuler_triggered()
+{
+    imageLabel->undoLast();
+}
+
+void MainWindow::on_actionRecadrer_triggered()
+{
+    loadFile("C:/Users/Fredd/Pictures/Rafael-icon.png");
+    ImageResizer *resizer = new ImageResizer;
+    QImage *resizedImg =resizer->resizeImage(imageLabel->getSelectedImage(),pdis->getResizedWidthRequired(),pdis->getResizedHeightRequired());
+    imageLabel->setPrincipal(resizedImg);
+    imageLabel->setInitialContext();
+    pdis->resizePictureArea();
+}
+

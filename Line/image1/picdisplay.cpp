@@ -20,6 +20,25 @@ PicDisplay::~PicDisplay()
     delete ui;
 }
 
+int PicDisplay:: getResizedWidthRequired()
+{
+    int ret=imageLabel->getSelectedImage()->width();
+    QLineEdit *q1=ui->lineEdit_Width;
+    if (!q1->text().isEmpty())
+        ret=q1->text().toInt();
+    return ret;
+}
+
+int PicDisplay::getResizedHeightRequired()
+{
+    int ret=imageLabel->getSelectedImage()->height();
+    QLineEdit *q1=ui->lineEdit_Height;
+    if (!q1->text().isEmpty())
+        ret=q1->text().toInt();
+    return ret;
+}
+
+
 void PicDisplay::refreshPixelProperties()
 {
     PictLabel *jj = static_cast<PictLabel*>(ui->scrollAreaP->widget());
@@ -117,5 +136,11 @@ void PicDisplay::on_refreshPixelProperties()
 
 void PicDisplay::on_resizingRequired()
 {
+    ui->libTailleWidth->setText("W:"+QString::number(imageLabel->getSelectedImage()->width()));
+    ui->libTailleHeigtht->setText("H:"+QString::number(imageLabel->getSelectedImage()->height()));
+    ui->radioButtonImg1->setChecked(imageLabel->getSelectedImage()==imageLabel->getImage1());
+    ui->radioButtonImg2->setChecked(imageLabel->getSelectedImage()!=imageLabel->getImage1());
+    ui->radioButtonImg2->setVisible(imageLabel->getImage2()!=NULL);
+
     resizePictureArea();
 }

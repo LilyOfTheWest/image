@@ -32,6 +32,8 @@ public:
     ~PicDisplay();
     void resizePictureArea();
     void scaleImage(double factor);
+    int getResizedWidthRequired();
+    int getResizedHeightRequired();
 
 private slots:
     void on_refreshPixelProperties();

@@ -420,7 +420,7 @@ void MainWindow::on_actionRecadrer_triggered()
 {
     loadFile("C:/Users/Fredd/Pictures/Rafael-icon.png");
     ImageResizer *resizer = new ImageResizer;
-    QImage *resizedImg =resizer->resizeImage(imageLabel->getSelectedImage(),imageLabel->getSelectedImage()->width()*2,imageLabel->getSelectedImage()->height());//512,512);
+    QImage *resizedImg =resizer->resizeImage(imageLabel->getSelectedImage(),pdis->getResizedWidthRequired(),pdis->getResizedHeightRequired());
     imageLabel->setPrincipal(resizedImg);
     imageLabel->setInitialContext();
     pdis->resizePictureArea();

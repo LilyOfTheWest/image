@@ -1,5 +1,4 @@
 #include "imageresizer.h"
-#include "transfocouleur.h"
 
 ImageResizer::ImageResizer(QObject *parent) : QObject(parent)
 {
@@ -113,44 +112,189 @@ QImage *ImageResizer::rotateImage180(QImage *src)
 
 QImage *ImageResizer::resizeImage(QImage *src,int newWidth, int newHeight)
 {
-    newWidth = 168;
+    QImage *resized_w = resizeImage_w(src,newWidth,src->height());
+    QImage *ret = resizeImage_h(resized_w,newWidth,newHeight);
+    if (resized_w != NULL)
+        delete resized_w;
+    return ret;
+}
+
+QImage *ImageResizer::resizeImage_w(QImage *src,int newWidth, int height)
+{
     int width_multiple = newWidth / src->width();
     int width_added = newWidth % src->width();
+    int width_added_tmp = width_added;
+    int w_impair_count=0;
+    bool every_2=false;
+    int mult_2 = 2;
+    while ((width_added_tmp < (src->width()/mult_2)) && (mult_2 <= 32)) {
+        mult_2 *= 2;
+    }
+
+    if (width_added_tmp >= (src->width()/mult_2))
+    {
+        every_2 = true;
+        width_added_tmp -= src->width()/mult_2;
+    }
     int width_step = src->width();
-    if (width_added > 0)
-        width_step = src->width() / width_added;
+    if (width_added_tmp > 0)
+        width_step = src->width() / width_added_tmp;
     int width_index = 0;
+    //int width_nb
     int r,g,b;
-    int width_added_tmp = width_step;
-    QRgb color;
-    TransfoCouleur *tc = new TransfoCouleur;
-    QImage *ret = new QImage(newWidth,newHeight,src->format());
-    for (int i=0; i<src->height()  ; i++) {
+    width_added_tmp = width_step;
+    QRgb color1,color2;
+    int nb_interpolation=0;
+    QImage *ret = new QImage(newWidth,height,src->format());
+    for (int h=0; h<src->height()  ; h++) {
         width_index = 0;
+        w_impair_count = 0;
         width_added_tmp = width_added;
-        for (int j=0; j<src->width(); j++) {
-            color = src->pixel(j,i);
-            r=tc->get_RVal_Pixel_FromYuv(color);
-            g=tc->get_GVal_Pixel_FromYuv(color);
-            b=tc->get_BVal_Pixel_FromYuv(color);
-            for (int k_mult=0; k_mult<width_multiple; k_mult++) {
-                if (width_index < newWidth) {
-                    ret->setPixel(width_index,i,color);
-                    width_index++;
-                } else
-                    continue;
-            }
-            if (width_index >= newWidth) {
-                continue;
-            }
-            if ((width_added_tmp > 0) && ((j % width_step) == 0))
+
+        for (int w=0; w<src->width(); w++) {
+            nb_interpolation=width_multiple;
+            color1 = src->pixel(w,h);
+            if (w < (src->width()-1))
+                color2 = src->pixel(w+1,h);
+            else
+                color2 = src->pixel(w,h);
+            if (every_2)
             {
-                ret->setPixel(width_index,i,color);
-                width_index++;
-                width_added_tmp--;
+                if ((w % mult_2) == 0)
+                {
+                    if (width_added_tmp > 0)
+                    {
+                        nb_interpolation++;
+                        width_added_tmp--;
+                    }
+                }
+                else
+                {
+                    if ((w_impair_count % width_step) == 0)
+                        if (width_added_tmp > 0)
+                        {
+                            nb_interpolation++;
+                            width_added_tmp--;
+                        }
+                    w_impair_count++;
+                }
             }
+            else
+            {
+                if ((w % width_step) == 0)
+                    if (width_added_tmp > 0)
+                    {
+                        nb_interpolation++;
+                        width_added_tmp--;
+                    }
+            }
+            interpol(ret,width_index,h,nb_interpolation,color1,color2,true);
+            width_index += nb_interpolation;
         }
     }
     return ret;
 }
 
+QImage *ImageResizer::resizeImage_h(QImage *src,int width, int newHeight)
+{
+    int height_multiple = newHeight / src->height();
+    int height_added = newHeight % src->height();
+    int height_added_tmp = height_added;
+    int h_impair_count=0;
+    bool every_2=false;
+    int mult_2 = 2;
+    while ((height_added_tmp < (src->height()/mult_2)) && (mult_2 <= 32)) {
+        mult_2 *= 2;
+    }
+    if (height_added_tmp >= (src->height()/mult_2))
+    {
+        every_2 = true;
+        height_added_tmp -= src->height()/mult_2;
+    }
+    int height_step = src->height();
+    if (height_added_tmp > 0)
+        height_step = src->height() / height_added_tmp;
+    int height_index = 0;
+    //int width_nb
+    int r,g,b;
+    height_added_tmp = height_step;
+    QRgb color1,color2;
+    int nb_interpolation=0;
+    QImage *ret = new QImage(width,newHeight,src->format());
+    for (int w=0; w<src->width(); w++) {
+        height_index = 0;
+        h_impair_count = 0;
+        height_added_tmp = height_added;
+        for (int h=0; h<src->height()  ; h++) {
+            nb_interpolation=height_multiple;
+            color1 = src->pixel(w,h);
+            if (h < (src->height()-1))
+                color2 = src->pixel(w,h+1);
+            else
+                color2 = src->pixel(w,h);
+            if (every_2)
+            {
+                if ((h % mult_2) == 0)
+                {
+                    if (height_added_tmp > 0)
+                    {
+                        nb_interpolation++;
+                        height_added_tmp--;
+                    }
+                }
+                else
+                {
+                    if ((h_impair_count % height_step) == 0)
+                        if (height_added_tmp > 0)
+                        {
+                            nb_interpolation++;
+                            height_added_tmp--;
+                        }
+                    h_impair_count++;
+                }
+            }
+            else
+            {
+                if ((h % height_step) == 0)
+                    if (height_added_tmp > 0)
+                    {
+                        nb_interpolation++;
+                        height_added_tmp--;
+                    }
+            }
+            interpol(ret,w,height_index,nb_interpolation,color1,color2,false);
+            height_index += nb_interpolation;
+        }
+    }
+    return ret;
+}
+
+void ImageResizer::interpol(QImage *dest, int wDest,int hDest,int nb_interpo_w,QRgb color1,
+                            QRgb  color2,bool width_sens)
+{
+    if (nb_interpo_w <= 0)
+        return;
+    dest->setPixel(wDest,hDest,color1);
+    if (nb_interpo_w >1)
+    {
+        int r1=qRed(color1);
+        int g1=qGreen(color1);
+        int b1=qBlue(color1);
+        int alpha1=qAlpha(color1);
+        int r2=qRed(color2);
+        int g2=qGreen(color2);
+        int b2=qBlue(color2);
+        int alpha2=qAlpha(color2);
+        QRgb color_tmp;
+        for (int k_mult=0; k_mult<nb_interpo_w; k_mult++) {
+            color_tmp = qRgba(r1+(r2-r1)*k_mult/nb_interpo_w,
+                              g1+(g2-g1)*k_mult/nb_interpo_w,
+                              b1+(b2-b1)*k_mult/nb_interpo_w,
+                              alpha1+(alpha2-alpha1)*k_mult/nb_interpo_w);
+            if (width_sens)
+                dest->setPixel(wDest+k_mult,hDest,color_tmp);
+            else
+                dest->setPixel(wDest,hDest+k_mult,color_tmp);
+        }
+    }
+}
