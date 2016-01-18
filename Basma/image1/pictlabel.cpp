@@ -10,6 +10,7 @@ PictLabel::PictLabel(QWidget *parent) :
 {
     principal = NULL;
     firstImg = NULL;
+    secondImg = NULL;
     scaleFactor = 1;
     setInitialContext();
 }
@@ -17,6 +18,17 @@ PictLabel::PictLabel(QWidget *parent) :
 PictLabel::~PictLabel()
 {
     delete principal;
+    qDeleteAll(undo);
+    /*QListIterator<QImage *> hh(undo);
+
+    while (hh.hasNext())
+    {
+        delete hh.next();
+
+
+
+        undo = new QStack<QImage>;
+    }*/
 }
 
 void PictLabel::setInitialContext()
@@ -24,7 +36,11 @@ void PictLabel::setInitialContext()
     origin_select.setX(0);
     origin_select.setY(0);
     mouseListenerState=0;
-    secondImg = NULL;
+    if (secondImg != NULL)
+    {
+        delete secondImg;
+        secondImg = NULL;
+    }
     setCouperMode(false);
     end_select = NULL;
     position_firstImg.setX(0);
@@ -70,6 +86,12 @@ void PictLabel::addImageToMerge(QImage *src)
 
 void PictLabel::setPrincipal(QImage *src)
 {
+    saveTemp(firstImg);
+    setPrincipalWithoutPrevSaved(src);
+}
+
+void PictLabel::setPrincipalWithoutPrevSaved(QImage *src)
+{
     // Install background ; principal devient firstImg
     QRgb backgroundColor = qRgb(255,255,255);
     if (principal != NULL)
@@ -84,6 +106,7 @@ void PictLabel::setPrincipal(QImage *src)
     }
     setInitialContext();
     drawImage();
+    signalResizingRequired();
 }
 
 QImage *PictLabel::getPrincipal()
@@ -247,21 +270,20 @@ void PictLabel::moveSelection(QPoint *mouse_end,QImage *imgToMove,QPoint &positi
     drawImage();
 }
 
-void PictLabel::saveTemp() {
-    if (undo == NULL)
-        undo = new QStack<QImage>();
-    const QPixmap *dd = this->pixmap();
-    QImage image2=dd->toImage();
-    undo->push(image2);
+void PictLabel::saveTemp(QImage *svgFirstImg) {
+    if (svgFirstImg == NULL)
+        return;
+    //const QPixmap *dd = this->pixmap();
+    //QImage image2=dd->toImage();
+    undo.append(svgFirstImg);//image2);
 }
 
 void PictLabel::undoLast() {
-    if (undo == NULL)
-        return;
-    if (undo->isEmpty())
-        return;
-    const QImage image = undo->pop();
-    this->setPixmap(QPixmap::fromImage(image));
+    if (undo.count()>0)
+    {
+        setPrincipalWithoutPrevSaved(undo.last());
+        undo.removeLast();
+    }
 }
 
 void PictLabel::setMouseListenerState(int mouseListenerStateVal)
@@ -358,8 +380,6 @@ void PictLabel::validateTransfo()
     case 110: // Crop select
         croppedImg =resizer->extractSubImage(firstImg,&origin_select,end_select);
         setPrincipal(croppedImg);
-        //setInitialContext();
-        drawImage();
         break;
     }
 }

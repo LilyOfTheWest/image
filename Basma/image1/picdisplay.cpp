@@ -112,6 +112,10 @@ void PicDisplay::on_radioButton_YUV_clicked()
 
 void PicDisplay::on_refreshPixelProperties()
 {
-    ui->libLibre->setText("AA !");
     refreshPixelProperties();
+}
+
+void PicDisplay::on_resizingRequired()
+{
+    resizePictureArea();
 }

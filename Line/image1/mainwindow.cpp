@@ -9,6 +9,7 @@
 #endif
 #include "kernelconv.h"
 
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -17,32 +18,22 @@ MainWindow::MainWindow(QWidget *parent) :
     imageLabel = new PictLabel;
     imageLabel->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
     imageLabel->setScaledContents(true);
-
-    scrollArea = new QScrollArea;
-    scrollArea->setWidget(imageLabel);
-
-    //ui->scrollAreaPict->setWidget(imageLabel);
-    //PictLabel jj = (PictLabel) ui->scrollAreaPict->widget();
-
-    //setCentralWidget(ui->scrollAreaPict);
-    pdis =new PicDisplay();
-    pdis->setScrollArea(imageLabel);
-    setCentralWidget(pdis);
+    QScrollArea *scrollArea = new QScrollArea(this);
+    pdis =new PicDisplay(imageLabel,this);
+    scrollArea->setWidget(pdis);
+    setCentralWidget(scrollArea);
     QObject::connect(imageLabel,SIGNAL(signalNewPixelPicked()),pdis,SLOT(on_refreshPixelProperties()));
-
-    //ui->scrollAreaPict->setWidgetResizable(false); AVOIR !!!
-
-    //ui->statusbar->insertWidget(0,new PicDisplay());
-    createActions();
-    createMenus();
+    QObject::connect(imageLabel,SIGNAL(signalResizingRequired()),pdis,SLOT(on_resizingRequired()));
+    updateActionsWithoutImage();
     resize(QGuiApplication::primaryScreen()->availableSize() * 3 / 5);
+    scaleFactor = 1;
+
+    on_actionRecadrer_triggered();
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
-    delete imageLabel;
-    delete scrollArea;
 }
 
 bool MainWindow::loadFile(const QString &fileName)
@@ -60,33 +51,33 @@ bool MainWindow::loadFile(const QString &fileName)
         return false;
     }
 
-    //Exemple de code de dessin - substitut au calque
-    /*QPainter p;
-    p.begin(&image2);
-    p.setPen(QColor(Qt::color0));
-    p.setBrush(Qt::NoBrush);
-    p.drawRect(QRect(30,30,400,400));
-    p.end();*/
     const QImage image = image2;
-
     imageLabel->setPrincipal(&image2);
-    //const QImage imageCst = *principal;
+    //imageLabel->adjustSize();
+    pdis->resizePictureArea();
+    updateActionsWithImage();
 
-    //this->setPixmap(QPixmap::fromImage(imageCst));
-    imageLabel->setPixmap(QPixmap::fromImage(image));
-    //imageLabel->setPixmap(QPixmap::fromImage(image));
-    scaleFactor = 1.0;
+    //if (!fitToWindowAct->isChecked())
 
-    pdis->resizeScrollArea(imageLabel);
-
-    printAct->setEnabled(true);
-    fitToWindowAct->setEnabled(true);
-    updateActions();
-
-    if (!fitToWindowAct->isChecked())
-        imageLabel->adjustSize();
+        //imageLabel->adjustSize();
+        //QWidget *uu=ui->centralwidget();
+        //uu->resize(image2.width(),image2.height());
+        //pdis->adjustSize();
 
     setWindowFilePath(fileName);
+    return true;
+}
+
+bool MainWindow::loadFileToMerge(const QString &fileName)
+{
+    QImageReader reader(fileName);
+    reader.setAutoTransform(true);
+
+    QImage image2 = reader.read();
+    const QImage image = image2;
+    imageLabel->addImageToMerge(&image2);
+    pdis->resizePictureArea();//resizeScrollArea(imageLabel);
+    //updateActionsWithImage();
     return true;
 }
 
@@ -135,17 +126,18 @@ void MainWindow::zoomOut()
 
 void MainWindow::normalSize()
 {
-    imageLabel->adjustSize();
     scaleFactor = 1.0;
+    imageLabel->setScaleFactor(scaleFactor);
+    imageLabel->adjustSize();
 }
 void MainWindow::fitToWindow()
 {
-    bool fitToWindow = fitToWindowAct->isChecked();
-    ui->scrollAreaPict->setWidgetResizable(fitToWindow);
-    if (!fitToWindow) {
-        normalSize();
-    }
-    updateActions();
+    //bool fitToWindow = fitToWindowAct->isChecked();
+    //ui->scrollAreaPict->setWidgetResizable(fitToWindow);
+    //if (!fitToWindow) {
+    //    normalSize();
+    //}
+    updateActionsWithImage();
 }
 
 void MainWindow::about()
@@ -164,104 +156,71 @@ void MainWindow::about()
                "zooming and scaling features. </p><p>In addition the example "
                "shows how to use QPainter to print an image.</p>"));
 }
-void MainWindow::createActions()
+//void MainWindow::createActions()
+//{
+//    normalSizeAct = new QAction(tr("&Normal Size"), this);
+//    normalSizeAct->setShortcut(tr("Ctrl+S"));
+//    normalSizeAct->setEnabled(false);
+//    connect(normalSizeAct, SIGNAL(triggered()), this, SLOT(normalSize()));
+
+//    fitToWindowAct = new QAction(tr("&Fit to Window"), this);
+//    fitToWindowAct->setEnabled(false);
+//    fitToWindowAct->setCheckable(true);
+//    fitToWindowAct->setShortcut(tr("Ctrl+F"));
+//    connect(fitToWindowAct, SIGNAL(triggered()), this, SLOT(fitToWindow()));
+
+//    aboutAct = new QAction(tr("&About"), this);
+//    connect(aboutAct, SIGNAL(triggered()), this, SLOT(about()));
+
+//    aboutQtAct = new QAction(tr("About &Qt"), this);
+//    connect(aboutQtAct, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
+//}
+
+
+void MainWindow::updateActionsWithoutImage()
 {
-    openAct = new QAction(tr("&Open..."), this);
-    openAct->setShortcut(tr("Ctrl+O"));
-    connect(openAct, SIGNAL(triggered()), this, SLOT(open()));
+    ui->action_Fermer->setEnabled(false);
+    ui->action_Imprimer->setEnabled(false);
+    ui->actionPipette->setVisible(false);
+    ui->action_Selection->setVisible(false);
+    ui->actionZoom_avant->setEnabled(false);
+    ui->action_Zoom_arriere->setEnabled(false);
+    ui->actionSeamCarving->setVisible(false);
+    ui->action_Copier->setVisible(false);
+    ui->action_Couper->setVisible(false);
+    ui->action_Coller->setVisible(false);
 
-    printAct = new QAction(tr("&Print..."), this);
-    printAct->setShortcut(tr("Ctrl+P"));
-    printAct->setEnabled(false);
-    connect(printAct, SIGNAL(triggered()), this, SLOT(print()));
-
-    exitAct = new QAction(tr("E&xit"), this);
-    exitAct->setShortcut(tr("Ctrl+Q"));
-    connect(exitAct, SIGNAL(triggered()), this, SLOT(close()));
-
-    inverseColorAct = new QAction(tr("Inverseur des couleurs"), this);
-    inverseColorAct->setShortcut(tr("Ctrl+N"));
-    inverseColorAct->setEnabled(false);
-    connect(inverseColorAct, SIGNAL(triggered()), this, SLOT(inverseColor()));
-
-    prodConvAct = new QAction(tr("Produit convolution Moyenneur rudimentaire"), this);
-    prodConvAct->setShortcut(tr("Ctrl+W"));
-    prodConvAct->setEnabled(false);
-    connect(prodConvAct, SIGNAL(triggered()), this, SLOT(prodConv()));
-
-    zoomInAct = new QAction(tr("Zoom &In (25%)"), this);
-    zoomInAct->setShortcut(tr("Ctrl++"));
-    zoomInAct->setEnabled(false);
-    connect(zoomInAct, SIGNAL(triggered()), this, SLOT(zoomIn()));
-
-    zoomOutAct = new QAction(tr("Zoom &Out (25%)"), this);
-    zoomOutAct->setShortcut(tr("Ctrl+-"));
-    zoomOutAct->setEnabled(false);
-    connect(zoomOutAct, SIGNAL(triggered()), this, SLOT(zoomOut()));
-
-    normalSizeAct = new QAction(tr("&Normal Size"), this);
-    normalSizeAct->setShortcut(tr("Ctrl+S"));
-    normalSizeAct->setEnabled(false);
-    connect(normalSizeAct, SIGNAL(triggered()), this, SLOT(normalSize()));
-
-    fitToWindowAct = new QAction(tr("&Fit to Window"), this);
-    fitToWindowAct->setEnabled(false);
-    fitToWindowAct->setCheckable(true);
-    fitToWindowAct->setShortcut(tr("Ctrl+F"));
-    connect(fitToWindowAct, SIGNAL(triggered()), this, SLOT(fitToWindow()));
-
-    aboutAct = new QAction(tr("&About"), this);
-    connect(aboutAct, SIGNAL(triggered()), this, SLOT(about()));
-
-    aboutQtAct = new QAction(tr("About &Qt"), this);
-    connect(aboutQtAct, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
-}
-void MainWindow::createMenus()
-{
-    fileMenu = new QMenu(tr("&File"), this);
-    fileMenu->addAction(openAct);
-    fileMenu->addAction(printAct);
-    fileMenu->addSeparator();
-    fileMenu->addAction(exitAct);
-
-    viewMenu = new QMenu(tr("&View"), this);
-    viewMenu->addAction(inverseColorAct);
-    viewMenu->addAction(prodConvAct);
-    viewMenu->addAction(zoomInAct);
-    viewMenu->addAction(zoomOutAct);
-    viewMenu->addAction(normalSizeAct);
-    viewMenu->addSeparator();
-    viewMenu->addAction(fitToWindowAct);
-
-    helpMenu = new QMenu(tr("&Help"), this);
-    helpMenu->addAction(aboutAct);
-    helpMenu->addAction(aboutQtAct);
-
-    menuBar()->addMenu(fileMenu);
-    menuBar()->addMenu(viewMenu);
-    menuBar()->addMenu(helpMenu);
 }
 
-void MainWindow::updateActions()
+
+void MainWindow::updateActionsWithImage()
 {
-    inverseColorAct->setEnabled(!fitToWindowAct->isChecked());
-    prodConvAct->setEnabled(!fitToWindowAct->isChecked());
-    zoomInAct->setEnabled(!fitToWindowAct->isChecked());
-    zoomOutAct->setEnabled(!fitToWindowAct->isChecked());
-    normalSizeAct->setEnabled(!fitToWindowAct->isChecked());
+    ui->action_Fermer->setEnabled(true);
+    ui->action_Imprimer->setEnabled(true);
+    ui->actionPipette->setVisible(true);
+    ui->action_Selection->setVisible(true);
+    ui->actionZoom_avant->setEnabled(true);
+    ui->action_Zoom_arriere->setEnabled(true);
+    ui->actionSeamCarving->setVisible(true);
+//    inverseColorAct->setEnabled(!fitToWindowAct->isChecked());
+//    prodConvAct->setEnabled(!fitToWindowAct->isChecked());
+//    zoomInAct->setEnabled(!fitToWindowAct->isChecked());
+//    zoomOutAct->setEnabled(!fitToWindowAct->isChecked());
+//    normalSizeAct->setEnabled(!fitToWindowAct->isChecked());
 }
 
 void MainWindow::scaleImage(double factor)
 {
     Q_ASSERT(imageLabel->pixmap());
     scaleFactor *= factor;
+    imageLabel->setScaleFactor(scaleFactor);
     imageLabel->resize(scaleFactor * imageLabel->pixmap()->size());
 
     //adjustScrollBar(ui->scrollAreaPict->horizontalScrollBar(), factor);
     //adjustScrollBar(ui->scrollAreaPict->verticalScrollBar(), factor);
 
-    zoomInAct->setEnabled(scaleFactor < 3.0);
-    zoomOutAct->setEnabled(scaleFactor > 0.333);
+    ui->actionZoom_avant->setEnabled(scaleFactor < 3.0);
+    ui->action_Zoom_arriere->setEnabled(scaleFactor > 0.333);
 }
 
 void MainWindow::adjustScrollBar(QScrollBar *scrollBar, double factor)
@@ -280,43 +239,190 @@ void MainWindow::inverseColor()
 {
     TransfoCouleur *tc = new TransfoCouleur;
     //PictLabel *jj = static_cast<PictLabel*>(ui->scrollAreaPict->widget());
-    QImage *imageInversee = tc->inverseColor(imageLabel->getPrincipal());
-    imageLabel->setPrincipal(imageInversee);
-    const QImage imageConv = *imageLabel->getPrincipal();
+    QImage *imageInversee = tc->inverseColor(imageLabel->getSelectedImage());
+    imageLabel->setSelectedImage(imageInversee);
+    const QImage imageConv = *imageLabel->getSelectedImage();
     imageLabel->setPixmap(QPixmap::fromImage(imageConv));
     scaleFactor = 1.0;//scaleImage(1.5);
 }
 
-void MainWindow::prodConv()
-{
-    /**imageL = kernelConv->produitConv(imageLabel->setPrincipal();
-    const QImage imageConv = *imageL;
-    imageLabel->setPixmap(QPixmap::fromImage(imageConv));
-    scaleFactor = 1.0;//scaleImage(1.5);*/
-}
-
-void MainWindow::on_actionFlouter_triggered()
-{
-    TransfoCouleur *tc = new TransfoCouleur;
-    //PictLabel *jj = static_cast<PictLabel*>(ui->scrollAreaPict->widget());
-    QImage *imageFloutee = tc->flou(imageLabel->getPrincipal());
-    imageLabel->setPrincipal(imageFloutee);
-    const QImage imageConv = *imageLabel->getPrincipal();
-    imageLabel->setPixmap(QPixmap::fromImage(imageConv));
-    scaleFactor = 1.0;//scaleImage(1.5);
-}
-
-void MainWindow::on_action_Open_triggered()
+void MainWindow::on_action_Ouvrir_triggered()
 {
     open();
 }
 
-void MainWindow::on_actionPick_Color_triggered()
+void MainWindow::on_action_Fermer_triggered()
+{
+    close();
+}
+
+void MainWindow::on_action_Imprimer_triggered()
+{
+    //print();
+    ui->action_Copier->setVisible(false);
+    ui->action_Couper->setVisible(false);
+    ui->action_Coller->setVisible(false);
+}
+
+void MainWindow::on_actionZoom_avant_triggered()
+{
+    zoomIn();
+}
+
+void MainWindow::on_action_Zoom_arriere_triggered()
+{
+    zoomOut();
+}
+
+void MainWindow::on_actionFlou_triggered()
+{
+    TransfoCouleur *tc = new TransfoCouleur;
+    //PictLabel *jj = static_cast<PictLabel*>(ui->scrollAreaPict->widget());
+    QImage *imageFloutee = tc->flou(imageLabel->getSelectedImage());
+    imageLabel->setSelectedImage(imageFloutee);
+    const QImage imageConv = *imageLabel->getSelectedImage();
+    imageLabel->setPixmap(QPixmap::fromImage(imageConv));
+    scaleFactor = 1.0;//scaleImage(1.5);
+}
+
+void MainWindow::on_actionPipette_triggered()
 {
     imageLabel->setMouseListenerState(10);
 }
 
-void MainWindow::on_actionSelect_triggered()
+void MainWindow::on_actionSeamCarving_triggered()
+{
+
+}
+
+void MainWindow::on_actionDeplacement_triggered()
+{
+    imageLabel->setMouseListenerState(12);
+}
+
+void MainWindow::on_action_Selection_triggered()
 {
     imageLabel->setMouseListenerState(11);
+    ui->action_Copier->setVisible(true);
+    ui->action_Couper->setVisible(true);
+    ui->action_Coller->setVisible(true);
 }
+
+
+void MainWindow::on_action_Copier_triggered()
+{
+    imageLabel->setMouseListenerState(12);
+}
+
+void MainWindow::on_action_Coller_triggered()
+{
+    imageLabel->pasteSelection();
+}
+
+void MainWindow::on_action_Couper_triggered()
+{
+    imageLabel->setCouperMode(true);
+    imageLabel->setMouseListenerState(18);
+}
+
+void MainWindow::on_actionImageGris_triggered()
+{
+    QImage *imageSrc = imageLabel->getSelectedImage();
+    if (imageSrc != NULL)
+    {
+        TransfoCouleur *tc = new TransfoCouleur;
+        //PictLabel *jj = static_cast<PictLabel*>(ui->scrollAreaPict->widget());
+        QImage *imageInversee = tc->inverseColor(imageSrc);
+        imageLabel->setPrincipal(imageInversee);
+        const QImage imageConv = *imageLabel->getSelectedImage();
+        imageLabel->setPixmap(QPixmap::fromImage(imageConv));
+        scaleFactor = 1.0;//scaleImage(1.5);
+    }
+}
+
+void MainWindow::on_actionInverseCoul_triggered()
+{
+    QImage *imageSrc = imageLabel->getSelectedImage();
+    if (imageSrc != NULL)
+    {
+        TransfoCouleur *tc = new TransfoCouleur;
+        //PictLabel *jj = static_cast<PictLabel*>(ui->scrollAreaPict->widget());
+        QImage *imageInversee = tc->inverseColor(imageLabel->getSelectedImage());
+        imageLabel->setPrincipal(imageInversee);
+        const QImage imageConv = *imageLabel->getSelectedImage();
+        imageLabel->setPixmap(QPixmap::fromImage(imageConv));
+        scaleFactor = 1.0;//scaleImage(1.5);
+    }
+}
+
+void MainWindow::on_actionFusion_2_triggered()
+{
+    QStringList mimeTypeFilters;
+    foreach (const QByteArray &mimeTypeName, QImageReader::supportedMimeTypes())
+        mimeTypeFilters.append(mimeTypeName);
+    mimeTypeFilters.sort();
+    const QStringList picturesLocations = QStandardPaths::standardLocations(QStandardPaths::PicturesLocation);
+    QFileDialog dialog(this, tr("Open second File to merge"),
+                       picturesLocations.isEmpty() ? QDir::currentPath() : picturesLocations.last());
+    dialog.setAcceptMode(QFileDialog::AcceptOpen);
+    dialog.setMimeTypeFilters(mimeTypeFilters);
+    dialog.selectMimeTypeFilter("image/jpeg");
+
+    while (dialog.exec() == QDialog::Accepted && !loadFileToMerge(dialog.selectedFiles().first())) {}
+}
+
+void MainWindow::on_actionCrop_triggered()
+{
+    imageLabel->setMouseListenerState(110);
+}
+
+void MainWindow::on_actionValider_triggered()
+{
+    imageLabel->validateTransfo();
+    pdis->resizePictureArea();
+}
+
+void MainWindow::on_actionRotation_90_Horaire_triggered()
+{
+    ImageResizer *resizer = new ImageResizer;
+    QImage *rotatedImg =resizer->rotateImage90(imageLabel->getSelectedImage(),true);
+    imageLabel->setPrincipal(rotatedImg);
+    imageLabel->setInitialContext();
+    pdis->resizePictureArea();
+}
+
+
+void MainWindow::on_action_Rotation_90_antihoraire_triggered()
+{
+    ImageResizer *resizer = new ImageResizer;
+    QImage *rotatedImg =resizer->rotateImage90(imageLabel->getSelectedImage(),false);
+    imageLabel->setPrincipal(rotatedImg);
+    imageLabel->setInitialContext();
+    pdis->resizePictureArea();
+}
+
+
+void MainWindow::on_actionRotation_180_triggered()
+{
+    ImageResizer *resizer = new ImageResizer;
+    QImage *rotatedImg =resizer->rotateImage180(imageLabel->getSelectedImage());
+    imageLabel->setPrincipal(rotatedImg);
+    imageLabel->setInitialContext();
+    pdis->resizePictureArea();
+}
+
+void MainWindow::on_action_Annuler_triggered()
+{
+    imageLabel->undoLast();
+}
+
+void MainWindow::on_actionRecadrer_triggered()
+{
+    loadFile("C:/Users/Fredd/Pictures/Rafael-icon.png");
+    ImageResizer *resizer = new ImageResizer;
+    QImage *resizedImg =resizer->resizeImage(imageLabel->getSelectedImage(),imageLabel->getSelectedImage()->width()*2,imageLabel->getSelectedImage()->height());//512,512);
+    imageLabel->setPrincipal(resizedImg);
+    imageLabel->setInitialContext();
+    pdis->resizePictureArea();
+}
+

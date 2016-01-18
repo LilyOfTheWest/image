@@ -4,12 +4,15 @@
 #include "TransfoCouleur.h"
 #include <QScrollBar>
 
-PicDisplay::PicDisplay(QWidget *parent) :
+PicDisplay::PicDisplay(PictLabel *imageLabel, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::PicDisplay)
 {
     ui->setupUi(this);
-    ui->radioButtonRGB->setChecked(true);
+    ui->scrollAreaP->setWidgetResizable(false);
+        ui->scrollAreaP->setWidget(imageLabel);
+    this->imageLabel=imageLabel;
+        ui->radioButtonRGB->setChecked(true);
 }
 
 PicDisplay::~PicDisplay()
@@ -48,11 +51,11 @@ void PicDisplay::refreshPixelProperties()
         ui->libCoul2->setText("U:");
         ui->libCoul3->setText("V:");
         TransfoCouleur *tc = new TransfoCouleur;
-        val1= QString::number(tc->get_YVal_Pixel(color));
+        val1= QString::number(tc->get_YVal_Pixel_FromRgb(color));
         ui->valCoul1->setText(val1);
-        val2= QString::number(tc->get_UVal_Pixel(color));
+        val2= QString::number(tc->get_UVal_Pixel_FromRgb(color));
         ui->valCoul2->setText(val2);
-        val3= QString::number(tc->get_VVal_Pixel(color));
+        val3= QString::number(tc->get_VVal_Pixel_FromRgb(color));
         ui->valCoul3->setText(val3);
     }
 }
@@ -68,28 +71,20 @@ void PicDisplay::on_pushButton_clicked()
     }
 }
 
-void PicDisplay::setScrollArea(PictLabel *imageLabel)
+/*void PicDisplay::setScrollArea(PictLabel *imageLabel)
 {
     ui->scrollAreaP->setWidgetResizable(false);
     ui->scrollAreaP->setWidget(imageLabel);
-    ui->scrollAreaP->setMinimumHeight(500);
-    ui->scrollAreaP->setMinimumWidth(10000);
-    ui->libLibre->setText("YEAH !");
-}
+}*/
 
-void PicDisplay::resizeScrollArea(PictLabel *imageLabel)
+void PicDisplay::resizePictureArea()
 {
-    ui->scrollAreaP->setWidgetResizable(false);
-    int y = imageLabel->height();
-    ui->scrollAreaP->setMinimumHeight(500);
-    ui->scrollAreaP->setMinimumWidth(imageLabel->width());
-    ui->libLibre->setText("Y§YEAH !");
-}
-
-void PicDisplay::adjustScrollBar(QScrollBar *scrollBar, double factor)
-{
-    scrollBar->setValue(int(factor * scrollBar->value()
-                            + ((factor - 1) * scrollBar->pageStep()/2)));
+    this->imageLabel->adjustSize();
+    QImage *imgMax = this->imageLabel->getPrincipal();
+    ui->scrollAreaP->resize(imgMax->width()+5,imgMax->height()+5);
+    this->adjustSize();
+    this->imageLabel->adjustSize();
+    this->imageLabel->drawImage();
 }
 
 void PicDisplay::scaleImage(double factor)
@@ -98,8 +93,8 @@ void PicDisplay::scaleImage(double factor)
     scaleFactor *= factor;
     imageLabel->resize(scaleFactor * imageLabel->pixmap()->size());*/
 
-    adjustScrollBar( ui->scrollAreaP->horizontalScrollBar(), factor);
-    adjustScrollBar( ui->scrollAreaP->verticalScrollBar(), factor);
+      //adjustScrollBar( ui->scrollAreaP->horizontalScrollBar(), factor);
+       //adjustScrollBar( ui->scrollAreaP->verticalScrollBar(), factor);
 /*
     zoomInAct->setEnabled(scaleFactor < 3.0);
     zoomOutAct->setEnabled(scaleFactor > 0.333);*/
@@ -117,6 +112,10 @@ void PicDisplay::on_radioButton_YUV_clicked()
 
 void PicDisplay::on_refreshPixelProperties()
 {
-    ui->libLibre->setText("HY§YEAH !");
     refreshPixelProperties();
+}
+
+void PicDisplay::on_resizingRequired()
+{
+    resizePictureArea();
 }
