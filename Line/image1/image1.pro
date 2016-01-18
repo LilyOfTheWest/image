@@ -9,7 +9,9 @@ HEADERS       = \
     mainwindow.h \
     imageanalyse.h \
     kernelconvmoyenneur.h \
-    kernelconvbinomial.h
+    kernelconvbinomial.h \
+    couleurs.h \
+    imageresizer.h
 SOURCES       = \
                 main.cpp \
     picdisplay.cpp \
@@ -19,7 +21,9 @@ SOURCES       = \
     mainwindow.cpp \
     imageanalyse.cpp \
     kernelconvmoyenneur.cpp \
-    kernelconvbinomial.cpp
+    kernelconvbinomial.cpp \
+    couleurs.cpp \
+    imageresizer.cpp
 
 # install
 target.path = $$[QT_INSTALL_EXAMPLES]/widgets/widgets/imageviewer
@@ -32,7 +36,10 @@ wince {
 
 FORMS += \
     picdisplay.ui \
-    mainwindow.ui
+    mainwindow.ui \
+    couleurs.ui \
+    histogramme.ui \
+    fusion.ui
 
 RESOURCES += \
     res.qrc
