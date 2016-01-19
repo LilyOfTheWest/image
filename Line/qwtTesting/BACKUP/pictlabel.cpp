@@ -8,22 +8,46 @@
 PictLabel::PictLabel(QWidget *parent) :
     QLabel(parent),colorPicked(qRgb(0,0,0))
 {
-    origin_select.setX(0);
-    origin_select.setY(0);
-    mouseListenerState=0;
     principal = NULL;
-    secondImg = NULL;
     firstImg = NULL;
-    end_select = NULL;
+    secondImg = NULL;
     scaleFactor = 1;
-    setCouperMode(false);
+    setInitialContext();
 }
 
 PictLabel::~PictLabel()
 {
     delete principal;
+    qDeleteAll(undo);
+    /*QListIterator<QImage *> hh(undo);
+
+    while (hh.hasNext())
+    {
+        delete hh.next();
+
+
+
+        undo = new QStack<QImage>;
+    }*/
 }
 
+void PictLabel::setInitialContext()
+{
+    origin_select.setX(0);
+    origin_select.setY(0);
+    mouseListenerState=0;
+    if (secondImg != NULL)
+    {
+        delete secondImg;
+        secondImg = NULL;
+    }
+    setCouperMode(false);
+    end_select = NULL;
+    position_firstImg.setX(0);
+    position_firstImg.setY(0);
+    position_secondImg.setX(0);
+    position_secondImg.setY(0);
+}
 
 void PictLabel::addImageToMerge(QImage *src)
 {
@@ -62,6 +86,12 @@ void PictLabel::addImageToMerge(QImage *src)
 
 void PictLabel::setPrincipal(QImage *src)
 {
+    saveTemp(firstImg);
+    setPrincipalWithoutPrevSaved(src);
+}
+
+void PictLabel::setPrincipalWithoutPrevSaved(QImage *src)
+{
     // Install background ; principal devient firstImg
     QRgb backgroundColor = qRgb(255,255,255);
     if (principal != NULL)
@@ -74,13 +104,41 @@ void PictLabel::setPrincipal(QImage *src)
             principal->setPixel(j,i,backgroundColor);
         }
     }
+    setInitialContext();
     drawImage();
+    signalResizingRequired();
+    signalRedisplayRequired();
 }
 
 QImage *PictLabel::getPrincipal()
 {
-    return firstImg;
+    return principal;
+}
 
+QImage *PictLabel::getSelectedImage()
+{
+    return firstImg;
+}
+
+QImage *PictLabel::getImage1()
+{
+    return firstImg;
+}
+
+QImage *PictLabel::getImage2()
+{
+    return secondImg;
+}
+
+void PictLabel::setSelectedImage(QImage *selectImg)
+{
+    firstImg = new QImage(selectImg->width(),selectImg->height(),selectImg->format());
+    for (int i=0; i< selectImg->height() ; i++) {
+        for (int j=0; j<selectImg->width() ; j++) {
+            firstImg->setPixel(j,i,selectImg->pixel(j,i));
+        }
+    }
+    signalRedisplayRequired();
 }
 
 /*void PictLabel::enterEvent ( QEvent * event )
@@ -94,14 +152,18 @@ void PictLabel::leaveEvent ( QEvent * event )
 void PictLabel::mouseMoveEvent ( QMouseEvent * event )
 {
     switch(mouseListenerState){
-    case 10:
+    case 10: // Pipette
 
         break;
-    case 11:
+    case 11: // Select
         //rubberBand->setGeometry(QRect(resizeWithScaling(origin_select), event->pos()).normalized());
         rubberBand->setGeometry(QRect(rubberBand->geometry().topLeft(), event->pos()).normalized());
         break;
-    case 12:
+    case 12: // Deplace première image
+        break;
+    case 110: // Crop select
+        //rubberBand->setGeometry(QRect(resizeWithScaling(origin_select), event->pos()).normalized());
+        rubberBand->setGeometry(QRect(rubberBand->geometry().topLeft(), event->pos()).normalized());
         break;
     }
 
@@ -111,13 +173,17 @@ void PictLabel::mouseMoveEvent ( QMouseEvent * event )
 void PictLabel::mousePressEvent ( QMouseEvent * event )
 {
     QPoint mouse_position = resizeWithScaling(event->pos());
+    QPoint rep;
+    ImageResizer *resizer;
     switch(mouseListenerState){
     case 10: // Pipette
-        //colorPicked = principal->pixel(mouse_position);
-        //if (isPicked(resizeWithScaling(event->pos()),firstImg,&position_firstImg)==true) {
-
-        //}
-        signalNewPixelPicked();
+        resizer = new ImageResizer;
+        mouse_position = resizer->isPicked(resizeWithScaling(event->pos()),firstImg,&position_firstImg);
+        if (mouse_position.x() != -1) {
+            mouse_origin = mouse_position;
+            colorPicked = firstImg->pixel(mouse_position);
+            signalNewPixelPicked();
+        }
         break;
     case 11: // Select
         origin_select = mouse_position;
@@ -137,6 +203,12 @@ void PictLabel::mousePressEvent ( QMouseEvent * event )
     case 22: // Deplace première image
         mouse_origin = resizeWithScaling(event->pos());
         break;
+    case 110: // Crop select
+        origin_select = mouse_position;
+        rubberBand = new QRubberBand(QRubberBand::Rectangle, this);
+        rubberBand->setGeometry(QRect(event->pos(), QSize()));
+        rubberBand->show();
+        break;
     }
 }
 
@@ -147,21 +219,25 @@ void PictLabel::mouseReleaseEvent ( QMouseEvent * event )
     case 10:
 
         break;
-    case 11:
+    case 11: // Select
         setSelection(event);
         break;
-    case 12:
+    case 12: // Deplace première image
         moveSelection(mouse_end,firstImg,position_firstImg);
         break;
-    case 18:
+    case 18: // Deplace seconde image suite Couper/Copier
         moveSelection(mouse_end,secondImg,position_secondImg);
         break;
-    case 21:
+    case 21: // Deplace seconde image
         moveSelection(mouse_end,secondImg,position_secondImg);
         break;
-    case 22:
+    case 22: // Deplace première image
         moveSelection(mouse_end,firstImg,position_firstImg);
         break;
+    case 110: // Crop select
+        setSelection(event);
+        break;
+
     }
 }
 
@@ -177,18 +253,14 @@ void PictLabel::setSelection(QMouseEvent * event)
 void PictLabel::pasteSelection()
 {
     if (end_select != NULL) {
-        TransfoCouleur *tc = new TransfoCouleur;
-        secondImg =tc->extractSubImage(firstImg,&origin_select,end_select);
+        ImageResizer *resizer = new ImageResizer;
+        secondImg =resizer->extractSubImage(firstImg,&origin_select,end_select);
         position_secondImg.setX(0);
         position_secondImg.setY(0);
         drawImage();
         mouseListenerState=18;
     }
-}
-
-bool PictLabel::isPicked(QPoint mousePosition,QImage *imgToMove,QPoint *positionRelative)
-{
-    return false;
+    signalRedisplayRequired();
 }
 
 void PictLabel::moveSelection(QPoint *mouse_end,QImage *imgToMove,QPoint &positionRelative)
@@ -210,21 +282,20 @@ void PictLabel::moveSelection(QPoint *mouse_end,QImage *imgToMove,QPoint &positi
     drawImage();
 }
 
-void PictLabel::saveTemp() {
-    if (undo == NULL)
-        undo = new QStack<QImage>();
-    const QPixmap *dd = this->pixmap();
-    QImage image2=dd->toImage();
-    undo->push(image2);
+void PictLabel::saveTemp(QImage *svgFirstImg) {
+    if (svgFirstImg == NULL)
+        return;
+    //const QPixmap *dd = this->pixmap();
+    //QImage image2=dd->toImage();
+    undo.append(svgFirstImg);//image2);
 }
 
 void PictLabel::undoLast() {
-    if (undo == NULL)
-        return;
-    if (undo->isEmpty())
-        return;
-    const QImage image = undo->pop();
-    this->setPixmap(QPixmap::fromImage(image));
+    if (undo.count()>0)
+    {
+        setPrincipalWithoutPrevSaved(undo.last());
+        undo.removeLast();
+    }
 }
 
 void PictLabel::setMouseListenerState(int mouseListenerStateVal)
@@ -295,4 +366,36 @@ void PictLabel::drawImage()
     const QImage image = image2;
     //    this->setPixmap(QPixmap::fromImage(image));
     this->setPixmap(QPixmap::fromImage(image));
+    signalRedisplayRequired();
 }
+
+void PictLabel::validateTransfo()
+{
+    ImageResizer *resizer = new ImageResizer;
+    QImage *displacedImg,*croppedImg,*pastedImage;
+    switch(mouseListenerState){
+    case 12: // Deplace première image
+        displacedImg =resizer->displaceImage(principal,firstImg,position_firstImg,NULL,position_secondImg);
+        setPrincipal(displacedImg);
+        break;
+    case 18: // Deplace seconde image suite Couper/Copier
+        pastedImage =resizer->displaceImage(principal,firstImg,position_firstImg,secondImg,position_secondImg);
+        setPrincipal(pastedImage);
+        break;
+    case 21: // Deplace seconde image
+        pastedImage =resizer->displaceImage(principal,firstImg,position_firstImg,secondImg,position_secondImg);
+        setPrincipal(pastedImage);
+        break;
+    case 22: // Deplace première image
+        pastedImage =resizer->displaceImage(principal,firstImg,position_firstImg,secondImg,position_secondImg);
+        setPrincipal(pastedImage);
+        break;
+    case 110: // Crop select
+        croppedImg =resizer->extractSubImage(firstImg,&origin_select,end_select);
+        setPrincipal(croppedImg);
+        break;
+    }
+}
+
+
+

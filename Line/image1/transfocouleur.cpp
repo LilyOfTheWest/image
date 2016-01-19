@@ -112,10 +112,13 @@ QImage * TransfoCouleur::rehaussement(QImage *src){
     kerImp->genereImp();
     // Filtre Passe Haut
     KernelConv *kerPH = new KernelConv(ordre);
+    double n, imp;
 
     for(int i=0;i<ordre;i++){
         for(int j=0;j<ordre;j++){
-            kerPH->setIndex((kerImp->getIndex(i,j))-(kerPB->getIndex(i,j)),i,j);
+            imp = kerImp->getIndex(i,j);
+            n = imp-(kerPB->getIndex(i,j))/(kerPB->getCoef());
+            kerPH->setIndex(n,i,j);
         }
     }
 
@@ -128,9 +131,11 @@ QImage * TransfoCouleur::rehaussement(QImage *src){
     double alpha = 0.5;
 
     KernelConv *kerRH = new KernelConv(ordre);
+
     for(int i=0;i<ordre;i++){
         for(int j=0;j<ordre;j++){
-            kerRH->setIndex((kerImp->getIndex(i,j)) + (alpha * kerPH->getIndex(i,j)),i,j);
+            n = (kerImp->getIndex(i,j)) + (alpha * kerPH->getIndex(i,j));
+            kerRH->setIndex(n,i,j);
         }
     }
 
@@ -213,17 +218,20 @@ QImage *TransfoCouleur::etalement(QImage *src){
     return imA->getDataRGB();
 }
 
-QImage TransfoCouleur::*egalisation(QImage *src){
+QImage *TransfoCouleur::egalisation(QImage *src){
     int nbr_pixels = src->height()*src->width();
     ImageAnalyse *imA = new ImageAnalyse(src);
     imA->initYuvImagris();
+    imA->calculHisto();
     int **hYUV = imA->getHistoYuv();
     int *hY = hYUV[0];
     int *phi = new int[256];
     int *sum = new int[256];
+    int p;
     sum=imA->cumsum(hY);
     for(int i=0;i<256;i++){
-        phi[i] = qRound(255.0/nbr_pixels*(sum[i]));
+        p = qRound(255.0/nbr_pixels*(sum[i]));
+        phi[i] = p;
     }
     double ** yuv=imA->getImagris();
     int y;
@@ -236,6 +244,8 @@ QImage TransfoCouleur::*egalisation(QImage *src){
 
     imA->setImagris(yuv);
     imA->fromYuvToRgb();
+
+    return imA->getDataRGB();
 }
 
 void TransfoCouleur::histogramme(QImage *src,int mode){

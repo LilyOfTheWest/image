@@ -8,6 +8,8 @@
 #include <QPrintDialog>
 #endif
 #include "kernelconv.h"
+#include "seamcarver.h"
+
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -17,35 +19,24 @@ MainWindow::MainWindow(QWidget *parent) :
     imageLabel = new PictLabel;
     imageLabel->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
     imageLabel->setScaledContents(true);
-
-    scrollArea = new QScrollArea;
-
-
-    //ui->scrollAreaPict->setWidget(imageLabel);
-    //PictLabel jj = (PictLabel) ui->scrollAreaPict->widget();
-
-    //setCentralWidget(ui->scrollAreaPict);
-    pdis =new PicDisplay();
-    pdis->setScrollArea(imageLabel);
-
+    QScrollArea *scrollArea = new QScrollArea(this);
+    pdis =new PicDisplay(imageLabel,this);
     scrollArea->setWidget(pdis);
-
     setCentralWidget(scrollArea);
     QObject::connect(imageLabel,SIGNAL(signalNewPixelPicked()),pdis,SLOT(on_refreshPixelProperties()));
+    QObject::connect(imageLabel,SIGNAL(signalResizingRequired()),pdis,SLOT(on_resizingRequired()));
+    QObject::connect(imageLabel,SIGNAL(signalRedisplayRequired()),pdis,SLOT(on_displayRedefined()));
     updateActionsWithoutImage();
-
-    //ui->scrollAreaPict->setWidgetResizable(false); AVOIR !!!
-
-    //ui->statusbar->insertWidget(0,new PicDisplay());
     resize(QGuiApplication::primaryScreen()->availableSize() * 3 / 5);
     scaleFactor = 1;
+
+    //loadFile("C:/Users/Fredd/Pictures/Rafael-icon.png");
+    //on_actionSeamCarving_triggered();
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
-    delete imageLabel;
-    delete scrollArea;
 }
 
 bool MainWindow::loadFile(const QString &fileName)
@@ -64,23 +55,17 @@ bool MainWindow::loadFile(const QString &fileName)
     }
 
     const QImage image = image2;
-
     imageLabel->setPrincipal(&image2);
-    //const QImage imageCst = *principal;
-
-    //this->setPixmap(QPixmap::fromImage(imageCst));
-      //imageLabel->setPixmap(QPixmap::fromImage(image));
-    //imageLabel->setPixmap(QPixmap::fromImage(image));
-
-    pdis->resizeScrollArea(imageLabel);
-
-    //printAct->setEnabled(true);
-    //fitToWindowAct->setEnabled(true);
+    //imageLabel->adjustSize();
+    pdis->resizePictureArea();
     updateActionsWithImage();
 
     //if (!fitToWindowAct->isChecked())
-        imageLabel->adjustSize();
-        pdis->adjustSize();
+
+        //imageLabel->adjustSize();
+        //QWidget *uu=ui->centralwidget();
+        //uu->resize(image2.width(),image2.height());
+        //pdis->adjustSize();
 
     setWindowFilePath(fileName);
     return true;
@@ -94,7 +79,7 @@ bool MainWindow::loadFileToMerge(const QString &fileName)
     QImage image2 = reader.read();
     const QImage image = image2;
     imageLabel->addImageToMerge(&image2);
-    pdis->resizeScrollArea(imageLabel);
+    pdis->resizePictureArea();//resizeScrollArea(imageLabel);
     //updateActionsWithImage();
     return true;
 }
@@ -208,6 +193,8 @@ void MainWindow::updateActionsWithoutImage()
     ui->action_Couper->setVisible(false);
     ui->action_Coller->setVisible(false);
 
+    this->pdis->updateDisplay();
+
 }
 
 
@@ -220,6 +207,7 @@ void MainWindow::updateActionsWithImage()
     ui->actionZoom_avant->setEnabled(true);
     ui->action_Zoom_arriere->setEnabled(true);
     ui->actionSeamCarving->setVisible(true);
+    this->pdis->updateDisplay();
 //    inverseColorAct->setEnabled(!fitToWindowAct->isChecked());
 //    prodConvAct->setEnabled(!fitToWindowAct->isChecked());
 //    zoomInAct->setEnabled(!fitToWindowAct->isChecked());
@@ -257,9 +245,9 @@ void MainWindow::inverseColor()
 {
     TransfoCouleur *tc = new TransfoCouleur;
     //PictLabel *jj = static_cast<PictLabel*>(ui->scrollAreaPict->widget());
-    QImage *imageInversee = tc->inverseColor(imageLabel->getPrincipal());
-    imageLabel->setPrincipal(imageInversee);
-    const QImage imageConv = *imageLabel->getPrincipal();
+    QImage *imageInversee = tc->inverseColor(imageLabel->getSelectedImage());
+    imageLabel->setSelectedImage(imageInversee);
+    const QImage imageConv = *imageLabel->getSelectedImage();
     imageLabel->setPixmap(QPixmap::fromImage(imageConv));
     scaleFactor = 1.0;//scaleImage(1.5);
 }
@@ -296,9 +284,9 @@ void MainWindow::on_actionFlou_triggered()
 {
     TransfoCouleur *tc = new TransfoCouleur;
     //PictLabel *jj = static_cast<PictLabel*>(ui->scrollAreaPict->widget());
-    QImage *imageFloutee = tc->flou(imageLabel->getPrincipal());
-    imageLabel->setPrincipal(imageFloutee);
-    const QImage imageConv = *imageLabel->getPrincipal();
+    QImage *imageFloutee = tc->flou(imageLabel->getSelectedImage());
+    imageLabel->setSelectedImage(imageFloutee);
+    const QImage imageConv = *imageLabel->getSelectedImage();
     imageLabel->setPixmap(QPixmap::fromImage(imageConv));
     scaleFactor = 1.0;//scaleImage(1.5);
 }
@@ -306,11 +294,6 @@ void MainWindow::on_actionFlou_triggered()
 void MainWindow::on_actionPipette_triggered()
 {
     imageLabel->setMouseListenerState(10);
-}
-
-void MainWindow::on_actionSeamCarving_triggered()
-{
-
 }
 
 void MainWindow::on_actionDeplacement_triggered()
@@ -345,24 +328,32 @@ void MainWindow::on_action_Couper_triggered()
 
 void MainWindow::on_actionImageGris_triggered()
 {
-    TransfoCouleur *tc = new TransfoCouleur;
-    //PictLabel *jj = static_cast<PictLabel*>(ui->scrollAreaPict->widget());
-    QImage *imageInversee = tc->inverseColor(imageLabel->getPrincipal());
-    imageLabel->setPrincipal(imageInversee);
-    const QImage imageConv = *imageLabel->getPrincipal();
-    imageLabel->setPixmap(QPixmap::fromImage(imageConv));
-    scaleFactor = 1.0;//scaleImage(1.5);
+    QImage *imageSrc = imageLabel->getSelectedImage();
+    if (imageSrc != NULL)
+    {
+        TransfoCouleur *tc = new TransfoCouleur;
+        //PictLabel *jj = static_cast<PictLabel*>(ui->scrollAreaPict->widget());
+        QImage *imageGris = tc->gris(imageSrc);
+        imageLabel->setPrincipal(imageGris);
+        const QImage imageConv = *imageLabel->getSelectedImage();
+        imageLabel->setPixmap(QPixmap::fromImage(imageConv));
+        scaleFactor = 1.0;//scaleImage(1.5);
+    }
 }
 
 void MainWindow::on_actionInverseCoul_triggered()
 {
-    TransfoCouleur *tc = new TransfoCouleur;
-    //PictLabel *jj = static_cast<PictLabel*>(ui->scrollAreaPict->widget());
-    QImage *imageInversee = tc->inverseColor(imageLabel->getPrincipal());
-    imageLabel->setPrincipal(imageInversee);
-    const QImage imageConv = *imageLabel->getPrincipal();
-    imageLabel->setPixmap(QPixmap::fromImage(imageConv));
-    scaleFactor = 1.0;//scaleImage(1.5);
+    QImage *imageSrc = imageLabel->getSelectedImage();
+    if (imageSrc != NULL)
+    {
+        TransfoCouleur *tc = new TransfoCouleur;
+        //PictLabel *jj = static_cast<PictLabel*>(ui->scrollAreaPict->widget());
+        QImage *imageInversee = tc->inverseColor(imageLabel->getSelectedImage());
+        imageLabel->setPrincipal(imageInversee);
+        const QImage imageConv = *imageLabel->getSelectedImage();
+        imageLabel->setPixmap(QPixmap::fromImage(imageConv));
+        scaleFactor = 1.0;//scaleImage(1.5);
+    }
 }
 
 void MainWindow::on_actionFusion_2_triggered()
@@ -383,5 +374,103 @@ void MainWindow::on_actionFusion_2_triggered()
 
 void MainWindow::on_actionCrop_triggered()
 {
-    imageLabel->setMouseListenerState(11);
+    imageLabel->setMouseListenerState(110);
+}
+
+void MainWindow::on_actionValider_triggered()
+{
+    imageLabel->validateTransfo();
+    pdis->resizePictureArea();
+}
+
+void MainWindow::on_actionRotation_90_Horaire_triggered()
+{
+    ImageResizer *resizer = new ImageResizer;
+    QImage *rotatedImg =resizer->rotateImage90(imageLabel->getSelectedImage(),true);
+    imageLabel->setPrincipal(rotatedImg);
+    imageLabel->setInitialContext();
+    pdis->resizePictureArea();
+}
+
+
+void MainWindow::on_action_Rotation_90_antihoraire_triggered()
+{
+    ImageResizer *resizer = new ImageResizer;
+    QImage *rotatedImg =resizer->rotateImage90(imageLabel->getSelectedImage(),false);
+    imageLabel->setPrincipal(rotatedImg);
+    imageLabel->setInitialContext();
+    pdis->resizePictureArea();
+}
+
+
+void MainWindow::on_actionRotation_180_triggered()
+{
+    ImageResizer *resizer = new ImageResizer;
+    QImage *rotatedImg =resizer->rotateImage180(imageLabel->getSelectedImage());
+    imageLabel->setPrincipal(rotatedImg);
+    imageLabel->setInitialContext();
+    pdis->resizePictureArea();
+}
+
+void MainWindow::on_action_Annuler_triggered()
+{
+    imageLabel->undoLast();
+    pdis->resizePictureArea();
+}
+
+void MainWindow::on_actionRecadrer_triggered()
+{
+    //loadFile("C:/Users/Fredd/Pictures/Rafael-icon.png");
+    ImageResizer *resizer = new ImageResizer;
+    QImage *resizedImg =resizer->resizeImage(imageLabel->getSelectedImage(),pdis->getResizedWidthRequired(),pdis->getResizedHeightRequired());
+    imageLabel->setPrincipal(resizedImg);
+    imageLabel->setInitialContext();
+    pdis->resizePictureArea();
+}
+
+void MainWindow::on_actionSeamCarving_triggered()
+{
+    //loadFile("C:/Users/Fredd/Pictures/Rafael-icon.png");
+    SeamCarver *sc = new SeamCarver(imageLabel->getSelectedImage(),this);
+    sc->init();
+    QImage *imageSeamCarved = sc->extendWidth(200);
+    imageLabel->setPrincipal(imageSeamCarved);
+    imageLabel->setInitialContext();
+    pdis->resizePictureArea();
+}
+
+void MainWindow::on_actionHistogramme_triggered()
+{
+    QImage *imageSrc = imageLabel->getSelectedImage();
+    if (imageSrc != NULL)
+    {
+        TransfoCouleur *tc = new TransfoCouleur;
+        //PictLabel *jj = static_cast<PictLabel*>(ui->scrollAreaPict->widget());
+        tc->histogramme(imageSrc,0);
+    }
+}
+
+void MainWindow::on_actionContour_triggered()
+{
+    QImage *imageSrc = imageLabel->getSelectedImage();
+    if (imageSrc != NULL)
+    {
+        TransfoCouleur *tc = new TransfoCouleur;
+        imageLabel->setPrincipal(tc->contour(imageSrc));
+        const QImage imageConv = *imageLabel->getSelectedImage();
+        imageLabel->setPixmap(QPixmap::fromImage(imageConv));
+        scaleFactor = 1.0;//scaleImage(1.5);
+    }
+}
+
+
+void MainWindow::on_actionHistogramme_2_triggered()
+{
+    QImage *imageSrc = imageLabel->getSelectedImage();
+    if (imageSrc != NULL)
+    {
+        TransfoCouleur *tc = new TransfoCouleur;
+        //PictLabel *jj = static_cast<PictLabel*>(ui->scrollAreaPict->widget());
+        tc->histogramme(imageSrc,0);
+    }
 }

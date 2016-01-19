@@ -285,7 +285,7 @@ void MainWindow::on_actionFlou_triggered()
     TransfoCouleur *tc = new TransfoCouleur;
     //PictLabel *jj = static_cast<PictLabel*>(ui->scrollAreaPict->widget());
     QImage *imageFloutee = tc->flou(imageLabel->getSelectedImage());
-    imageLabel->setSelectedImage(imageFloutee);
+    imageLabel->setPrincipal(imageFloutee);
     const QImage imageConv = *imageLabel->getSelectedImage();
     imageLabel->setPixmap(QPixmap::fromImage(imageConv));
     scaleFactor = 1.0;//scaleImage(1.5);
@@ -472,5 +472,44 @@ void MainWindow::on_actionHistogramme_2_triggered()
         TransfoCouleur *tc = new TransfoCouleur;
         //PictLabel *jj = static_cast<PictLabel*>(ui->scrollAreaPict->widget());
         tc->histogramme(imageSrc,0);
+    }
+}
+
+void MainWindow::on_actionRehaussement_triggered()
+{
+    QImage *imageSrc = imageLabel->getSelectedImage();
+    if (imageSrc != NULL)
+    {
+        TransfoCouleur *tc = new TransfoCouleur;
+        imageLabel->setPrincipal(tc->rehaussement(imageSrc));
+        const QImage imageConv = *imageLabel->getSelectedImage();
+        imageLabel->setPixmap(QPixmap::fromImage(imageConv));
+        scaleFactor = 1.0;//scaleImage(1.5);
+    }
+}
+
+void MainWindow::on_actionEtalement_triggered()
+{
+    QImage *imageSrc = imageLabel->getSelectedImage();
+    if (imageSrc != NULL)
+    {
+        TransfoCouleur *tc = new TransfoCouleur;
+        imageLabel->setPrincipal(tc->etalement(imageSrc));
+        const QImage imageConv = *imageLabel->getSelectedImage();
+        imageLabel->setPixmap(QPixmap::fromImage(imageConv));
+        scaleFactor = 1.0;//scaleImage(1.5);
+    }
+}
+
+void MainWindow::on_actionEgalisation_triggered()
+{
+    QImage *imageSrc = imageLabel->getSelectedImage();
+    if (imageSrc != NULL)
+    {
+        TransfoCouleur *tc = new TransfoCouleur;
+        imageLabel->setPrincipal(tc->egalisation(imageSrc));
+        const QImage imageConv = *imageLabel->getSelectedImage();
+        imageLabel->setPixmap(QPixmap::fromImage(imageConv));
+        scaleFactor = 1.0;//scaleImage(1.5);
     }
 }

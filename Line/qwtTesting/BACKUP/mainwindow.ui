@@ -88,9 +88,18 @@
      <addaction name="action_Flou_Roberts"/>
      <addaction name="action_Personnalis_Detec"/>
      <addaction name="separator"/>
+     <addaction name="actionRehaussement"/>
+     <addaction name="actionEtalement"/>
+     <addaction name="actionEgalisation"/>
+    </widget>
+    <widget class="QMenu" name="menuType_Here">
+     <property name="title">
+      <string>Type Here</string>
+     </property>
     </widget>
     <addaction name="menu_Flou"/>
     <addaction name="menu_Datetction_de_contours"/>
+    <addaction name="menuType_Here"/>
    </widget>
    <widget class="QMenu" name="menu_Fen_tre">
     <property name="title">
@@ -129,6 +138,9 @@
    <addaction name="action_Couper"/>
    <addaction name="action_Copier"/>
    <addaction name="action_Coller"/>
+   <addaction name="action_Annuler"/>
+   <addaction name="actionValider"/>
+   <addaction name="actionSupprimer"/>
   </widget>
   <widget class="QToolBar" name="toolBar_2">
    <property name="windowTitle">
@@ -149,6 +161,8 @@
    <addaction name="actionInverseCoul"/>
    <addaction name="actionImageGris"/>
    <addaction name="actionFusion_2"/>
+   <addaction name="actionHistogramme_2"/>
+   <addaction name="actionContour"/>
    <addaction name="actionZoom_avant"/>
   </widget>
   <action name="action_Nouveau">
@@ -489,7 +503,7 @@
   <action name="actionInverseCoul">
    <property name="icon">
     <iconset resource="res.qrc">
-     <normaloff>:/Barre outil/Tool bar/negatif couleur.png</normaloff>:/Barre outil/Tool bar/negatif couleur.png</iconset>
+     <normaloff>:/Barre outil/Tool bar/negatif.png</normaloff>:/Barre outil/Tool bar/negatif.png</iconset>
    </property>
    <property name="text">
     <string>InverseCoul</string>
@@ -516,6 +530,57 @@
   <action name="actionRecadrer">
    <property name="text">
     <string>Recadrer</string>
+   </property>
+  </action>
+  <action name="actionValider">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/Barre outil/Tool bar/valider.png</normaloff>:/Barre outil/Tool bar/valider.png</iconset>
+   </property>
+   <property name="text">
+    <string>Valider</string>
+   </property>
+  </action>
+  <action name="actionHistogramme_2">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/Barre outil/Tool bar/Histogramme.png</normaloff>:/Barre outil/Tool bar/Histogramme.png</iconset>
+   </property>
+   <property name="text">
+    <string>Histogramme</string>
+   </property>
+  </action>
+  <action name="actionSupprimer">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/Barre outil/Tool bar/Supprimer.png</normaloff>:/Barre outil/Tool bar/Supprimer.png</iconset>
+   </property>
+   <property name="text">
+    <string>Supprimer</string>
+   </property>
+  </action>
+  <action name="actionContour">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/Barre outil/Tool bar/Contour.png</normaloff>:/Barre outil/Tool bar/Contour.png</iconset>
+   </property>
+   <property name="text">
+    <string>Contour</string>
+   </property>
+  </action>
+  <action name="actionRehaussement">
+   <property name="text">
+    <string>Rehaussement </string>
+   </property>
+  </action>
+  <action name="actionEtalement">
+   <property name="text">
+    <string>Etalement</string>
+   </property>
+  </action>
+  <action name="actionEgalisation">
+   <property name="text">
+    <string>Egalisation</string>
    </property>
   </action>
  </widget>

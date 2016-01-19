@@ -97,6 +97,12 @@ private slots:
 
     void on_actionHistogramme_2_triggered();
 
+    void on_actionRehaussement_triggered();
+
+    void on_actionEtalement_triggered();
+
+    void on_actionEgalisation_triggered();
+
 private:
     Ui::MainWindow *ui;
     void updateActions();

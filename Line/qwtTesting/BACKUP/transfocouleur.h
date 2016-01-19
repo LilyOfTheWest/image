@@ -14,6 +14,10 @@ public:
     QImage *flou(QImage *src);
     QImage *rehaussement(QImage *src);
     QImage *contour(QImage *src);
+    QImage *gris(QImage *src);
+    QImage *etalement(QImage *src);
+    QImage *egalisation(QImage *src);
+    void histogramme(QImage *src,int mode);
     /* A mettre dans imageanalyse !!
      * double *rgb_YUV_image(QImage *src);
     double **get_YBuf_image(QImage *src);
@@ -28,7 +32,6 @@ public:
     int get_BVal_Pixel_FromYuv(QRgb pixel_src);
     QImage *convertRgbToYuv(QImage *src);
     QImage *convertYuvToRgb(QImage *src);
-    QImage *extractSubImage(QImage *src,QPoint *origin_select,QPoint *end_select);
     int normalizeColorValue(double val);
 signals:
 
