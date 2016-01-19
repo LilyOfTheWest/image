@@ -93,8 +93,6 @@ private slots:
 
     void on_actionHistogramme_triggered();
 
-    void on_actionHistogramme_2_triggered();
-
     void on_actionContour_triggered();
 
 private:

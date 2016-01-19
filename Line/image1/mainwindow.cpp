@@ -439,7 +439,7 @@ void MainWindow::on_actionSeamCarving_triggered()
     pdis->resizePictureArea();
 }
 
-void MainWindow::on_actionHistogramme_2_triggered()
+void MainWindow::on_actionHistogramme_triggered()
 {
     QImage *imageSrc = imageLabel->getSelectedImage();
     if (imageSrc != NULL)
@@ -462,3 +462,4 @@ void MainWindow::on_actionContour_triggered()
         scaleFactor = 1.0;//scaleImage(1.5);
     }
 }
+
