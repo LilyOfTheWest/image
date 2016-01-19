@@ -46,3 +46,4 @@ FORMS += \
 RESOURCES += \
     res.qrc
 
+CONFIG+=qwt

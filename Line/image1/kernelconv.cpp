@@ -4,8 +4,12 @@
 KernelConv::KernelConv(int ordre)
 {
     w=ordre;
-    buf=(double**) malloc(w*w*sizeof(double*)); 
+    buf = new double*[ordre];
+    for(int i = 0;i<ordre;i++){
+        buf[i] = new double[ordre];
+    }
     coef = 0;
+
 }
 
 KernelConv::~KernelConv() {
@@ -14,25 +18,25 @@ KernelConv::~KernelConv() {
 
 double ** KernelConv::produitConv(double **src, int n, int m) {
     /* Place pour l'image formée */
-    double ** S = new double*[n];
-    for(int i = 0;i<n;i++){
-        S[i] = new double[m];
+    double ** S = new double*[m];
+    for(int i = 0;i<m;i++){
+        S[i] = new double[n];
     }
 
     /* Retournement spacial du noyau + calcul de ses coeffs */
-    this->retournement();
-    this->sommeCoef();
+    retournement();
+    sommeCoef();
 
-    int lk = (k-1)/2;
-    int ck = (k-1)/2;
-    int sum;
+    int lk = (w-1)/2;
+    int ck = (w-1)/2;
+    int sum, x1, y1;
 
     /* Régler problème des tailles de noyau sup */
-    for(int i=0;i<n;i++){
-        for(int j=0;j<m;j++){
+    for(int i=0;i<m;i++){
+        for(int j=0;j<n;j++){
             // Pour ne pas prendre en compte les bords
-            if(i==0 || i== n-1 || j== 0 || j== m-1){
-                S[i][j] = buf[i][j];
+            if(i<=lk-1 || i >= m-lk || j <= ck-1 || j >= n-ck){
+                S[i][j] = src[i][j];
 
             }
             // Les bords restent les mêmes
@@ -40,7 +44,7 @@ double ** KernelConv::produitConv(double **src, int n, int m) {
                 sum = 0;
                 for(int l=-lk;l<=lk;l++){
                     for(int c = -ck;c<=ck;c++){
-                        sum+=K[l+lk][c+ck]*buf[i+l][j+c];
+                        sum+=buf[l+lk][c+ck]*src[i+l][j+c];
                     }
                 }
                 S[i][j] = sum/coef;
@@ -50,7 +54,7 @@ double ** KernelConv::produitConv(double **src, int n, int m) {
     return S;
 }
 
-double * convLinear(double * M, double * K, int n, int k){
+double * KernelConv::convLinear(double * M, double * K, int n, int k){
     double * S = new double[n+k-1];
     int kmin,kmax;
     for(int i=0;i<n+k-1;i++){
@@ -65,44 +69,101 @@ double * convLinear(double * M, double * K, int n, int k){
 }
 
 
-void ** retournement(){
-    for(int i = 0;i<this.w();i++){
-        for(int j = 0 ;j<k;j++){
-            S[k -(i+1)][k -(j+1)] = M[i][j];
+void KernelConv::retournement(){
+    double ** S = new double*[w];
+    for(int i = 0;i<w;i++){
+        S[i] = new double[w];
+    }
+
+    for(int i = 0;i<w;i++){
+        for(int j = 0 ;j<w;j++){
+            S[w -(i+1)][w -(j+1)] = buf[i][j];
+        }
+    }
+    buf=S;
+}
+
+void KernelConv::sommeCoef(){
+    coef=0;
+    for(int i =0;i<w;i++){
+        for(int j =0;j<w;j++){
+            coef+=buf[i][j];
         }
     }
 }
 
-void sommeCoef(){
-    this.setCoef(0);
-    for(int i =0;i<k;i++){
-        for(int j =0;j<k;j++){
-            this.setCoef(this.coef()+K[i][j]);
+void KernelConv::genereImp(){
+    for(int i=0;i<w;i++){
+        for(int j=0;j<w;j++){
+            if((i == (w/2)+1) && (j == (w/2)+1))
+                buf[i][j]=1;
+            else buf[i][j]=0;
         }
     }
+}
+
+void KernelConv::genereSobelVert(){
+    double S[3]={1,2,1};
+    double D[3]={1,0,-1};
+    for(int i=0;i<w;i++){
+        for(int j=0;j<w;j++){
+            buf[i][j]=S[i]*D[j];
+        }
+    }
+}
+
+void KernelConv::genereSobelHori(){
+    double S[3]={1,2,1};
+    double D[3]={1,0,-1};
+    for(int i=0;i<w;i++){
+        for(int j=0;j<w;j++){
+            buf[i][j]=D[i]*S[j];
+        }
+    }
+}
+
+int KernelConv::reflect(int M, int x)
+{
+    if(x < 0)
+    {
+        return -x - 1;
+    }
+    if(x >= M)
+    {
+        return 2*M - x - 1;
+    }
+   return x;
 }
 
 /* Getters & Setters */
-int getW(){
-    return this.w;
+int KernelConv::getW(){
+    return w;
 }
 
-int getCoef(){
-    return this.coef;
+int KernelConv::getCoef(){
+    return coef;
 }
 
-double ** getBuf(){
-    return this.buf;
+double ** KernelConv::getBuf(){
+    return buf;
 }
 
-void setW(int n){
-    this.w = n;
+double KernelConv::getIndex(int x, int y){
+    return buf[x][y];
 }
 
-void setCoef(int c){
-    this.coef = c;
+void KernelConv::setW(int n){
+    w = n;
 }
 
-void setBuf(double ** b){
-    this.buf = b;
+void KernelConv::setCoef(int c){
+    coef = c;
+}
+
+void KernelConv::setBuf(double ** b){
+    buf = b;
+}
+
+void KernelConv::setIndex(double n, int x, int y){
+    buf[x][y]=n;
 }

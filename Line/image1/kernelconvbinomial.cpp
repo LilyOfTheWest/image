@@ -1,8 +1,7 @@
 #include "kernelconvbinomial.h"
 
-KernelConvBinomial::KernelConvBinomial(int ordre)
+KernelConvBinomial::KernelConvBinomial(int ordre) : KernelConv(ordre)
 {
-    KernelConv(ordre);
     double K[2]={1,1};
     double *K2=new double[ordre];
     int n = 2;
@@ -21,13 +20,7 @@ KernelConvBinomial::KernelConvBinomial(int ordre)
         }
     }
 
-    this->sommeCoef();
-
-    for(int i=0;i<ordre;i++){
-        for(int j=0;j<ordre;j++){
-            buf[i][j]/=this->coef();
-        }
-    }
+    sommeCoef();
 }
 
 KernelConvBinomial::~KernelConvBinomial()

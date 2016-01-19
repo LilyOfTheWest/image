@@ -1,15 +1,15 @@
 #include "kernelconvmoyenneur.h"
 
-KernelConvMoyenneur::KernelConvMoyenneur(int ordre)
+KernelConvMoyenneur::KernelConvMoyenneur(int ordre) : KernelConv(ordre)
 {
-    KernelConv(ordre);
+//    KernelConv(ordre);
     for(int i=0;i<ordre;i++){
         for(int j=0;j<ordre;j++){
-            this->buf[i][j] = 1;
+            buf[i][j] = 1;
         }
     }
 
-    this->sommeCoef();
+    sommeCoef();
 }
 
 KernelConvMoyenneur::~KernelConvMoyenneur()

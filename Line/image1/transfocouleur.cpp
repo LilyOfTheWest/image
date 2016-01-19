@@ -80,12 +80,6 @@ QImage *TransfoCouleur::flou(QImage *src)
     // -> nvle image flouter ; passe pictlabel ; undo + ;
     imA->fromYuvToRgb();
 
-    /* TEST HISTOGRAMMES */
-    imA->calculHisto();
-    imA->histoToPoints(1);
-    imA->afficheHisto(1);
-    /* FIN TEST HISTOGRAMMES */
-
     return imA->getDataRGB();
     // delete de tous les new créés.
 
@@ -173,7 +167,22 @@ QImage * TransfoCouleur::contour(QImage *src){
 }
 
 QImage *TransfoCouleur::gris(QImage *src){
-    //TODO voir qGray ?
+    ImageAnalyse *imA = new ImageAnalyse(src);
+    imA->initYuvImagris();
+    QRgb color, color2;
+    int y, alpha;
+    QImage *gris = new QImage(src->width(),src->height(),src->format());
+    double ** imaGris = imA->getImagris();
+    for(int i=0;i<gris->height();i++){
+        for(int j=0;j<gris->width();j++){
+            color=src->pixel(j,i);
+            y = imaGris[i][j];
+            alpha=qAlpha(color);
+            color2=qRgba(y,y,y,alpha);
+            gris->setPixel(j,i,color2);
+        }
+    }
+    return gris;
 }
 
 QImage *TransfoCouleur::etalement(QImage *src){
@@ -204,7 +213,7 @@ QImage *TransfoCouleur::etalement(QImage *src){
     return imA->getDataRGB();
 }
 
-QImage *egalisation(QImage *src){
+QImage TransfoCouleur::*egalisation(QImage *src){
     int nbr_pixels = src->height()*src->width();
     ImageAnalyse *imA = new ImageAnalyse(src);
     imA->initYuvImagris();
@@ -227,6 +236,16 @@ QImage *egalisation(QImage *src){
 
     imA->setImagris(yuv);
     imA->fromYuvToRgb();
+}
+
+void TransfoCouleur::histogramme(QImage *src,int mode){
+    ImageAnalyse *imA = new ImageAnalyse(src);
+    imA->initYuvImagris();
+    /* TEST HISTOGRAMMES */
+    imA->calculHisto();
+    imA->histoToPoints(mode);
+    imA->afficheHisto(mode);
+    /* FIN TEST HISTOGRAMMES */
 }
 
 int TransfoCouleur::get_YVal_Pixel_FromRgb(QRgb pixel_src)

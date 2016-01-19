@@ -1,7 +1,7 @@
 #include "picdisplay.h"
 #include "ui_picdisplay.h"
 #include "pictlabel.h"
-#include "TransfoCouleur.h"
+#include "transfocouleur.h"
 #include <QScrollBar>
 
 PicDisplay::PicDisplay(PictLabel *imageLabel, QWidget *parent) :
