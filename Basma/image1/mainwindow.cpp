@@ -285,7 +285,7 @@ void MainWindow::on_actionFlou_triggered()
     TransfoCouleur *tc = new TransfoCouleur;
     //PictLabel *jj = static_cast<PictLabel*>(ui->scrollAreaPict->widget());
     QImage *imageFloutee = tc->flou(imageLabel->getSelectedImage());
-    imageLabel->setSelectedImage(imageFloutee);
+    imageLabel->setPrincipal(imageFloutee);
     const QImage imageConv = *imageLabel->getSelectedImage();
     imageLabel->setPixmap(QPixmap::fromImage(imageConv));
     scaleFactor = 1.0;//scaleImage(1.5);
