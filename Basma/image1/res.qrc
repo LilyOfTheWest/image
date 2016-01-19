@@ -36,5 +36,8 @@
         <file>Tool bar/Fusion.png</file>
         <file>Tool bar/valider.png</file>
         <file>Tool bar/Histogramme.png</file>
+        <file>Tool bar/Contour.png</file>
+        <file>Tool bar/Supprimer.png</file>
+        <file>Tool bar/negatif.png</file>
     </qresource>
 </RCC>
