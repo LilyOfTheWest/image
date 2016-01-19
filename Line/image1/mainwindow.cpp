@@ -439,11 +439,6 @@ void MainWindow::on_actionSeamCarving_triggered()
     pdis->resizePictureArea();
 }
 
-void MainWindow::on_actionHistogramme_triggered()
-{
-
-}
-
 void MainWindow::on_actionHistogramme_2_triggered()
 {
     QImage *imageSrc = imageLabel->getSelectedImage();
@@ -452,5 +447,18 @@ void MainWindow::on_actionHistogramme_2_triggered()
         TransfoCouleur *tc = new TransfoCouleur;
         //PictLabel *jj = static_cast<PictLabel*>(ui->scrollAreaPict->widget());
         tc->histogramme(imageSrc,0);
+    }
+}
+
+void MainWindow::on_actionContour_triggered()
+{
+    QImage *imageSrc = imageLabel->getSelectedImage();
+    if (imageSrc != NULL)
+    {
+        TransfoCouleur *tc = new TransfoCouleur;
+        imageLabel->setPrincipal(tc->contour(imageSrc));
+        const QImage imageConv = *imageLabel->getSelectedImage();
+        imageLabel->setPixmap(QPixmap::fromImage(imageConv));
+        scaleFactor = 1.0;//scaleImage(1.5);
     }
 }

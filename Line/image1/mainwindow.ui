@@ -131,6 +131,7 @@
    <addaction name="action_Coller"/>
    <addaction name="action_Annuler"/>
    <addaction name="actionValider"/>
+   <addaction name="actionSupprimer"/>
   </widget>
   <widget class="QToolBar" name="toolBar_2">
    <property name="windowTitle">
@@ -152,6 +153,7 @@
    <addaction name="actionImageGris"/>
    <addaction name="actionFusion_2"/>
    <addaction name="actionHistogramme_2"/>
+   <addaction name="actionContour"/>
    <addaction name="actionZoom_avant"/>
   </widget>
   <action name="action_Nouveau">
@@ -492,7 +494,7 @@
   <action name="actionInverseCoul">
    <property name="icon">
     <iconset resource="res.qrc">
-     <normaloff>:/Barre outil/Tool bar/negatif couleur.png</normaloff>:/Barre outil/Tool bar/negatif couleur.png</iconset>
+     <normaloff>:/Barre outil/Tool bar/negatif.png</normaloff>:/Barre outil/Tool bar/negatif.png</iconset>
    </property>
    <property name="text">
     <string>InverseCoul</string>
@@ -537,6 +539,24 @@
    </property>
    <property name="text">
     <string>Histogramme</string>
+   </property>
+  </action>
+  <action name="actionSupprimer">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/Barre outil/Tool bar/Supprimer.png</normaloff>:/Barre outil/Tool bar/Supprimer.png</iconset>
+   </property>
+   <property name="text">
+    <string>Supprimer</string>
+   </property>
+  </action>
+  <action name="actionContour">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/Barre outil/Tool bar/Contour.png</normaloff>:/Barre outil/Tool bar/Contour.png</iconset>
+   </property>
+   <property name="text">
+    <string>Contour</string>
    </property>
   </action>
  </widget>
