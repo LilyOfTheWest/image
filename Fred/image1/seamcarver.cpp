@@ -56,17 +56,19 @@ void SeamCarver::init(){
     int strengthValue;
     QList<int> listStrengthValue;
     QList<int> listOrderedStrengthValue;
+    QPolygon *polyg;
     for(int h=0;h<imgOrigine->height();h++){
-        listLignes[h] = new QPolygon(imgOrigine->width());
+        polyg = new QPolygon();
         item = QPoint(0,h);
-        *listLignes[h] << item;
-       strengthValue=imA->getDyIndex(0,h);
+        *polyg << item;
+        strengthValue = imA->getDyIndex(0,h);
         for (int w=1; w<(imgOrigine->width()-1); w++) {
             item = leastRouteNextPointAt(item,strengthValue);
-            *listLignes[h] << item;
+            *polyg << item;
         }
         listStrengthValue << strengthValue;
         listOrderedStrengthValue << strengthValue;
+        listLignes <<polyg;
     }
 
 
