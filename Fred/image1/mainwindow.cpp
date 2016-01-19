@@ -439,17 +439,6 @@ void MainWindow::on_actionSeamCarving_triggered()
     pdis->resizePictureArea();
 }
 
-void MainWindow::on_actionHistogramme_triggered()
-{
-    QImage *imageSrc = imageLabel->getSelectedImage();
-    if (imageSrc != NULL)
-    {
-        TransfoCouleur *tc = new TransfoCouleur;
-        //PictLabel *jj = static_cast<PictLabel*>(ui->scrollAreaPict->widget());
-        tc->histogramme(imageSrc,0);
-    }
-}
-
 void MainWindow::on_actionContour_triggered()
 {
     QImage *imageSrc = imageLabel->getSelectedImage();

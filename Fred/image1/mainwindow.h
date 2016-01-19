@@ -91,8 +91,6 @@ private slots:
 
     void on_action_Annuler_triggered();
 
-    void on_actionHistogramme_triggered();
-
     void on_actionContour_triggered();
 
 private:
