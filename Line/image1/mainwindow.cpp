@@ -463,3 +463,14 @@ void MainWindow::on_actionContour_triggered()
     }
 }
 
+
+void MainWindow::on_actionHistogramme_2_triggered()
+{
+    QImage *imageSrc = imageLabel->getSelectedImage();
+    if (imageSrc != NULL)
+    {
+        TransfoCouleur *tc = new TransfoCouleur;
+        //PictLabel *jj = static_cast<PictLabel*>(ui->scrollAreaPict->widget());
+        tc->histogramme(imageSrc,0);
+    }
+}

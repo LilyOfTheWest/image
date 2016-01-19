@@ -95,6 +95,8 @@ private slots:
 
     void on_actionContour_triggered();
 
+    void on_actionHistogramme_2_triggered();
+
 private:
     Ui::MainWindow *ui;
     void updateActions();
