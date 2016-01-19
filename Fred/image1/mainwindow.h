@@ -89,6 +89,8 @@ private slots:
 
     void on_actionRotation_180_triggered();
 
+    void on_action_Annuler_triggered();
+
 private:
     Ui::MainWindow *ui;
     void updateActions();

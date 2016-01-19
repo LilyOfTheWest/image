@@ -11,7 +11,8 @@ HEADERS       = \
     kernelconvmoyenneur.h \
     kernelconvbinomial.h \
     couleurs.h \
-    imageresizer.h
+    imageresizer.h \
+    seamcarver.h
 SOURCES       = \
                 main.cpp \
     picdisplay.cpp \
@@ -23,7 +24,8 @@ SOURCES       = \
     kernelconvmoyenneur.cpp \
     kernelconvbinomial.cpp \
     couleurs.cpp \
-    imageresizer.cpp
+    imageresizer.cpp \
+    seamcarver.cpp
 
 # install
 target.path = $$[QT_INSTALL_EXAMPLES]/widgets/widgets/imageviewer

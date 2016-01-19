@@ -41,9 +41,9 @@ int PicDisplay::getResizedHeightRequired()
 
 void PicDisplay::refreshPixelProperties()
 {
-    PictLabel *jj = static_cast<PictLabel*>(ui->scrollAreaP->widget());
-    QRgb color = jj->getColorPicked();
-    QPoint position = jj->getPixelPicked();
+    //PictLabel *jj = static_cast<PictLabel*>(ui->scrollAreaP->widget());
+    QRgb color = this->imageLabel->getColorPicked();
+    QPoint position = this->imageLabel->getPixelPicked();
     QString valx= QString::number(position.x());
     ui->valPosX->setText(valx);
     QString valy= QString::number(position.y());
@@ -52,7 +52,6 @@ void PicDisplay::refreshPixelProperties()
 
     if (ui->radioButtonRGB->isChecked())
     {
-        ui->libLibre->setText("RGB");
         ui->libCoul1->setText("R:");
         ui->libCoul2->setText("G:");
         ui->libCoul3->setText("B:");
@@ -65,7 +64,6 @@ void PicDisplay::refreshPixelProperties()
 
     } else
     {
-        ui->libLibre->setText("YUV");
         ui->libCoul1->setText("Y:");
         ui->libCoul2->setText("U:");
         ui->libCoul3->setText("V:");
@@ -76,17 +74,6 @@ void PicDisplay::refreshPixelProperties()
         ui->valCoul2->setText(val2);
         val3= QString::number(tc->get_VVal_Pixel_FromRgb(color));
         ui->valCoul3->setText(val3);
-    }
-}
-
-void PicDisplay::on_pushButton_clicked()
-{
-    if (ui->radioButtonRGB->isChecked())
-    {
-        ui->libLibre->setText("OO");
-    } else
-    {
-        ui->libLibre->setText("FF");
     }
 }
 
@@ -136,11 +123,50 @@ void PicDisplay::on_refreshPixelProperties()
 
 void PicDisplay::on_resizingRequired()
 {
-    ui->libTailleWidth->setText("W:"+QString::number(imageLabel->getSelectedImage()->width()));
+    /*ui->libTailleWidth->setText("W:"+QString::number(imageLabel->getSelectedImage()->width()));
     ui->libTailleHeigtht->setText("H:"+QString::number(imageLabel->getSelectedImage()->height()));
     ui->radioButtonImg1->setChecked(imageLabel->getSelectedImage()==imageLabel->getImage1());
     ui->radioButtonImg2->setChecked(imageLabel->getSelectedImage()!=imageLabel->getImage1());
     ui->radioButtonImg2->setVisible(imageLabel->getImage2()!=NULL);
 
-    resizePictureArea();
+    resizePictureArea();*/
+}
+
+void PicDisplay::on_displayRedefined()
+{
+    updateDisplay();
+}
+
+void PicDisplay::updateDisplay()
+{
+    if (imageLabel->getSelectedImage() != NULL)
+    {
+        ui->libTailleGeneral->setVisible(true);
+        ui->libTailleHeigtht->setText("H:"+QString::number(imageLabel->getSelectedImage()->height()));
+        ui->libTailleHeigtht->setVisible(true);
+        ui->libTailleWidth->setText("W:"+QString::number(imageLabel->getSelectedImage()->width()));
+        ui->libTailleWidth->setVisible(true);
+        ui->lineEdit_Width->setVisible(true);
+        ui->lineEdit_Height->setVisible(true);
+
+        if (imageLabel->getImage2() == NULL)
+        {
+            ui->radioButtonImg1->setVisible(false);
+            ui->radioButtonImg2->setVisible(false);
+        } else
+        {
+            ui->radioButtonImg1->setVisible(true);
+            ui->radioButtonImg2->setVisible(true);
+        }
+
+    } else
+    {
+        ui->libTailleGeneral->setVisible(false);
+        ui->libTailleHeigtht->setVisible(false);
+        ui->libTailleWidth->setVisible(false);
+        ui->lineEdit_Width->setVisible(false);
+        ui->lineEdit_Height->setVisible(false);
+        ui->radioButtonImg1->setVisible(false);
+        ui->radioButtonImg2->setVisible(false);
+    }
 }

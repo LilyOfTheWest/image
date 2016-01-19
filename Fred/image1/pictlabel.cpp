@@ -10,6 +10,7 @@ PictLabel::PictLabel(QWidget *parent) :
 {
     principal = NULL;
     firstImg = NULL;
+    secondImg = NULL;
     scaleFactor = 1;
     setInitialContext();
 }
@@ -17,6 +18,17 @@ PictLabel::PictLabel(QWidget *parent) :
 PictLabel::~PictLabel()
 {
     delete principal;
+    qDeleteAll(undo);
+    /*QListIterator<QImage *> hh(undo);
+
+    while (hh.hasNext())
+    {
+        delete hh.next();
+
+
+
+        undo = new QStack<QImage>;
+    }*/
 }
 
 void PictLabel::setInitialContext()
@@ -24,7 +36,11 @@ void PictLabel::setInitialContext()
     origin_select.setX(0);
     origin_select.setY(0);
     mouseListenerState=0;
-    secondImg = NULL;
+    if (secondImg != NULL)
+    {
+        delete secondImg;
+        secondImg = NULL;
+    }
     setCouperMode(false);
     end_select = NULL;
     position_firstImg.setX(0);
@@ -70,6 +86,12 @@ void PictLabel::addImageToMerge(QImage *src)
 
 void PictLabel::setPrincipal(QImage *src)
 {
+    saveTemp(firstImg);
+    setPrincipalWithoutPrevSaved(src);
+}
+
+void PictLabel::setPrincipalWithoutPrevSaved(QImage *src)
+{
     // Install background ; principal devient firstImg
     QRgb backgroundColor = qRgb(255,255,255);
     if (principal != NULL)
@@ -84,6 +106,8 @@ void PictLabel::setPrincipal(QImage *src)
     }
     setInitialContext();
     drawImage();
+    signalResizingRequired();
+    signalRedisplayRequired();
 }
 
 QImage *PictLabel::getPrincipal()
@@ -96,6 +120,16 @@ QImage *PictLabel::getSelectedImage()
     return firstImg;
 }
 
+QImage *PictLabel::getImage1()
+{
+    return firstImg;
+}
+
+QImage *PictLabel::getImage2()
+{
+    return secondImg;
+}
+
 void PictLabel::setSelectedImage(QImage *selectImg)
 {
     firstImg = new QImage(selectImg->width(),selectImg->height(),selectImg->format());
@@ -104,6 +138,7 @@ void PictLabel::setSelectedImage(QImage *selectImg)
             firstImg->setPixel(j,i,selectImg->pixel(j,i));
         }
     }
+    signalRedisplayRequired();
 }
 
 /*void PictLabel::enterEvent ( QEvent * event )
@@ -138,13 +173,17 @@ void PictLabel::mouseMoveEvent ( QMouseEvent * event )
 void PictLabel::mousePressEvent ( QMouseEvent * event )
 {
     QPoint mouse_position = resizeWithScaling(event->pos());
+    QPoint rep;
+    ImageResizer *resizer;
     switch(mouseListenerState){
     case 10: // Pipette
-        //colorPicked = principal->pixel(mouse_position);
-        //if (isPicked(resizeWithScaling(event->pos()),firstImg,&position_firstImg)==true) {
-
-        //}
-        signalNewPixelPicked();
+        resizer = new ImageResizer;
+        mouse_position = resizer->isPicked(resizeWithScaling(event->pos()),firstImg,&position_firstImg);
+        if (mouse_position.x() != -1) {
+            mouse_origin = mouse_position;
+            colorPicked = firstImg->pixel(mouse_position);
+            signalNewPixelPicked();
+        }
         break;
     case 11: // Select
         origin_select = mouse_position;
@@ -221,11 +260,7 @@ void PictLabel::pasteSelection()
         drawImage();
         mouseListenerState=18;
     }
-}
-
-bool PictLabel::isPicked(QPoint mousePosition,QImage *imgToMove,QPoint *positionRelative)
-{
-    return false;
+    signalRedisplayRequired();
 }
 
 void PictLabel::moveSelection(QPoint *mouse_end,QImage *imgToMove,QPoint &positionRelative)
@@ -247,21 +282,20 @@ void PictLabel::moveSelection(QPoint *mouse_end,QImage *imgToMove,QPoint &positi
     drawImage();
 }
 
-void PictLabel::saveTemp() {
-    if (undo == NULL)
-        undo = new QStack<QImage>();
-    const QPixmap *dd = this->pixmap();
-    QImage image2=dd->toImage();
-    undo->push(image2);
+void PictLabel::saveTemp(QImage *svgFirstImg) {
+    if (svgFirstImg == NULL)
+        return;
+    //const QPixmap *dd = this->pixmap();
+    //QImage image2=dd->toImage();
+    undo.append(svgFirstImg);//image2);
 }
 
 void PictLabel::undoLast() {
-    if (undo == NULL)
-        return;
-    if (undo->isEmpty())
-        return;
-    const QImage image = undo->pop();
-    this->setPixmap(QPixmap::fromImage(image));
+    if (undo.count()>0)
+    {
+        setPrincipalWithoutPrevSaved(undo.last());
+        undo.removeLast();
+    }
 }
 
 void PictLabel::setMouseListenerState(int mouseListenerStateVal)
@@ -332,6 +366,7 @@ void PictLabel::drawImage()
     const QImage image = image2;
     //    this->setPixmap(QPixmap::fromImage(image));
     this->setPixmap(QPixmap::fromImage(image));
+    signalRedisplayRequired();
 }
 
 void PictLabel::validateTransfo()
@@ -358,8 +393,6 @@ void PictLabel::validateTransfo()
     case 110: // Crop select
         croppedImg =resizer->extractSubImage(firstImg,&origin_select,end_select);
         setPrincipal(croppedImg);
-        //setInitialContext();
-        drawImage();
         break;
     }
 }

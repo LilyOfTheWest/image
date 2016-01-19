@@ -11,6 +11,7 @@ class ImageResizer : public QObject
 
 public:
     explicit ImageResizer(QObject *parent = 0);
+    QPoint isPicked(QPoint mousePosition,QImage *imgPicked,QPoint *positionRel);
     QImage *extractSubImage(QImage *src,QPoint *origin_select,QPoint *end_select);
     QImage *displaceImage(QImage *principal, QImage *img1,QPoint pos_rel1,QImage *img2,QPoint pos_rel2);
     QImage *rotateImage90(QImage *src,bool horaire);

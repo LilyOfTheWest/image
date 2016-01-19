@@ -35,10 +35,12 @@ public:
     int getResizedWidthRequired();
     int getResizedHeightRequired();
 
+    void updateDisplay();
+
 private slots:
     void on_refreshPixelProperties();
     void on_resizingRequired();
-    void on_pushButton_clicked();
+    void on_displayRedefined();
     void on_radioButtonRGB_clicked();
     void on_radioButton_YUV_clicked();
 

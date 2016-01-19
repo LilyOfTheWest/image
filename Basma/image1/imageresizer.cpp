@@ -30,6 +30,20 @@ QImage *ImageResizer::extractSubImage(QImage *src,QPoint *origin_select,QPoint *
     return ret;
 }
 
+
+QPoint ImageResizer::isPicked(QPoint mousePosition,QImage *imgPicked,QPoint *positionRel)
+{
+    QPoint ret = QPoint(-1,-1);
+    if (imgPicked != NULL)
+    {
+        int x_in_imgPicked = mousePosition.x()-positionRel->x();
+        int y_in_imgPicked = mousePosition.y()-positionRel->y();
+        if ((x_in_imgPicked < imgPicked->width()) && (y_in_imgPicked < imgPicked->height()))
+            ret = QPoint(x_in_imgPicked,y_in_imgPicked);
+    }
+    return ret;
+}
+
 QImage *ImageResizer::displaceImage(QImage *principal, QImage *img1,QPoint pos_rel1,QImage *img2,QPoint pos_rel2)
 {
     int x1_min = qMax(pos_rel1.x(),0);

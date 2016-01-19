@@ -33,6 +33,8 @@ public:
     void drawImage();
     QImage *getPrincipal();
     QImage *getSelectedImage();
+    QImage *getImage1();
+    QImage *getImage2();
     void setSelectedImage(QImage *selectImg);
     QRgb getColorPicked();
     QPoint getPixelPicked();
@@ -44,6 +46,8 @@ public:
 
 signals:
     void signalNewPixelPicked();
+    void signalResizingRequired();
+    void signalRedisplayRequired();
 
 public slots:
 
@@ -53,19 +57,19 @@ protected:
     virtual void mouseMoveEvent ( QMouseEvent * event ) Q_DECL_OVERRIDE;
     virtual void mousePressEvent ( QMouseEvent * event ) Q_DECL_OVERRIDE;
     virtual void mouseReleaseEvent ( QMouseEvent * event ) Q_DECL_OVERRIDE;
-    void saveTemp();
+    void saveTemp(QImage *svgFirstImg);
     void drawSelection ();
     void setSelection(QMouseEvent * event);
-    bool isPicked(QPoint mousePosition,QImage *imgToMove,QPoint *positionRelative);
     void moveSelection(QPoint *mouse_end,QImage *imgToMove,QPoint &positionRelative);
     QPoint resizeWithScaling(QPoint mousePointed);
+    void setPrincipalWithoutPrevSaved(QImage *src);
 
     QRubberBand *rubberBand;
     QPoint origin_select;
     QPoint *end_select;
     QPoint mouse_origin;
     QPoint *mouse_end;
-    QStack<QImage> *undo;
+    QList<QImage *> undo;
     QImage *principal;
     QImage *firstImg;
     QImage *secondImg;

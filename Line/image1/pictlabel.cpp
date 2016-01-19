@@ -107,6 +107,7 @@ void PictLabel::setPrincipalWithoutPrevSaved(QImage *src)
     setInitialContext();
     drawImage();
     signalResizingRequired();
+    signalRedisplayRequired();
 }
 
 QImage *PictLabel::getPrincipal()
@@ -119,6 +120,16 @@ QImage *PictLabel::getSelectedImage()
     return firstImg;
 }
 
+QImage *PictLabel::getImage1()
+{
+    return firstImg;
+}
+
+QImage *PictLabel::getImage2()
+{
+    return secondImg;
+}
+
 void PictLabel::setSelectedImage(QImage *selectImg)
 {
     firstImg = new QImage(selectImg->width(),selectImg->height(),selectImg->format());
@@ -127,6 +138,7 @@ void PictLabel::setSelectedImage(QImage *selectImg)
             firstImg->setPixel(j,i,selectImg->pixel(j,i));
         }
     }
+    signalRedisplayRequired();
 }
 
 /*void PictLabel::enterEvent ( QEvent * event )
@@ -161,13 +173,17 @@ void PictLabel::mouseMoveEvent ( QMouseEvent * event )
 void PictLabel::mousePressEvent ( QMouseEvent * event )
 {
     QPoint mouse_position = resizeWithScaling(event->pos());
+    QPoint rep;
+    ImageResizer *resizer;
     switch(mouseListenerState){
     case 10: // Pipette
-        //colorPicked = principal->pixel(mouse_position);
-        //if (isPicked(resizeWithScaling(event->pos()),firstImg,&position_firstImg)==true) {
-
-        //}
-        signalNewPixelPicked();
+        resizer = new ImageResizer;
+        mouse_position = resizer->isPicked(resizeWithScaling(event->pos()),firstImg,&position_firstImg);
+        if (mouse_position.x() != -1) {
+            mouse_origin = mouse_position;
+            colorPicked = firstImg->pixel(mouse_position);
+            signalNewPixelPicked();
+        }
         break;
     case 11: // Select
         origin_select = mouse_position;
@@ -244,11 +260,7 @@ void PictLabel::pasteSelection()
         drawImage();
         mouseListenerState=18;
     }
-}
-
-bool PictLabel::isPicked(QPoint mousePosition,QImage *imgToMove,QPoint *positionRelative)
-{
-    return false;
+    signalRedisplayRequired();
 }
 
 void PictLabel::moveSelection(QPoint *mouse_end,QImage *imgToMove,QPoint &positionRelative)
@@ -354,6 +366,7 @@ void PictLabel::drawImage()
     const QImage image = image2;
     //    this->setPixmap(QPixmap::fromImage(image));
     this->setPixmap(QPixmap::fromImage(image));
+    signalRedisplayRequired();
 }
 
 void PictLabel::validateTransfo()

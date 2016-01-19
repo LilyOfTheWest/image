@@ -8,6 +8,7 @@
 #include <QPrintDialog>
 #endif
 #include "kernelconv.h"
+#include "seamcarver.h"
 
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -24,11 +25,13 @@ MainWindow::MainWindow(QWidget *parent) :
     setCentralWidget(scrollArea);
     QObject::connect(imageLabel,SIGNAL(signalNewPixelPicked()),pdis,SLOT(on_refreshPixelProperties()));
     QObject::connect(imageLabel,SIGNAL(signalResizingRequired()),pdis,SLOT(on_resizingRequired()));
+    QObject::connect(imageLabel,SIGNAL(signalRedisplayRequired()),pdis,SLOT(on_displayRedefined()));
     updateActionsWithoutImage();
     resize(QGuiApplication::primaryScreen()->availableSize() * 3 / 5);
     scaleFactor = 1;
 
-    on_actionRecadrer_triggered();
+    //loadFile("C:/Users/Fredd/Pictures/Rafael-icon.png");
+    //on_actionSeamCarving_triggered();
 }
 
 MainWindow::~MainWindow()
@@ -190,6 +193,8 @@ void MainWindow::updateActionsWithoutImage()
     ui->action_Couper->setVisible(false);
     ui->action_Coller->setVisible(false);
 
+    this->pdis->updateDisplay();
+
 }
 
 
@@ -202,6 +207,7 @@ void MainWindow::updateActionsWithImage()
     ui->actionZoom_avant->setEnabled(true);
     ui->action_Zoom_arriere->setEnabled(true);
     ui->actionSeamCarving->setVisible(true);
+    this->pdis->updateDisplay();
 //    inverseColorAct->setEnabled(!fitToWindowAct->isChecked());
 //    prodConvAct->setEnabled(!fitToWindowAct->isChecked());
 //    zoomInAct->setEnabled(!fitToWindowAct->isChecked());
@@ -288,11 +294,6 @@ void MainWindow::on_actionFlou_triggered()
 void MainWindow::on_actionPipette_triggered()
 {
     imageLabel->setMouseListenerState(10);
-}
-
-void MainWindow::on_actionSeamCarving_triggered()
-{
-
 }
 
 void MainWindow::on_actionDeplacement_triggered()
@@ -414,11 +415,12 @@ void MainWindow::on_actionRotation_180_triggered()
 void MainWindow::on_action_Annuler_triggered()
 {
     imageLabel->undoLast();
+    pdis->resizePictureArea();
 }
 
 void MainWindow::on_actionRecadrer_triggered()
 {
-    loadFile("C:/Users/Fredd/Pictures/Rafael-icon.png");
+    //loadFile("C:/Users/Fredd/Pictures/Rafael-icon.png");
     ImageResizer *resizer = new ImageResizer;
     QImage *resizedImg =resizer->resizeImage(imageLabel->getSelectedImage(),pdis->getResizedWidthRequired(),pdis->getResizedHeightRequired());
     imageLabel->setPrincipal(resizedImg);
@@ -426,3 +428,13 @@ void MainWindow::on_actionRecadrer_triggered()
     pdis->resizePictureArea();
 }
 
+void MainWindow::on_actionSeamCarving_triggered()
+{
+    //loadFile("C:/Users/Fredd/Pictures/Rafael-icon.png");
+    SeamCarver *sc = new SeamCarver(imageLabel->getSelectedImage(),this);
+    sc->init();
+    QImage *imageSeamCarved = sc->extendWidth(200);
+    imageLabel->setPrincipal(imageSeamCarved);
+    imageLabel->setInitialContext();
+    pdis->resizePictureArea();
+}
