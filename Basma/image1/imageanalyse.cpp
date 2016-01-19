@@ -116,7 +116,7 @@ int ImageAnalyse::min(){
     QRgb color;
     int r;
     for(int i=0;i<dataYUV->height();i++){
-        for(int j=0;i<dataYUV->width();j++){
+        for(int j=0;j<dataYUV->width();j++){
             color=dataYUV->pixel(j,i);
             r=qRed(color);
             if(r <= min){
@@ -132,7 +132,7 @@ int ImageAnalyse::max(){
     QRgb color;
     int r;
     for(int i=0;i<dataYUV->height();i++){
-        for(int j=0;i<dataYUV->width();j++){
+        for(int j=0;j<dataYUV->width();j++){
             color=dataYUV->pixel(j,i);
             r=qRed(color);
             if(r >= max){
