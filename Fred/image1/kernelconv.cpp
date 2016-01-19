@@ -47,7 +47,8 @@ double ** KernelConv::produitConv(double **src, int n, int m) {
                         sum+=buf[l+lk][c+ck]*src[i+l][j+c];
                     }
                 }
-                S[i][j] = sum/coef;
+                if(coef != 0)
+                    S[i][j] = sum/coef;
             }
         }
     }
@@ -97,7 +98,7 @@ void KernelConv::sommeCoef(){
 void KernelConv::genereImp(){
     for(int i=0;i<w;i++){
         for(int j=0;j<w;j++){
-            if((i == (w/2)+1) && (j == (w/2)+1))
+            if((i == (w/2)) && (j == (w/2)))
                 buf[i][j]=1;
             else buf[i][j]=0;
         }

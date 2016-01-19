@@ -64,7 +64,6 @@ private slots:
 
     void on_actionDeplacement_triggered();
 
-
     void on_action_Copier_triggered();
 
     void on_action_Coller_triggered();
@@ -92,6 +91,12 @@ private slots:
     void on_action_Annuler_triggered();
 
     void on_actionContour_triggered();
+
+    void on_actionRehaussement_triggered();
+
+    void on_actionEtalement_triggered();
+
+    void on_actionEgalisation_triggered();
 
 private:
     Ui::MainWindow *ui;

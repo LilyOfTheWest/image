@@ -1,7 +1,7 @@
 #ifndef SEAMCARVER_H
 #define SEAMCARVER_H
 
-#define NB_LIGNES_SEAM_CARVING = 7
+#define NB_LIGNES_SEAM_CARVING 7
 #include <QObject>
 #include "imageanalyse.h"
 

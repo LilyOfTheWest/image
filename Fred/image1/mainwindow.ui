@@ -88,9 +88,18 @@
      <addaction name="action_Flou_Roberts"/>
      <addaction name="action_Personnalis_Detec"/>
      <addaction name="separator"/>
+     <addaction name="actionRehaussement"/>
+     <addaction name="actionEtalement"/>
+     <addaction name="actionEgalisation"/>
+    </widget>
+    <widget class="QMenu" name="menuType_Here">
+     <property name="title">
+      <string>Type Here</string>
+     </property>
     </widget>
     <addaction name="menu_Flou"/>
     <addaction name="menu_Datetction_de_contours"/>
+    <addaction name="menuType_Here"/>
    </widget>
    <widget class="QMenu" name="menu_Fen_tre">
     <property name="title">
@@ -557,6 +566,21 @@
    </property>
    <property name="text">
     <string>Contour</string>
+   </property>
+  </action>
+  <action name="actionRehaussement">
+   <property name="text">
+    <string>Rehaussement </string>
+   </property>
+  </action>
+  <action name="actionEtalement">
+   <property name="text">
+    <string>Etalement</string>
+   </property>
+  </action>
+  <action name="actionEgalisation">
+   <property name="text">
+    <string>Egalisation</string>
    </property>
   </action>
  </widget>
