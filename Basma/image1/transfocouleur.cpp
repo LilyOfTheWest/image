@@ -167,7 +167,22 @@ QImage * TransfoCouleur::contour(QImage *src){
 }
 
 QImage *TransfoCouleur::gris(QImage *src){
-    //TODO voir qGray ?
+    ImageAnalyse *imA = new ImageAnalyse(src);
+    imA->initYuvImagris();
+    QRgb color, color2;
+    int y, alpha;
+    QImage *gris = new QImage(src->width(),src->height(),src->format());
+    double ** imaGris = imA->getImagris();
+    for(int i=0;i<gris->height();i++){
+        for(int j=0;j<gris->width();j++){
+            color=src->pixel(j,i);
+            y = imaGris[i][j];
+            alpha=qAlpha(color);
+            color2=qRgba(y,y,y,alpha);
+            gris->setPixel(j,i,color2);
+        }
+    }
+    return gris;
 }
 
 QImage *TransfoCouleur::etalement(QImage *src){

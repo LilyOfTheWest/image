@@ -333,8 +333,8 @@ void MainWindow::on_actionImageGris_triggered()
     {
         TransfoCouleur *tc = new TransfoCouleur;
         //PictLabel *jj = static_cast<PictLabel*>(ui->scrollAreaPict->widget());
-        QImage *imageInversee = tc->inverseColor(imageSrc);
-        imageLabel->setPrincipal(imageInversee);
+        QImage *imageGris = tc->gris(imageSrc);
+        imageLabel->setPrincipal(imageGris);
         const QImage imageConv = *imageLabel->getSelectedImage();
         imageLabel->setPixmap(QPixmap::fromImage(imageConv));
         scaleFactor = 1.0;//scaleImage(1.5);
@@ -438,3 +438,17 @@ void MainWindow::on_actionSeamCarving_triggered()
     imageLabel->setInitialContext();
     pdis->resizePictureArea();
 }
+
+void MainWindow::on_actionContour_triggered()
+{
+    QImage *imageSrc = imageLabel->getSelectedImage();
+    if (imageSrc != NULL)
+    {
+        TransfoCouleur *tc = new TransfoCouleur;
+        imageLabel->setPrincipal(tc->contour(imageSrc));
+        const QImage imageConv = *imageLabel->getSelectedImage();
+        imageLabel->setPixmap(QPixmap::fromImage(imageConv));
+        scaleFactor = 1.0;//scaleImage(1.5);
+    }
+}
+

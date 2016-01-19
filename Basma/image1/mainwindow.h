@@ -91,6 +91,8 @@ private slots:
 
     void on_action_Annuler_triggered();
 
+    void on_actionContour_triggered();
+
 private:
     Ui::MainWindow *ui;
     void updateActions();
