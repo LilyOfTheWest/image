@@ -31,7 +31,8 @@ MainWindow::MainWindow(QWidget *parent) :
     scaleFactor = 1;
 
     //loadFile("C:/Users/Fredd/Pictures/Rafael-icon.png");
-    //on_actionSeamCarving_triggered();
+    loadFile("C:/Users/Fredd/Pictures/Rio-2-Official-Trailer-3-40.jpg");
+    on_actionSeamCarving_triggered();
 }
 
 MainWindow::~MainWindow()
@@ -433,7 +434,7 @@ void MainWindow::on_actionSeamCarving_triggered()
     //loadFile("C:/Users/Fredd/Pictures/Rafael-icon.png");
     SeamCarver *sc = new SeamCarver(imageLabel->getSelectedImage(),this);
     sc->init();
-    QImage *imageSeamCarved = sc->extendWidth(200);
+    QImage *imageSeamCarved = sc->extendWidth(20);
     imageLabel->setPrincipal(imageSeamCarved);
     imageLabel->setInitialContext();
     pdis->resizePictureArea();
@@ -446,7 +447,7 @@ void MainWindow::on_actionHistogramme_triggered()
     {
         TransfoCouleur *tc = new TransfoCouleur;
         //PictLabel *jj = static_cast<PictLabel*>(ui->scrollAreaPict->widget());
-        tc->histogramme(imageSrc,0);
+        tc->histogramme(imageSrc,pdis->getYUVMode());
     }
 }
 
@@ -471,7 +472,7 @@ void MainWindow::on_actionHistogramme_2_triggered()
     {
         TransfoCouleur *tc = new TransfoCouleur;
         //PictLabel *jj = static_cast<PictLabel*>(ui->scrollAreaPict->widget());
-        tc->histogramme(imageSrc,0);
+        tc->histogramme(imageSrc,pdis->getYUVMode());
     }
 }
 

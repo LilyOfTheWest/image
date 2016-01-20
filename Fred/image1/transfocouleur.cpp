@@ -103,7 +103,7 @@ QImage *TransfoCouleur::inverseColor(QImage *src) {
     return ret;
 }
 
-QImage * TransfoCouleur::rehaussement(QImage *src){
+QImage * TransfoCouleur::rehaussement(QImage *src, double alpha){
     int ordre = 3;
     // Filtre Passe Bas
     KernelConv *kerPB = new KernelConvBinomial(ordre);
@@ -127,8 +127,6 @@ QImage * TransfoCouleur::rehaussement(QImage *src){
 //    imA->initYuvImagris();
 //    imA->setImagris(kerPH->produitConv(imA->getImagris(), src->width(), src->height()));
 //    imA->fromYuvToRgb();
-
-    double alpha = 0.5;
 
     KernelConv *kerRH = new KernelConv(ordre);
 
@@ -190,10 +188,7 @@ QImage *TransfoCouleur::gris(QImage *src){
     return gris;
 }
 
-QImage *TransfoCouleur::etalement(QImage *src){
-    double beta, alpha;
-    beta = 1;
-    alpha = 1.5;
+QImage *TransfoCouleur::etalement(QImage *src, double alpha, double beta){
     ImageAnalyse *imA = new ImageAnalyse(src);
     imA->initYuvImagris();
     int min = imA->min();
@@ -246,6 +241,16 @@ QImage *TransfoCouleur::egalisation(QImage *src){
     imA->fromYuvToRgb();
 
     return imA->getDataRGB();
+}
+
+void TransfoCouleur::histogramme(QImage *src,int mode){
+    ImageAnalyse *imA = new ImageAnalyse(src);
+    imA->initYuvImagris();
+    /* TEST HISTOGRAMMES */
+    imA->calculHisto();
+    imA->histoToPoints(mode);
+    imA->afficheHisto(mode);
+    /* FIN TEST HISTOGRAMMES */
 }
 
 int TransfoCouleur::get_YVal_Pixel_FromRgb(QRgb pixel_src)

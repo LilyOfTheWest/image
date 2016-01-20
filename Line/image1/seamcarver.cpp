@@ -95,7 +95,7 @@ QImage * SeamCarver::extendWidth(int w_extent){
     QRgb ligneColor = qRgb(255,255,255);
     int y_ligneBest;
     QPoint pp;
-    QImage *dataRet = new QImage(imgOrigine->width(),imgOrigine->height()+(w_extent+2)*listLignesMostSuitable.size(),imgOrigine->format());
+    QImage *dataRet = new QImage(imgOrigine->width(),imgOrigine->height()+2+NB_LIGNES_SEAM_CARVING,imgOrigine->format());
     ImageResizer *resizer = new ImageResizer;
     int delta_y,tmp_lect;
     QList<int> list_y_val;
@@ -124,15 +124,11 @@ QImage * SeamCarver::extendWidth(int w_extent){
                 dataRet->setPixel(x,y+delta_y,color1);
             } else
             {
-                do {
-                    dataRet->setPixel(x,y_ligneBest+delta_y,ligneColor);
-                    dataRet->setPixel(x,y_ligneBest+w_extent+2+delta_y,ligneColor);
-                    color2=imgOrigine->pixel(x,y+1);
-                    resizer->interpol(dataRet,x,y_ligneBest+1+delta_y,w_extent,color1,color2,false);
-                    delta_y += w_extent+2;
-                    tmp_lect = list_y_val.takeFirst();
-                } while (tmp_lect == y_ligneBest);
-                y_ligneBest = tmp_lect;
+                dataRet->setPixel(x,y_ligneBest+delta_y,ligneColor);
+                dataRet->setPixel(x,y_ligneBest+delta_y+2+NB_LIGNES_SEAM_CARVING,ligneColor);
+                color2=imgOrigine->pixel(x,y+1);
+                resizer->interpol(dataRet,x,y_ligneBest+1+delta_y,NB_LIGNES_SEAM_CARVING+1,color1,color2,false);
+                delta_y += NB_LIGNES_SEAM_CARVING+2;
             }
         }
     }

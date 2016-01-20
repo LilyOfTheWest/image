@@ -267,7 +267,7 @@
      </item>
     </layout>
    </widget>
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>0</x>
@@ -278,14 +278,14 @@
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout_12">
      <item>
-      <widget class="QLabel" name="label_3">
+      <widget class="QLabel" name="libCoulA">
        <property name="text">
         <string>Alpha:</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QLabel" name="label_5">
+      <widget class="QLabel" name="valCoulA">
        <property name="text">
         <string>0</string>
        </property>
@@ -293,7 +293,7 @@
      </item>
     </layout>
    </widget>
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>1</x>
@@ -313,7 +313,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="label_8">
+        <widget class="QLabel" name="val_alpha_img1">
          <property name="text">
           <string>100</string>
          </property>
@@ -322,7 +322,7 @@
       </layout>
      </item>
      <item>
-      <widget class="QSlider" name="horizontalSlider_2">
+      <widget class="QSlider" name="horizontalSlider_img1">
        <property name="maximum">
         <number>100</number>
        </property>
@@ -344,7 +344,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="label_9">
+        <widget class="QLabel" name="val_alpha_img2">
          <property name="text">
           <string>100</string>
          </property>
@@ -353,7 +353,7 @@
       </layout>
      </item>
      <item>
-      <widget class="QSlider" name="horizontalSlider">
+      <widget class="QSlider" name="horizontalSlider_img2">
        <property name="maximum">
         <number>100</number>
        </property>
@@ -370,6 +370,7 @@
    <zorder>layoutWidget</zorder>
    <zorder>layoutWidget</zorder>
    <zorder>layoutWidget</zorder>
+   <zorder>layoutWidget</zorder>
    <zorder>layoutWidget_2</zorder>
    <zorder>layoutWidget_3</zorder>
    <zorder>layoutWidget_4</zorder>
@@ -377,10 +378,6 @@
    <zorder>layoutWidget_5</zorder>
    <zorder>layoutWidget</zorder>
    <zorder>layoutWidget</zorder>
-   <zorder>label_3</zorder>
-   <zorder>label_5</zorder>
-   <zorder>valCoul2</zorder>
-   <zorder>label_9</zorder>
   </widget>
   <widget class="QLabel" name="label">
    <property name="geometry">
@@ -405,7 +402,7 @@
     </rect>
    </property>
    <property name="title">
-    <string>Paramétres :</string>
+    <string>Paramètres :</string>
    </property>
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
@@ -418,24 +415,24 @@
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout_9">
      <item>
-      <widget class="QCheckBox" name="checkBox">
+      <widget class="QCheckBox" name="checkBoxFlou">
        <property name="text">
         <string>Flou</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QLabel" name="label_2">
+      <widget class="QLabel" name="libFlou1">
        <property name="text">
         <string>Taille noyau :</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="lineEdit"/>
+      <widget class="QLineEdit" name="lineEditFlou1"/>
      </item>
      <item>
-      <widget class="QComboBox" name="comboBox">
+      <widget class="QComboBox" name="comboBoxFlou1">
        <item>
         <property name="text">
          <string>Moyenneur</string>
@@ -461,21 +458,21 @@
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout_10">
      <item>
-      <widget class="QCheckBox" name="checkBox_2">
+      <widget class="QCheckBox" name="checkBox_Rehaus">
        <property name="text">
         <string>Rehaussement</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QLabel" name="label_4">
+      <widget class="QLabel" name="lib_Rehaus">
        <property name="text">
         <string>Coeff de rendu :</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="lineEdit_3"/>
+      <widget class="QLineEdit" name="lineEdit_Rehaus"/>
      </item>
     </layout>
    </widget>
@@ -490,35 +487,35 @@
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout_11">
      <item>
-      <widget class="QCheckBox" name="checkBox_3">
+      <widget class="QCheckBox" name="checkBox_Etal">
        <property name="text">
         <string>Etalement</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QLabel" name="label_6">
+      <widget class="QLabel" name="lib_Etal1">
        <property name="text">
         <string>Alpha :</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="lineEdit_4">
+      <widget class="QLineEdit" name="lineEdit_Etal1">
        <property name="text">
         <string/>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QLabel" name="label_7">
+      <widget class="QLabel" name="lib_Etal2">
        <property name="text">
         <string>Beta :</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="lineEdit_5"/>
+      <widget class="QLineEdit" name="lineEdit_Etal2"/>
      </item>
     </layout>
    </widget>

@@ -64,6 +64,7 @@ private slots:
 
     void on_actionDeplacement_triggered();
 
+
     void on_action_Copier_triggered();
 
     void on_action_Coller_triggered();
@@ -90,7 +91,11 @@ private slots:
 
     void on_action_Annuler_triggered();
 
+    void on_actionHistogramme_triggered();
+
     void on_actionContour_triggered();
+
+    void on_actionHistogramme_2_triggered();
 
     void on_actionRehaussement_triggered();
 

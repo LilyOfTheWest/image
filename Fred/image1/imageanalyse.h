@@ -4,6 +4,8 @@
 #include <QObject>
 #include <QImage>
 #include "TransfoCouleur.h"
+#include "qwt_plot.h"
+#include "qwt_plot_curve.h"
 
 class ImageAnalyse : public QObject
 {
@@ -19,6 +21,9 @@ public:
     int min();
     int max();
     int * cumsum(int h[]);
+    void histoToPoints(int mode);
+    void afficheHisto(int mode);
+    int maxHisto(int num, int mode);
 
     /* Getters & Setters */
     QImage * getDataRGB();
@@ -52,6 +57,12 @@ int **histo_yuv;
 double **d_x;
 double **d_y;
 TransfoCouleur *tc;
+QwtPlot *histo1;
+QwtPlot *histo2;
+QwtPlot *histo3;
+QPolygonF serie1;
+QPolygonF serie2;
+QPolygonF serie3;
 };
 
 #endif // IMAGEANALYSE_H
