@@ -481,7 +481,8 @@ void MainWindow::on_actionRehaussement_triggered()
     if (imageSrc != NULL)
     {
         TransfoCouleur *tc = new TransfoCouleur;
-        imageLabel->setPrincipal(tc->rehaussement(imageSrc));
+        // RECUPERER LA VALEUR DE ALPHA ! rehaussement(imageSrc, alpha)
+        imageLabel->setPrincipal(tc->rehaussement(imageSrc, 0.5));
         const QImage imageConv = *imageLabel->getSelectedImage();
         imageLabel->setPixmap(QPixmap::fromImage(imageConv));
         scaleFactor = 1.0;//scaleImage(1.5);
@@ -494,7 +495,8 @@ void MainWindow::on_actionEtalement_triggered()
     if (imageSrc != NULL)
     {
         TransfoCouleur *tc = new TransfoCouleur;
-        imageLabel->setPrincipal(tc->etalement(imageSrc));
+        // RECUPERER LES VALEURS DE ALPHA ET BETA ! etalement(imageSrc, alpha, beta)
+        imageLabel->setPrincipal(tc->etalement(imageSrc, 1.5, 1));
         const QImage imageConv = *imageLabel->getSelectedImage();
         imageLabel->setPixmap(QPixmap::fromImage(imageConv));
         scaleFactor = 1.0;//scaleImage(1.5);
