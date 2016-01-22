@@ -484,14 +484,14 @@ void MainWindow::on_actionHistogramme_triggered()
     }
 }
 
-void MainWindow::on_actionContour_triggered()
+void MainWindow::on_actionContour_triggered(int mode)
 {
     QImage *imageSrc = imageLabel->getSelectedImage();
     if (imageSrc != NULL)
     {
         TransfoCouleur *tc = new TransfoCouleur;
         // CABLER LE MODE DE CONTOUR
-        imageLabel->setPrincipal(tc->contour(imageSrc, 0));
+        imageLabel->setPrincipal(tc->contour(imageSrc, mode));
         const QImage imageConv = *imageLabel->getSelectedImage();
         imageLabel->setPixmap(QPixmap::fromImage(imageConv));
         scaleFactor = 1.0;//scaleImage(1.5);
@@ -564,4 +564,19 @@ void MainWindow::on_action_Enregistrer_sous_triggered()
 void MainWindow::on_action_Enregistrer_triggered()
 {
     save();
+}
+
+void MainWindow::on_actionFiltre_Scharr_triggered()
+{
+    on_actionContour_triggered(2);
+}
+
+void MainWindow::on_actionFiltre_Sobel_triggered()
+{
+    on_actionContour_triggered(1);
+}
+
+void MainWindow::on_action_Filtre_Prewitt_triggered()
+{
+    on_actionContour_triggered(0);
 }

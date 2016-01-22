@@ -96,7 +96,7 @@ private slots:
 
     void on_actionHistogramme_triggered();
 
-    void on_actionContour_triggered();
+    void on_actionContour_triggered(int mode);
 
     void on_actionHistogramme_2_triggered();
 
@@ -109,6 +109,14 @@ private slots:
     void on_action_Enregistrer_sous_triggered();
 
     void on_action_Enregistrer_triggered();
+
+    void on_actionFiltre_Scharr_triggered();
+
+    void on_actionFiltre_Sobel_triggered();
+
+    void on_action_Filtre_Prewitt_triggered();
+
+    void on_actionContour_triggered();
 
 private:
     Ui::MainWindow *ui;

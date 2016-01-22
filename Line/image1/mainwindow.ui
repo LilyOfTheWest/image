@@ -82,7 +82,7 @@
      <property name="title">
       <string>&amp;Detection de contours</string>
      </property>
-     <addaction name="action_Flou_Sobel"/>
+     <addaction name="action_Filtre_Prewitt"/>
      <addaction name="actionFiltre_Sobel"/>
      <addaction name="actionFiltre_Scharr"/>
      <addaction name="separator"/>
@@ -361,14 +361,9 @@
     <string>&amp;Personnalisé...</string>
    </property>
   </action>
-  <action name="action_Flou_Sobel">
+  <action name="action_Filtre_Prewitt">
    <property name="text">
-    <string>&amp;Flou Prewitt</string>
-   </property>
-  </action>
-  <action name="action_Flou_Roberts">
-   <property name="text">
-    <string>&amp;Flou Roberts</string>
+    <string>&amp;Filtre Prewitt</string>
    </property>
   </action>
   <action name="action_Personnalis_Detec">
