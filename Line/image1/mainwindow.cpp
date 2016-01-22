@@ -456,7 +456,8 @@ void MainWindow::on_actionContour_triggered()
     if (imageSrc != NULL)
     {
         TransfoCouleur *tc = new TransfoCouleur;
-        imageLabel->setPrincipal(tc->contour(imageSrc));
+        // CABLER LE MODE DE CONTOUR
+        imageLabel->setPrincipal(tc->contour(imageSrc, 0));
         const QImage imageConv = *imageLabel->getSelectedImage();
         imageLabel->setPixmap(QPixmap::fromImage(imageConv));
         scaleFactor = 1.0;//scaleImage(1.5);

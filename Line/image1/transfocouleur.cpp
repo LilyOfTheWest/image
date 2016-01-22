@@ -146,7 +146,7 @@ QImage * TransfoCouleur::rehaussement(QImage *src, double alpha){
     return imA->getDataRGB();
 }
 
-QImage * TransfoCouleur::contour(QImage *src){
+QImage * TransfoCouleur::contour(QImage *src, int mode){
     double ** norm = new double*[src->height()];
     for(int i=0;i<src->height();i++){
         norm[i] = new double[src->width()];
@@ -154,7 +154,7 @@ QImage * TransfoCouleur::contour(QImage *src){
 
     ImageAnalyse *imA = new ImageAnalyse(src);
     imA->initYuvImagris();
-    imA->calculgradient();
+    imA->calculgradient(mode);
 
     for(int i=0;i<src->height();i++){
         for(int j=0;j<src->width();j++){

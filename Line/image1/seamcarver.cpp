@@ -5,7 +5,7 @@ SeamCarver::SeamCarver(QImage *src, QObject *parent) : QObject(parent)
 {
     imA = new ImageAnalyse(src);
     imA->initYuvImagris();
-    imA->calculgradient();
+    imA->calculgradient(1);
     imgOrigine = imA->getDataRGB();
     //listLignesMostSuitable;
 }
