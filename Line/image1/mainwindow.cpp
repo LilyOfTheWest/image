@@ -466,8 +466,8 @@ void MainWindow::on_actionSeamCarving_triggered()
 {
     //loadFile("C:/Users/Fredd/Pictures/Rafael-icon.png");
     SeamCarver *sc = new SeamCarver(imageLabel->getSelectedImage(),this);
-    sc->init();
-    QImage *imageSeamCarved = sc->extendWidth(20);
+    sc->init(20);
+    QImage *imageSeamCarved = sc->extendWidth(20,true);
     imageLabel->setPrincipal(imageSeamCarved);
     imageLabel->setInitialContext();
     pdis->resizePictureArea();
@@ -484,7 +484,7 @@ void MainWindow::on_actionHistogramme_triggered()
     }
 }
 
-void MainWindow::on_actionContour_triggered(int mode)
+void MainWindow::actionContour(int mode)
 {
     QImage *imageSrc = imageLabel->getSelectedImage();
     if (imageSrc != NULL)
@@ -496,6 +496,11 @@ void MainWindow::on_actionContour_triggered(int mode)
         imageLabel->setPixmap(QPixmap::fromImage(imageConv));
         scaleFactor = 1.0;//scaleImage(1.5);
     }
+}
+
+void MainWindow::on_actionContour_triggered()
+{
+    actionContour(1);
 }
 
 
@@ -568,15 +573,15 @@ void MainWindow::on_action_Enregistrer_triggered()
 
 void MainWindow::on_actionFiltre_Scharr_triggered()
 {
-    on_actionContour_triggered(2);
+    actionContour(2);
 }
 
 void MainWindow::on_actionFiltre_Sobel_triggered()
 {
-    on_actionContour_triggered(1);
+    actionContour(1);
 }
 
 void MainWindow::on_action_Filtre_Prewitt_triggered()
 {
-    on_actionContour_triggered(0);
+    actionContour(0);
 }

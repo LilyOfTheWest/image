@@ -96,7 +96,7 @@ private slots:
 
     void on_actionHistogramme_triggered();
 
-    void on_actionContour_triggered(int mode);
+    void on_actionContour_triggered();
 
     void on_actionHistogramme_2_triggered();
 
@@ -116,14 +116,13 @@ private slots:
 
     void on_action_Filtre_Prewitt_triggered();
 
-    void on_actionContour_triggered();
-
 private:
     Ui::MainWindow *ui;
     void updateActions();
     void scaleImage(double factor);
     void adjustScrollBar(QScrollBar *scrollBar, double factor);
     bool loadFileToMerge(const QString &fileName);
+    void actionContour(int mode);
     PictLabel *imageLabel;
     //QScrollArea *scrollArea;
     PicDisplay *pdis;
