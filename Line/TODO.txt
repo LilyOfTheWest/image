@@ -1,0 +1,7 @@
+Noyaux Scharr, prewitt
+Save des images
+Opacité des images
+Bug transparence
+bug Etalement
+INTERDICTION NOMBRES PAIRS POUR KERNELS
+

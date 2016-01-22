@@ -31,7 +31,7 @@ MainWindow::MainWindow(QWidget *parent) :
     scaleFactor = 1;
 
     //loadFile("C:/Users/Fredd/Pictures/Rafael-icon.png");
-    loadFile("C:/Users/Fredd/Pictures/Rio-2-Official-Trailer-3-40.jpg");
+    //loadFile("C:/Users/Fredd/Pictures/Rio-2-Official-Trailer-3-40.jpg");
     on_actionSeamCarving_triggered();
 }
 
