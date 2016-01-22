@@ -455,5 +455,13 @@ void PictLabel::validateTransfo()
     }
 }
 
+QString PictLabel::getNomImg(){
+    return nomImg;
+}
+
+void PictLabel::setNomImg(QString nom){
+    nomImg = nom;
+}
+
 
 

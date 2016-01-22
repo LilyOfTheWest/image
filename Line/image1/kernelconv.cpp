@@ -130,7 +130,7 @@ void KernelConv::generePrewittVert(){
     double D[3]={1,0,-1};
     for(int i=0;i<w;i++){
         for(int j=0;j<w;j++){
-            buf[i][j]=D[i]*S[j];
+            buf[i][j]=S[i]*D[j];
         }
     }
 }
@@ -147,17 +147,16 @@ void KernelConv::generePrewittHori(){
 
 void KernelConv::genereScharrVert(){
     double S[3]={3,10,3};
-    double D[3]={3,0,-3};
+    double D[3]={1,0,-1};
     for(int i=0;i<w;i++){
         for(int j=0;j<w;j++){
-            buf[i][j]=D[i]*S[j];
-        }
+            buf[i][j]=S[i]*D[j];        }
     }
 }
 
 void KernelConv::genereScharrHori(){
     double S[3]={3,10,3};
-    double D[3]={3,0,-3};
+    double D[3]={1,0,-1};
     for(int i=0;i<w;i++){
         for(int j=0;j<w;j++){
             buf[i][j]=D[i]*S[j];

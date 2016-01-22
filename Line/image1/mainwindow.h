@@ -34,6 +34,8 @@ public:
 
 private slots:
     void open();
+    void saveas();
+    void save();
     void print();
     void inverseColor();
     void updateActionsWithoutImage();
@@ -103,6 +105,10 @@ private slots:
     void on_actionEtalement_triggered();
 
     void on_actionEgalisation_triggered();
+
+    void on_action_Enregistrer_sous_triggered();
+
+    void on_action_Enregistrer_triggered();
 
 private:
     Ui::MainWindow *ui;

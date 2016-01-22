@@ -49,6 +49,8 @@ public:
     void setAlphaImg2(int value);
     void pasteSelection();
     void validateTransfo();
+    QString getNomImg();
+    void setNomImg(QString nom);
 
 signals:
     void signalNewPixelPicked();
@@ -84,6 +86,7 @@ protected:
     QPoint position_secondImg;
     int mouseListenerState;
     QRgb colorPicked;
+    QString nomImg;
     double scaleFactor;
     bool couperMode;
     bool firstImgSelected;

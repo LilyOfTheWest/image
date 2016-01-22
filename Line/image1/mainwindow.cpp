@@ -57,6 +57,8 @@ bool MainWindow::loadFile(const QString &fileName)
 
     const QImage image = image2;
     imageLabel->setPrincipal(&image2);
+    QString nom = fileName;
+    imageLabel->setNomImg(nom);
     //imageLabel->adjustSize();
     pdis->resizePictureArea();
     updateActionsWithImage();
@@ -90,13 +92,43 @@ void MainWindow::open()
         mimeTypeFilters.append(mimeTypeName);
     mimeTypeFilters.sort();
     const QStringList picturesLocations = QStandardPaths::standardLocations(QStandardPaths::PicturesLocation);
-    QFileDialog dialog(this, tr("Open File"),
+    QFileDialog dialog(this, tr("Ouvrir"),
                        picturesLocations.isEmpty() ? QDir::currentPath() : picturesLocations.last());
     dialog.setAcceptMode(QFileDialog::AcceptOpen);
     dialog.setMimeTypeFilters(mimeTypeFilters);
     dialog.selectMimeTypeFilter("image/jpeg");
 
     while (dialog.exec() == QDialog::Accepted && !loadFile(dialog.selectedFiles().first())) {}
+}
+
+void MainWindow::saveas(){
+    const QStringList picturesLocations = QStandardPaths::standardLocations(QStandardPaths::PicturesLocation);
+
+    QImage *img = imageLabel->getImage1();
+    QFileDialog dialog(this, tr("Enregistrer sous..."),
+                       picturesLocations.isEmpty() ? QDir::currentPath() : picturesLocations.last());
+    dialog.setAcceptMode(QFileDialog::AcceptSave);
+    QString nomImg = dialog.getSaveFileName(this, tr("Enregistrer sous..."),
+                                            imageLabel->getNomImg(),
+                                            tr("Images (*.bmp);;Images (*.jpg);;Images (*.png);;Images (*.ppm);;Images (*.tif))"));
+
+    if(nomImg.isNull())
+        return;
+
+    QString ext = QFileInfo(nomImg).suffix();
+    img->save(nomImg, ext.toUtf8());
+}
+
+void MainWindow::save(){
+    QImage *img = imageLabel->getImage1();
+
+    QString nomImg = imageLabel->getNomImg();
+
+    if(nomImg.isNull())
+        return;
+
+    QString ext = QFileInfo(nomImg).suffix();
+    img->save(nomImg, ext.toUtf8());
 }
 
 void MainWindow::print()
@@ -206,6 +238,8 @@ void MainWindow::updateActionsWithImage()
     ui->actionZoom_avant->setEnabled(true);
     ui->action_Zoom_arriere->setEnabled(true);
     ui->actionSeamCarving->setVisible(true);
+    ui->action_Enregistrer_sous->setEnabled(true);
+    ui->action_Enregistrer->setEnabled(true);
     this->pdis->updateDisplay();
 //    inverseColorAct->setEnabled(!fitToWindowAct->isChecked());
 //    prodConvAct->setEnabled(!fitToWindowAct->isChecked());
@@ -520,4 +554,14 @@ void MainWindow::on_actionEgalisation_triggered()
 void MainWindow::on_actionSupprimer_triggered()
 {
     imageLabel->setInitialContext();
+}
+
+void MainWindow::on_action_Enregistrer_sous_triggered()
+{
+    saveas();
+}
+
+void MainWindow::on_action_Enregistrer_triggered()
+{
+    save();
 }
