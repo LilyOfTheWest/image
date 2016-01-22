@@ -78,10 +78,8 @@ bool MainWindow::loadFileToMerge(const QString &fileName)
     reader.setAutoTransform(true);
 
     QImage image2 = reader.read();
-    const QImage image = image2;
     imageLabel->addImageToMerge(&image2);
-    pdis->resizePictureArea();//resizeScrollArea(imageLabel);
-    //updateActionsWithImage();
+    pdis->resizePictureArea();
     return true;
 }
 
@@ -248,9 +246,9 @@ void MainWindow::inverseColor()
     //PictLabel *jj = static_cast<PictLabel*>(ui->scrollAreaPict->widget());
     QImage *imageInversee = tc->inverseColor(imageLabel->getSelectedImage());
     imageLabel->setSelectedImage(imageInversee);
-    const QImage imageConv = *imageLabel->getSelectedImage();
-    imageLabel->setPixmap(QPixmap::fromImage(imageConv));
-    scaleFactor = 1.0;//scaleImage(1.5);
+    //const QImage imageConv = *imageLabel->getSelectedImage();
+    //imageLabel->setPixmap(QPixmap::fromImage(imageConv));
+    //scaleFactor = 1.0;//scaleImage(1.5);
 }
 
 void MainWindow::on_action_Ouvrir_triggered()
@@ -313,18 +311,19 @@ void MainWindow::on_action_Selection_triggered()
 
 void MainWindow::on_action_Copier_triggered()
 {
-    imageLabel->setMouseListenerState(12);
+
 }
 
 void MainWindow::on_action_Coller_triggered()
 {
     imageLabel->pasteSelection();
+    imageLabel->setMouseListenerState(12);
+    imageLabel->setSecondImgAsSelect(true);
 }
 
 void MainWindow::on_action_Couper_triggered()
 {
     imageLabel->setCouperMode(true);
-    imageLabel->setMouseListenerState(18);
 }
 
 void MainWindow::on_actionImageGris_triggered()
@@ -515,4 +514,9 @@ void MainWindow::on_actionEgalisation_triggered()
         imageLabel->setPixmap(QPixmap::fromImage(imageConv));
         scaleFactor = 1.0;//scaleImage(1.5);
     }
+}
+
+void MainWindow::on_actionSupprimer_triggered()
+{
+    imageLabel->setInitialContext();
 }

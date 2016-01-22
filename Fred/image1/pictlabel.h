@@ -41,6 +41,8 @@ public:
     void setScaleFactor(double scaleFactor);
     void setMouseListenerState(int mouseListenerStateVal);
     void setCouperMode(bool couperMode);
+    void setSecondImgAsSelect(bool secondImgAsSelect);
+    bool getSecondImgAsSelect();
     void pasteSelection();
     void validateTransfo();
 

@@ -182,6 +182,11 @@ void PicDisplay::updateDisplay()
 
 void PicDisplay::displayImage2Selector(bool visible)
 {
+    bool image1Selected = !imageLabel->getSecondImgAsSelect();
+    if (image1Selected) {
+        ui->radioButtonImg1->setChecked(image1Selected);
+        ui->radioButtonImg2->setChecked(!image1Selected);
+    }
     ui->radioButtonImg1->setVisible(visible);
     ui->radioButtonImg2->setVisible(visible);
     ui->val_alpha_img1->setVisible(visible);

@@ -64,7 +64,6 @@ private slots:
 
     void on_actionDeplacement_triggered();
 
-
     void on_action_Copier_triggered();
 
     void on_action_Coller_triggered();
@@ -82,6 +81,8 @@ private slots:
     void on_actionRecadrer_triggered();
 
     void on_actionValider_triggered();
+
+    void on_actionSupprimer_triggered();
 
     void on_actionRotation_90_Horaire_triggered();
 

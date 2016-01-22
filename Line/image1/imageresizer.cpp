@@ -38,7 +38,8 @@ QPoint ImageResizer::isPicked(QPoint mousePosition,QImage *imgPicked,QPoint *pos
     {
         int x_in_imgPicked = mousePosition.x()-positionRel->x();
         int y_in_imgPicked = mousePosition.y()-positionRel->y();
-        if ((x_in_imgPicked < imgPicked->width()) && (y_in_imgPicked < imgPicked->height()))
+        if ((x_in_imgPicked < imgPicked->width()) && (x_in_imgPicked>0) &&
+                (y_in_imgPicked < imgPicked->height()) && (y_in_imgPicked>0))
             ret = QPoint(x_in_imgPicked,y_in_imgPicked);
     }
     return ret;
@@ -103,9 +104,9 @@ QImage *ImageResizer::rotateImage90(QImage *src,bool horaire)
         for (int j=0; j<src->width(); j++) {
             color = src->pixel(j,i);
             if (horaire == true)
-                ret->setPixel(i,src->width()-1-j,color);
-            else
                 ret->setPixel(src->height()-1-i,j,color);
+            else
+                ret->setPixel(i,src->width()-1-j,color);
         }
     }
     return ret;
