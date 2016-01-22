@@ -219,6 +219,15 @@ void PicDisplay::displayEtalProperties(bool visible)
     ui->lineEdit_Etal2->setVisible(visible);
 }
 
+void PicDisplay::displayFiltreProperties(bool visible)
+{
+    ui->checkBox_Filtre->setChecked(visible);
+    ui->lib_Filtre1->setVisible(visible);
+    ui->lineEdit_Filtre->setVisible(visible);
+    ui->pushButtonFiltreEdition->setVisible(visible);
+    ui->pushButton_FiltreLaunch->setVisible(visible);
+}
+
 void PicDisplay::on_checkBoxFlou_stateChanged(int arg1)
 {
     displayFlouProperties(arg1 != Qt::Unchecked);
@@ -233,3 +242,43 @@ void PicDisplay::on_checkBox_Etal_stateChanged(int arg1)
 {
     displayEtalProperties(arg1 != Qt::Unchecked);
 }
+
+void PicDisplay::on_checkBox_Filtre_stateChanged(int arg1)
+{
+    displayFiltreProperties(arg1 != Qt::Unchecked);
+}
+
+void PicDisplay::on_radioButtonImg1_clicked()
+{
+    this->imageLabel->setSecondImgAsSelect(false);
+}
+
+void PicDisplay::on_radioButtonImg2_clicked()
+{
+    this->imageLabel->setSecondImgAsSelect(true);
+}
+
+void PicDisplay::on_horizontalSlider_img1_valueChanged(int value)
+{
+    ui->val_alpha_img1->setText(QString::number(value));
+    this->imageLabel->setAlphaImg1(value);
+    this->imageLabel->drawImage();
+}
+
+void PicDisplay::on_horizontalSlider_img2_valueChanged(int value)
+{
+    ui->val_alpha_img2->setText(QString::number(value));
+    this->imageLabel->setAlphaImg2(value);
+    this->imageLabel->drawImage();
+}
+
+void PicDisplay::on_pushButtonFiltreEdition_clicked()
+{
+
+}
+
+void PicDisplay::on_pushButton_FiltreLaunch_clicked()
+{
+
+}
+

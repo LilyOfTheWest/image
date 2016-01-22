@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>621</width>
+    <width>933</width>
     <height>467</height>
    </rect>
   </property>
@@ -397,7 +397,7 @@
     <rect>
      <x>120</x>
      <y>10</y>
-     <width>441</width>
+     <width>801</width>
      <height>111</height>
     </rect>
    </property>
@@ -479,8 +479,8 @@
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>80</y>
+      <x>290</x>
+      <y>20</y>
       <width>271</width>
       <height>22</height>
      </rect>
@@ -516,6 +516,53 @@
      </item>
      <item>
       <widget class="QLineEdit" name="lineEdit_Etal2"/>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="layoutWidget_6">
+    <property name="geometry">
+     <rect>
+      <x>290</x>
+      <y>50</y>
+      <width>401</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout_15">
+     <item>
+      <widget class="QCheckBox" name="checkBox_Filtre">
+       <property name="text">
+        <string>Filtre personalisé</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="lib_Filtre1">
+       <property name="text">
+        <string>Taille noyau :</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="lineEdit_Filtre">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButtonFiltreEdition">
+       <property name="text">
+        <string>Edition</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_FiltreLaunch">
+       <property name="text">
+        <string>Filtre</string>
+       </property>
+      </widget>
      </item>
     </layout>
    </widget>

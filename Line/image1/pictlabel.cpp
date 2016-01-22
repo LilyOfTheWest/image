@@ -27,6 +27,8 @@ void PictLabel::setInitialContext()
     origin_select.setX(0);
     origin_select.setY(0);
     mouseListenerState=0;
+    alphaImg1=100;
+    alphaImg2=100;
     if (secondImg != NULL)
     {
         delete secondImg;
@@ -37,7 +39,7 @@ void PictLabel::setInitialContext()
     if (end_select != NULL)
     {
         delete end_select;
-        secondImg = NULL;
+        end_select = NULL;
     }
     position_firstImg.setX(0);
     position_firstImg.setY(0);
@@ -146,13 +148,47 @@ void PictLabel::setSelectedImage(QImage *selectImgPar)
     signalRedisplayRequired();
 }
 
-/*void PictLabel::enterEvent ( QEvent * event )
+int PictLabel::getAlphaImg1()
 {
+    return alphaImg1;
 }
 
-void PictLabel::leaveEvent ( QEvent * event )
+void PictLabel::setAlphaImg1(int value)
 {
-}*/
+    alphaImg1=value;
+    if (firstImg != NULL)
+    {
+        QRgb color;
+        TransfoCouleur *tc = new TransfoCouleur;
+        for (int i=0; i< firstImg->height() ; i++) {
+            for (int j=0; j<firstImg->width() ; j++) {
+                color=firstImg->pixel(j,i);
+                firstImg->setPixel(j,i,tc->changeAlphaColor(color,value));
+            }
+        }
+    }
+}
+
+int PictLabel::getAlphaImg2()
+{
+    return alphaImg1;
+}
+
+void PictLabel::setAlphaImg2(int value)
+{
+    alphaImg2=value;
+    QRgb color;
+    TransfoCouleur *tc = new TransfoCouleur;
+    if (secondImg != NULL)
+    {
+        for (int i=0; i< secondImg->height() ; i++) {
+            for (int j=0; j<secondImg->width() ; j++) {
+                color=secondImg->pixel(j,i);
+                secondImg->setPixel(j,i,tc->changeAlphaColor(color,value));
+            }
+        }
+    }
+}
 
 void PictLabel::mouseMoveEvent ( QMouseEvent * event )
 {
@@ -412,18 +448,6 @@ void PictLabel::validateTransfo()
         newImage =resizer->displaceImage(principal,firstImg,position_firstImg,secondImg,position_secondImg);
         setPrincipal(newImage);
         break;
-/*    case 18: // Deplace seconde image suite Couper/Copier
-        pastedImage =resizer->displaceImage(principal,firstImg,position_firstImg,secondImg,position_secondImg);
-        setPrincipal(pastedImage);
-        break;
-    case 21: // Deplace seconde image
-        pastedImage =resizer->displaceImage(principal,firstImg,position_firstImg,secondImg,position_secondImg);
-        setPrincipal(pastedImage);
-        break;
-    case 22: // Deplace première image
-        pastedImage =resizer->displaceImage(principal,firstImg,position_firstImg,secondImg,position_secondImg);
-        setPrincipal(pastedImage);
-        break;*/
     case 110: // Crop select
         newImage =resizer->extractSubImage(firstImg,&origin_select,end_select);
         setPrincipal(newImage);

@@ -318,3 +318,9 @@ int TransfoCouleur::normalizeColorValue(double val)
         ret=255;
     return ret;
 }
+
+QRgb TransfoCouleur::changeAlphaColor(QRgb color,int alpha)
+{
+    return color;
+
+}

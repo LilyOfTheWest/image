@@ -30,6 +30,7 @@ public:
     int get_RVal_Pixel_FromYuv(QRgb pixel_src);
     int get_GVal_Pixel_FromYuv(QRgb pixel_src);
     int get_BVal_Pixel_FromYuv(QRgb pixel_src);
+    QRgb changeAlphaColor(QRgb color,int alpha);
     QImage *convertRgbToYuv(QImage *src);
     QImage *convertYuvToRgb(QImage *src);
     int normalizeColorValue(double val);

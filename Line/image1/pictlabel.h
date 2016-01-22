@@ -43,6 +43,10 @@ public:
     void setCouperMode(bool couperMode);
     void setSecondImgAsSelect(bool secondImgAsSelect);
     bool getSecondImgAsSelect();
+    int getAlphaImg1();
+    void setAlphaImg1(int value);
+    int getAlphaImg2();
+    void setAlphaImg2(int value);
     void pasteSelection();
     void validateTransfo();
 
@@ -83,6 +87,8 @@ protected:
     double scaleFactor;
     bool couperMode;
     bool firstImgSelected;
+    int alphaImg1;
+    int alphaImg2;
 };
 
 #endif // PICTLABEL_H
