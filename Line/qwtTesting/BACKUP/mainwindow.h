@@ -64,7 +64,6 @@ private slots:
 
     void on_actionDeplacement_triggered();
 
-
     void on_action_Copier_triggered();
 
     void on_action_Coller_triggered();
@@ -83,6 +82,8 @@ private slots:
 
     void on_actionValider_triggered();
 
+    void on_actionSupprimer_triggered();
+
     void on_actionRotation_90_Horaire_triggered();
 
     void on_action_Rotation_90_antihoraire_triggered();
@@ -96,6 +97,12 @@ private slots:
     void on_actionContour_triggered();
 
     void on_actionHistogramme_2_triggered();
+
+    void on_actionRehaussement_triggered();
+
+    void on_actionEtalement_triggered();
+
+    void on_actionEgalisation_triggered();
 
 private:
     Ui::MainWindow *ui;

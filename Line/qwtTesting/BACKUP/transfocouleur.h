@@ -12,10 +12,10 @@ public:
     explicit TransfoCouleur(QObject *parent = 0);
     QImage *inverseColor(QImage *src);
     QImage *flou(QImage *src);
-    QImage *rehaussement(QImage *src);
-    QImage *contour(QImage *src);
+    QImage *rehaussement(QImage *src, double alpha);
+    QImage *contour(QImage *src, int mode);
     QImage *gris(QImage *src);
-    QImage *etalement(QImage *src);
+    QImage *etalement(QImage *src, double alpha, double beta);
     QImage *egalisation(QImage *src);
     void histogramme(QImage *src,int mode);
     /* A mettre dans imageanalyse !!

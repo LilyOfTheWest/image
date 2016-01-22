@@ -95,13 +95,25 @@ void ImageAnalyse::calculHisto()
     }
 }
 
-void ImageAnalyse::calculgradient(){
+void ImageAnalyse::calculgradient(int mode){
     int ordre = 3;
-    KernelConv *SobelX = new KernelConv(ordre);
-    KernelConv *SobelY = new KernelConv(ordre);
 
-    SobelX->genereSobelHori();
-    SobelY->genereSobelVert();
+    KernelConv *noyauX = new KernelConv(ordre);
+    KernelConv *noyauY = new KernelConv(ordre);
+    switch(mode){
+    case 0:
+        noyauX->generePrewittHori();
+        noyauY->generePrewittVert();
+        break;
+    case 2:
+        noyauX->genereScharrHori();
+        noyauY->genereScharrVert();
+        break;
+    default:
+        noyauX->genereSobelHori();
+        noyauY->genereSobelVert();
+        break;
+    }
 
     d_x = new double *[dataRGB->height()];
     d_y = new double *[dataRGB->height()];
@@ -111,8 +123,8 @@ void ImageAnalyse::calculgradient(){
         d_y[i] = new double[dataRGB->width()];
     }
 
-    d_x = SobelX->produitConv(imagris, dataRGB->width(), dataRGB->height());
-    d_y = SobelY->produitConv(imagris, dataRGB->width(), dataRGB->height());
+    d_x = noyauX->produitConv(imagris, dataRGB->width(), dataRGB->height());
+    d_y = noyauY->produitConv(imagris, dataRGB->width(), dataRGB->height());
 }
 
 int ImageAnalyse::min(){

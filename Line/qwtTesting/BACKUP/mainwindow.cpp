@@ -31,6 +31,7 @@ MainWindow::MainWindow(QWidget *parent) :
     scaleFactor = 1;
 
     //loadFile("C:/Users/Fredd/Pictures/Rafael-icon.png");
+    //loadFile("D:/Lily/Bureau/Dossier Line/M1-Info/PROJET/image/Fred/imageviewer/Rio-2-Official-Trailer-3-40.jpg");
     //on_actionSeamCarving_triggered();
 }
 
@@ -77,10 +78,8 @@ bool MainWindow::loadFileToMerge(const QString &fileName)
     reader.setAutoTransform(true);
 
     QImage image2 = reader.read();
-    const QImage image = image2;
     imageLabel->addImageToMerge(&image2);
-    pdis->resizePictureArea();//resizeScrollArea(imageLabel);
-    //updateActionsWithImage();
+    pdis->resizePictureArea();
     return true;
 }
 
@@ -247,9 +246,9 @@ void MainWindow::inverseColor()
     //PictLabel *jj = static_cast<PictLabel*>(ui->scrollAreaPict->widget());
     QImage *imageInversee = tc->inverseColor(imageLabel->getSelectedImage());
     imageLabel->setSelectedImage(imageInversee);
-    const QImage imageConv = *imageLabel->getSelectedImage();
-    imageLabel->setPixmap(QPixmap::fromImage(imageConv));
-    scaleFactor = 1.0;//scaleImage(1.5);
+    //const QImage imageConv = *imageLabel->getSelectedImage();
+    //imageLabel->setPixmap(QPixmap::fromImage(imageConv));
+    //scaleFactor = 1.0;//scaleImage(1.5);
 }
 
 void MainWindow::on_action_Ouvrir_triggered()
@@ -285,7 +284,7 @@ void MainWindow::on_actionFlou_triggered()
     TransfoCouleur *tc = new TransfoCouleur;
     //PictLabel *jj = static_cast<PictLabel*>(ui->scrollAreaPict->widget());
     QImage *imageFloutee = tc->flou(imageLabel->getSelectedImage());
-    imageLabel->setSelectedImage(imageFloutee);
+    imageLabel->setPrincipal(imageFloutee);
     const QImage imageConv = *imageLabel->getSelectedImage();
     imageLabel->setPixmap(QPixmap::fromImage(imageConv));
     scaleFactor = 1.0;//scaleImage(1.5);
@@ -312,18 +311,19 @@ void MainWindow::on_action_Selection_triggered()
 
 void MainWindow::on_action_Copier_triggered()
 {
-    imageLabel->setMouseListenerState(12);
+
 }
 
 void MainWindow::on_action_Coller_triggered()
 {
     imageLabel->pasteSelection();
+    imageLabel->setMouseListenerState(12);
+    imageLabel->setSecondImgAsSelect(true);
 }
 
 void MainWindow::on_action_Couper_triggered()
 {
     imageLabel->setCouperMode(true);
-    imageLabel->setMouseListenerState(18);
 }
 
 void MainWindow::on_actionImageGris_triggered()
@@ -433,7 +433,7 @@ void MainWindow::on_actionSeamCarving_triggered()
     //loadFile("C:/Users/Fredd/Pictures/Rafael-icon.png");
     SeamCarver *sc = new SeamCarver(imageLabel->getSelectedImage(),this);
     sc->init();
-    QImage *imageSeamCarved = sc->extendWidth(200);
+    QImage *imageSeamCarved = sc->extendWidth(20);
     imageLabel->setPrincipal(imageSeamCarved);
     imageLabel->setInitialContext();
     pdis->resizePictureArea();
@@ -446,7 +446,7 @@ void MainWindow::on_actionHistogramme_triggered()
     {
         TransfoCouleur *tc = new TransfoCouleur;
         //PictLabel *jj = static_cast<PictLabel*>(ui->scrollAreaPict->widget());
-        tc->histogramme(imageSrc,0);
+        tc->histogramme(imageSrc,pdis->getYUVMode());
     }
 }
 
@@ -471,6 +471,52 @@ void MainWindow::on_actionHistogramme_2_triggered()
     {
         TransfoCouleur *tc = new TransfoCouleur;
         //PictLabel *jj = static_cast<PictLabel*>(ui->scrollAreaPict->widget());
-        tc->histogramme(imageSrc,0);
+        tc->histogramme(imageSrc,pdis->getYUVMode());
     }
+}
+
+void MainWindow::on_actionRehaussement_triggered()
+{
+    QImage *imageSrc = imageLabel->getSelectedImage();
+    if (imageSrc != NULL)
+    {
+        TransfoCouleur *tc = new TransfoCouleur;
+        // RECUPERER LA VALEUR DE ALPHA ! rehaussement(imageSrc, alpha)
+        imageLabel->setPrincipal(tc->rehaussement(imageSrc, 0.5));
+        const QImage imageConv = *imageLabel->getSelectedImage();
+        imageLabel->setPixmap(QPixmap::fromImage(imageConv));
+        scaleFactor = 1.0;//scaleImage(1.5);
+    }
+}
+
+void MainWindow::on_actionEtalement_triggered()
+{
+    QImage *imageSrc = imageLabel->getSelectedImage();
+    if (imageSrc != NULL)
+    {
+        TransfoCouleur *tc = new TransfoCouleur;
+        // RECUPERER LES VALEURS DE ALPHA ET BETA ! etalement(imageSrc, alpha, beta)
+        imageLabel->setPrincipal(tc->etalement(imageSrc, 1.5, 1));
+        const QImage imageConv = *imageLabel->getSelectedImage();
+        imageLabel->setPixmap(QPixmap::fromImage(imageConv));
+        scaleFactor = 1.0;//scaleImage(1.5);
+    }
+}
+
+void MainWindow::on_actionEgalisation_triggered()
+{
+    QImage *imageSrc = imageLabel->getSelectedImage();
+    if (imageSrc != NULL)
+    {
+        TransfoCouleur *tc = new TransfoCouleur;
+        imageLabel->setPrincipal(tc->egalisation(imageSrc));
+        const QImage imageConv = *imageLabel->getSelectedImage();
+        imageLabel->setPixmap(QPixmap::fromImage(imageConv));
+        scaleFactor = 1.0;//scaleImage(1.5);
+    }
+}
+
+void MainWindow::on_actionSupprimer_triggered()
+{
+    imageLabel->setInitialContext();
 }

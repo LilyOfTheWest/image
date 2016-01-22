@@ -17,7 +17,7 @@ public:
     void initYuvImagris();
     void fromYuvToRgb();
     void calculHisto();
-    void calculgradient();
+    void calculgradient(int mode);
     int min();
     int max();
     int * cumsum(int h[]);
