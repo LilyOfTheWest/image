@@ -110,7 +110,7 @@ void MainWindow::saveas(){
     dialog.setAcceptMode(QFileDialog::AcceptSave);
     QString nomImg = dialog.getSaveFileName(this, tr("Enregistrer sous..."),
                                             imageLabel->getNomImg(),
-                                            tr("Images (*.bmp);;Images (*.jpg);;Images (*.png);;Images (*.ppm);;Images (*.tif))"));
+                                            tr("Images (*.bmp);;Images (*.jpg; *.jpeg);;Images (*.png);;Images (*.ppm; *.xbm; *.xpm);;Images (*.tif))"));
 
     if(nomImg.isNull())
         return;
