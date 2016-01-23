@@ -5,10 +5,20 @@ SeamCarver::SeamCarver(QImage *src, QObject *parent) : QObject(parent)
 {
     imA = new ImageAnalyse(src);
     imA->initYuvImagris();
-    imA->calculgradient();
+    imA->calculgradient(1);
     imgOrigine = imA->getDataRGB();
     //listLignesMostSuitable;
+    b_Pos_interdit = new bool*[imgOrigine->height()];
+    for(int y = 0 ; y < imgOrigine->height() ; y++){
+        b_Pos_interdit[y] = new bool[imgOrigine->width()];
+    }
+    for(int x = 0; x < imgOrigine->width() ; x++){
+        b_Pos_interdit[0][x]=true;
+        b_Pos_interdit[imgOrigine->height()-1][x]=true;
+
+    }
 }
+
 
 SeamCarver::~SeamCarver()
 {
@@ -20,15 +30,20 @@ SeamCarver::~SeamCarver()
     }
 }
 
+double SeamCarver::getPointEnergy(int y, int x)
+{
+    return qAbs(imA->getDyIndex(y,x)) + qAbs(imA->getDxIndex(y,x));
+}
+
 QPoint SeamCarver::leastRouteNextPointAt(QPoint prec, int &strengthValue) {
     int x=prec.x()+1;
     int y=prec.y();
-    int y_most_suitable=y;
-    double dy_val = qAbs(imA->getDyIndex(y,x));
+    int y_most_suitable=-1;
+    double dy_val = 20000;
     double dy_val_cmp;
-    if (y>0)
+    if (b_Pos_interdit[y-1][x] == false)
     {
-        dy_val_cmp = qAbs(imA->getDyIndex(y-1,x));
+        dy_val_cmp = this->getPointEnergy(y-1,x);
         if (dy_val_cmp < dy_val)
         {
             y_most_suitable = y-1;
@@ -36,9 +51,19 @@ QPoint SeamCarver::leastRouteNextPointAt(QPoint prec, int &strengthValue) {
         }
 
     }
-    if (y<(imgOrigine->height()-1))
+    if (b_Pos_interdit[y][x] == false)
     {
-        dy_val_cmp = qAbs(imA->getDyIndex(y+1,x));
+        dy_val_cmp = this->getPointEnergy(y,x);
+        if (dy_val_cmp < dy_val)
+        {
+            y_most_suitable = y;
+            dy_val = dy_val_cmp;
+        }
+
+    }
+    if (!b_Pos_interdit[y+1][x])
+    {
+        dy_val_cmp = this->getPointEnergy(y+1,x);
         if (dy_val_cmp < dy_val)
         {
             y_most_suitable = y+1;
@@ -50,52 +75,82 @@ QPoint SeamCarver::leastRouteNextPointAt(QPoint prec, int &strengthValue) {
     return QPoint(x,y_most_suitable);
 }
 
-void SeamCarver::init(){
+void SeamCarver::init(int w_extent){
+
+    for (int iter=0 ; iter<w_extent ; iter++)
+    {
+        iteration();
+
+    }
+    int y=0;
+}
+
+void SeamCarver::iteration()
+{
     QList<QPolygon *> listLignes;
     QPoint item;
     int strengthValue;
     QList<int> listStrengthValue;
     QList<int> listOrderedStrengthValue;
     QPolygon *polyg;
+    bool route_bloquee;
+
     for(int h=0;h<imgOrigine->height();h++){
-        polyg = new QPolygon();
-        item = QPoint(0,h);
-        *polyg << item;
-        strengthValue = imA->getDyIndex(h,0);
-        for (int w=1; w<(imgOrigine->width()-1); w++) {
-            item = leastRouteNextPointAt(item,strengthValue);
+        route_bloquee=false;
+        if (b_Pos_interdit[h][0] == false)
+        {
+            polyg = new QPolygon();
+            item = QPoint(0,h);
             *polyg << item;
+            strengthValue = getPointEnergy(h,0);
+            for (int w=1; w<(imgOrigine->width()-1); w++) {
+                item = leastRouteNextPointAt(item,strengthValue);
+                if (item.y() < 0) //Cas 3 routes bloquées
+                {
+                    w=imgOrigine->width();
+                    route_bloquee=true;
+
+                } else
+                    *polyg << item;
+            }
+            if (route_bloquee==false)
+            {
+                *polyg << QPoint(imgOrigine->width()-1,item.y());
+                listStrengthValue << strengthValue;
+                listOrderedStrengthValue << strengthValue;
+                listLignes <<polyg;
+            } else
+                delete polyg;
         }
-        *polyg << QPoint(imgOrigine->width()-1,item.y());
-        listStrengthValue << strengthValue;
-        listOrderedStrengthValue << strengthValue;
-        listLignes <<polyg;
     }
     qSort(listOrderedStrengthValue);
     int strLeast;
     int index=1;
     int count=0;
-    while((count <= NB_LIGNES_SEAM_CARVING)&&(index>0))
-    {
-        strLeast = listOrderedStrengthValue.takeFirst();
-        index = listStrengthValue.indexOf(strLeast);
-        listStrengthValue.takeAt(index);
-        listLignesMostSuitable << listLignes.takeAt(index);
-        count++;
-    }
+    strLeast = listOrderedStrengthValue.takeFirst();
+    index = listStrengthValue.indexOf(strLeast);
+    listStrengthValue.takeAt(index);
+    polyg = listLignes.takeAt(index);
+    listLignesMostSuitable << polyg;
 
+    QVectorIterator<QPoint> qit(*polyg);
+    while (qit.hasNext())
+    {
+        item=qit.next();
+        b_Pos_interdit[item.y()][item.x()]= true;
+    }
     qDeleteAll(listLignes);
     count=0;
 }
 
-QImage * SeamCarver::extendWidth(int w_extent){
+QImage * SeamCarver::extendWidth(int w_extent,bool compression){
 
     QPolygon *ligneBest;// = listLignesMostSuitable.first();
     QRgb color1,color2;
     QRgb ligneColor = qRgb(255,255,255);
     int y_ligneBest;
     QPoint pp;
-    QImage *dataRet = new QImage(imgOrigine->width(),imgOrigine->height()+(w_extent+2)*listLignesMostSuitable.size(),imgOrigine->format());
+    QImage *dataRet = new QImage(imgOrigine->width(),imgOrigine->height()+3*w_extent,imgOrigine->format());
     ImageResizer *resizer = new ImageResizer;
     int delta_y,tmp_lect;
     QList<int> list_y_val;
@@ -124,15 +179,12 @@ QImage * SeamCarver::extendWidth(int w_extent){
                 dataRet->setPixel(x,y+delta_y,color1);
             } else
             {
-                do {
-                    dataRet->setPixel(x,y_ligneBest+delta_y,ligneColor);
-                    dataRet->setPixel(x,y_ligneBest+w_extent+2+delta_y,ligneColor);
-                    color2=imgOrigine->pixel(x,y+1);
-                    resizer->interpol(dataRet,x,y_ligneBest+1+delta_y,w_extent,color1,color2,false);
-                    delta_y += w_extent+2;
-                    tmp_lect = list_y_val.takeFirst();
-                } while (tmp_lect == y_ligneBest);
-                y_ligneBest = tmp_lect;
+                dataRet->setPixel(x,y_ligneBest+delta_y,ligneColor);
+                dataRet->setPixel(x,y_ligneBest+delta_y+2,ligneColor);
+                color2=imgOrigine->pixel(x,y+1);
+                resizer->interpol(dataRet,x,y_ligneBest+1+delta_y,1,color1,color2,false);
+                delta_y += 3;
+                y_ligneBest = list_y_val.takeFirst();
             }
         }
     }

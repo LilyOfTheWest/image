@@ -14,6 +14,10 @@ public:
     void genereImp();
     void genereSobelVert();
     void genereSobelHori();
+    void generePrewittVert();
+    void generePrewittHori();
+    void genereScharrVert();
+    void genereScharrHori();
     int reflect(int M, int x);
     /* Getters & Setters */
     int getW();

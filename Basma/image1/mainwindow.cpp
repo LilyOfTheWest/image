@@ -31,6 +31,7 @@ MainWindow::MainWindow(QWidget *parent) :
     scaleFactor = 1;
 
     //loadFile("C:/Users/Fredd/Pictures/Rafael-icon.png");
+    //loadFile("D:/Lily/Bureau/Dossier Line/M1-Info/PROJET/image/Fred/imageviewer/Rio-2-Official-Trailer-3-40.jpg");
     //on_actionSeamCarving_triggered();
 }
 
@@ -56,6 +57,8 @@ bool MainWindow::loadFile(const QString &fileName)
 
     const QImage image = image2;
     imageLabel->setPrincipal(&image2);
+    QString nom = fileName;
+    imageLabel->setNomImg(nom);
     //imageLabel->adjustSize();
     pdis->resizePictureArea();
     updateActionsWithImage();
@@ -77,10 +80,8 @@ bool MainWindow::loadFileToMerge(const QString &fileName)
     reader.setAutoTransform(true);
 
     QImage image2 = reader.read();
-    const QImage image = image2;
     imageLabel->addImageToMerge(&image2);
-    pdis->resizePictureArea();//resizeScrollArea(imageLabel);
-    //updateActionsWithImage();
+    pdis->resizePictureArea();
     return true;
 }
 
@@ -91,13 +92,43 @@ void MainWindow::open()
         mimeTypeFilters.append(mimeTypeName);
     mimeTypeFilters.sort();
     const QStringList picturesLocations = QStandardPaths::standardLocations(QStandardPaths::PicturesLocation);
-    QFileDialog dialog(this, tr("Open File"),
+    QFileDialog dialog(this, tr("Ouvrir"),
                        picturesLocations.isEmpty() ? QDir::currentPath() : picturesLocations.last());
     dialog.setAcceptMode(QFileDialog::AcceptOpen);
     dialog.setMimeTypeFilters(mimeTypeFilters);
     dialog.selectMimeTypeFilter("image/jpeg");
 
     while (dialog.exec() == QDialog::Accepted && !loadFile(dialog.selectedFiles().first())) {}
+}
+
+void MainWindow::saveas(){
+    const QStringList picturesLocations = QStandardPaths::standardLocations(QStandardPaths::PicturesLocation);
+
+    QImage *img = imageLabel->getImage1();
+    QFileDialog dialog(this, tr("Enregistrer sous..."),
+                       picturesLocations.isEmpty() ? QDir::currentPath() : picturesLocations.last());
+    dialog.setAcceptMode(QFileDialog::AcceptSave);
+    QString nomImg = dialog.getSaveFileName(this, tr("Enregistrer sous..."),
+                                            imageLabel->getNomImg(),
+                                            tr("Images (*.bmp);;Images (*.jpg; *.jpeg);;Images (*.png);;Images (*.ppm; *.xbm; *.xpm);;Images (*.tif))"));
+
+    if(nomImg.isNull())
+        return;
+
+    QString ext = QFileInfo(nomImg).suffix();
+    img->save(nomImg, ext.toUtf8());
+}
+
+void MainWindow::save(){
+    QImage *img = imageLabel->getImage1();
+
+    QString nomImg = imageLabel->getNomImg();
+
+    if(nomImg.isNull())
+        return;
+
+    QString ext = QFileInfo(nomImg).suffix();
+    img->save(nomImg, ext.toUtf8());
 }
 
 void MainWindow::print()
@@ -207,6 +238,8 @@ void MainWindow::updateActionsWithImage()
     ui->actionZoom_avant->setEnabled(true);
     ui->action_Zoom_arriere->setEnabled(true);
     ui->actionSeamCarving->setVisible(true);
+    ui->action_Enregistrer_sous->setEnabled(true);
+    ui->action_Enregistrer->setEnabled(true);
     this->pdis->updateDisplay();
 //    inverseColorAct->setEnabled(!fitToWindowAct->isChecked());
 //    prodConvAct->setEnabled(!fitToWindowAct->isChecked());
@@ -247,9 +280,9 @@ void MainWindow::inverseColor()
     //PictLabel *jj = static_cast<PictLabel*>(ui->scrollAreaPict->widget());
     QImage *imageInversee = tc->inverseColor(imageLabel->getSelectedImage());
     imageLabel->setSelectedImage(imageInversee);
-    const QImage imageConv = *imageLabel->getSelectedImage();
-    imageLabel->setPixmap(QPixmap::fromImage(imageConv));
-    scaleFactor = 1.0;//scaleImage(1.5);
+    //const QImage imageConv = *imageLabel->getSelectedImage();
+    //imageLabel->setPixmap(QPixmap::fromImage(imageConv));
+    //scaleFactor = 1.0;//scaleImage(1.5);
 }
 
 void MainWindow::on_action_Ouvrir_triggered()
@@ -312,18 +345,19 @@ void MainWindow::on_action_Selection_triggered()
 
 void MainWindow::on_action_Copier_triggered()
 {
-    imageLabel->setMouseListenerState(12);
+
 }
 
 void MainWindow::on_action_Coller_triggered()
 {
     imageLabel->pasteSelection();
+    imageLabel->setMouseListenerState(12);
+    imageLabel->setSecondImgAsSelect(true);
 }
 
 void MainWindow::on_action_Couper_triggered()
 {
     imageLabel->setCouperMode(true);
-    imageLabel->setMouseListenerState(18);
 }
 
 void MainWindow::on_actionImageGris_triggered()
@@ -432,23 +466,52 @@ void MainWindow::on_actionSeamCarving_triggered()
 {
     //loadFile("C:/Users/Fredd/Pictures/Rafael-icon.png");
     SeamCarver *sc = new SeamCarver(imageLabel->getSelectedImage(),this);
-    sc->init();
-    QImage *imageSeamCarved = sc->extendWidth(200);
+    sc->init(20);
+    QImage *imageSeamCarved = sc->extendWidth(20,true);
     imageLabel->setPrincipal(imageSeamCarved);
     imageLabel->setInitialContext();
     pdis->resizePictureArea();
 }
 
-void MainWindow::on_actionContour_triggered()
+void MainWindow::on_actionHistogramme_triggered()
 {
     QImage *imageSrc = imageLabel->getSelectedImage();
     if (imageSrc != NULL)
     {
         TransfoCouleur *tc = new TransfoCouleur;
-        imageLabel->setPrincipal(tc->contour(imageSrc));
+        //PictLabel *jj = static_cast<PictLabel*>(ui->scrollAreaPict->widget());
+        tc->histogramme(imageSrc,pdis->getYUVMode());
+    }
+}
+
+void MainWindow::actionContour(int mode)
+{
+    QImage *imageSrc = imageLabel->getSelectedImage();
+    if (imageSrc != NULL)
+    {
+        TransfoCouleur *tc = new TransfoCouleur;
+        // CABLER LE MODE DE CONTOUR
+        imageLabel->setPrincipal(tc->contour(imageSrc, mode));
         const QImage imageConv = *imageLabel->getSelectedImage();
         imageLabel->setPixmap(QPixmap::fromImage(imageConv));
         scaleFactor = 1.0;//scaleImage(1.5);
+    }
+}
+
+void MainWindow::on_actionContour_triggered()
+{
+    actionContour(1);
+}
+
+
+void MainWindow::on_actionHistogramme_2_triggered()
+{
+    QImage *imageSrc = imageLabel->getSelectedImage();
+    if (imageSrc != NULL)
+    {
+        TransfoCouleur *tc = new TransfoCouleur;
+        //PictLabel *jj = static_cast<PictLabel*>(ui->scrollAreaPict->widget());
+        tc->histogramme(imageSrc,pdis->getYUVMode());
     }
 }
 
@@ -458,7 +521,8 @@ void MainWindow::on_actionRehaussement_triggered()
     if (imageSrc != NULL)
     {
         TransfoCouleur *tc = new TransfoCouleur;
-        imageLabel->setPrincipal(tc->rehaussement(imageSrc));
+        // RECUPERER LA VALEUR DE ALPHA ! rehaussement(imageSrc, alpha)
+        imageLabel->setPrincipal(tc->rehaussement(imageSrc, 0.5));
         const QImage imageConv = *imageLabel->getSelectedImage();
         imageLabel->setPixmap(QPixmap::fromImage(imageConv));
         scaleFactor = 1.0;//scaleImage(1.5);
@@ -471,7 +535,8 @@ void MainWindow::on_actionEtalement_triggered()
     if (imageSrc != NULL)
     {
         TransfoCouleur *tc = new TransfoCouleur;
-        imageLabel->setPrincipal(tc->etalement(imageSrc));
+        // RECUPERER LES VALEURS DE ALPHA ET BETA ! etalement(imageSrc, alpha, beta)
+        imageLabel->setPrincipal(tc->etalement(imageSrc, 1.5, 1));
         const QImage imageConv = *imageLabel->getSelectedImage();
         imageLabel->setPixmap(QPixmap::fromImage(imageConv));
         scaleFactor = 1.0;//scaleImage(1.5);
@@ -491,4 +556,32 @@ void MainWindow::on_actionEgalisation_triggered()
     }
 }
 
+void MainWindow::on_actionSupprimer_triggered()
+{
+    imageLabel->setInitialContext();
+}
 
+void MainWindow::on_action_Enregistrer_sous_triggered()
+{
+    saveas();
+}
+
+void MainWindow::on_action_Enregistrer_triggered()
+{
+    save();
+}
+
+void MainWindow::on_actionFiltre_Scharr_triggered()
+{
+    actionContour(2);
+}
+
+void MainWindow::on_actionFiltre_Sobel_triggered()
+{
+    actionContour(1);
+}
+
+void MainWindow::on_action_Filtre_Prewitt_triggered()
+{
+    actionContour(0);
+}

@@ -29,6 +29,10 @@ ImageAnalyse::ImageAnalyse(QImage *qimageRgbSrc,QObject *parent) : QObject(paren
             histo_yuv[i][j]=0;
         }
     }
+
+    histo1 = new QwtPlot();
+    histo2 = new QwtPlot();
+    histo3 = new QwtPlot();
 //    dataYUV=NULL;
 //    d_x=NULL;
 //    d_y=NULL;
@@ -91,13 +95,25 @@ void ImageAnalyse::calculHisto()
     }
 }
 
-void ImageAnalyse::calculgradient(){
+void ImageAnalyse::calculgradient(int mode){
     int ordre = 3;
-    KernelConv *SobelX = new KernelConv(ordre);
-    KernelConv *SobelY = new KernelConv(ordre);
 
-    SobelX->genereSobelHori();
-    SobelY->genereSobelVert();
+    KernelConv *noyauX = new KernelConv(ordre);
+    KernelConv *noyauY = new KernelConv(ordre);
+    switch(mode){
+    case 0:
+        noyauX->generePrewittHori();
+        noyauY->generePrewittVert();
+        break;
+    case 2:
+        noyauX->genereScharrHori();
+        noyauY->genereScharrVert();
+        break;
+    default:
+        noyauX->genereSobelHori();
+        noyauY->genereSobelVert();
+        break;
+    }
 
     d_x = new double *[dataRGB->height()];
     d_y = new double *[dataRGB->height()];
@@ -107,8 +123,8 @@ void ImageAnalyse::calculgradient(){
         d_y[i] = new double[dataRGB->width()];
     }
 
-    d_x = SobelX->produitConv(imagris, dataRGB->width(), dataRGB->height());
-    d_y = SobelY->produitConv(imagris, dataRGB->width(), dataRGB->height());
+    d_x = noyauX->produitConv(imagris, dataRGB->width(), dataRGB->height());
+    d_y = noyauY->produitConv(imagris, dataRGB->width(), dataRGB->height());
 }
 
 int ImageAnalyse::min(){
@@ -151,6 +167,114 @@ int * ImageAnalyse::cumsum(int *h){
     }
 
     return sum;
+}
+
+void ImageAnalyse::histoToPoints(int mode){
+    int valeur;
+    for(int i=0;i<3;i++){
+        for(int j=0;j<256;j++){
+            if(mode == 1){
+                valeur = histo_yuv[i][j];
+            }
+            else{
+                valeur = histo_rgb[i][j];
+            }
+            if(i==0){
+                serie1.append(QPoint(j,0));
+                serie1.append(QPoint(j,valeur));
+            }
+            else if(i == 1){
+                serie2.append(QPoint(j,0));
+                serie2.append(QPoint(j,valeur));
+            }
+            else{
+                serie3.append(QPoint(j,0));
+                serie3.append(QPoint(j,valeur));
+            }
+        }
+    }
+}
+
+void ImageAnalyse::afficheHisto(int mode){
+    histo1->setCanvasBackground(Qt::gray);
+    if(mode == 1){
+        histo1->setTitle("Composante Y");
+    }
+    else{
+        histo1->setTitle("Répartition des pixels en rouge");
+    }
+    histo1->setFixedHeight(300);
+    histo1->setFixedWidth(600);
+    histo1->setAxisScale( QwtPlot::yLeft, 0, maxHisto(0,mode)); //Scale the y-axis
+    histo1->setAxisScale(QwtPlot::xBottom,0,256); //Scale the x-axis
+
+    QwtPlotCurve *courbe1 = new QwtPlotCurve("Rouge");
+    QColor c = Qt::red;
+    c.setAlpha(150);
+    courbe1->setPen(c, 2);
+    courbe1->setBrush(c);
+    courbe1->setSamples(serie1);
+    courbe1->attach(histo1);
+    histo1->show();
+
+    histo2->setCanvasBackground(Qt::gray);
+    if(mode == 1)
+        histo2->setTitle("Composante U");
+    else
+        histo2->setTitle("Répartition des pixels en vert");
+    histo2->setFixedHeight(300);
+    histo2->setFixedWidth(600);
+    histo2->setAxisScale( QwtPlot::yLeft, 0, maxHisto(1,mode)); //Scale the y-axis
+    histo2->setAxisScale(QwtPlot::xBottom,0,256); //Scale the x-axis
+
+    QwtPlotCurve *courbe2 = new QwtPlotCurve("Vert");
+    QColor c2 = Qt::green;
+    c2.setAlpha(150);
+    courbe2->setPen(c2, 2);
+    courbe2->setBrush(c2);
+    courbe2->setSamples(serie2);
+    courbe2->attach(histo2);
+    histo2->show();
+
+    histo3->setCanvasBackground(Qt::gray);
+    if(mode == 1)
+        histo3->setTitle("Composante V");
+    else
+        histo3->setTitle("Répartition des pixels en bleu");
+    histo3->setFixedHeight(300);
+    histo3->setFixedWidth(600);
+    histo3->setAxisScale( QwtPlot::yLeft, 0, maxHisto(2,mode)); //Scale the y-axis
+    histo3->setAxisScale(QwtPlot::xBottom,0,256); //Scale the x-axis
+
+    QwtPlotCurve *courbe3 = new QwtPlotCurve("Bleu");
+    QColor c3 = Qt::blue;
+    c3.setAlpha(150);
+    courbe3->setPen(c3, 2);
+    courbe3->setBrush(c3);
+    courbe3->setSamples(serie3);
+    courbe3->attach(histo3);
+    histo3->show();
+
+
+}
+
+int ImageAnalyse::maxHisto(int num, int mode){
+    int max = 0;
+    if(mode == 1){
+        for(int i=0;i<256;i++){
+            if(histo_yuv[num][i] >= max){
+                max = histo_yuv[num][i];
+            }
+        }
+    }
+    else{
+        for(int i=0;i<256;i++){
+            if(histo_rgb[num][i] >= max){
+                max = histo_rgb[num][i];
+            }
+        }
+    }
+    return max;
 }
 
 QImage * ImageAnalyse::getDataRGB(){

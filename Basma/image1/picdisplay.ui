@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>559</width>
+    <width>933</width>
     <height>467</height>
    </rect>
   </property>
@@ -16,10 +16,10 @@
   <widget class="QScrollArea" name="scrollAreaP">
    <property name="geometry">
     <rect>
-     <x>140</x>
-     <y>100</y>
+     <x>130</x>
+     <y>140</y>
      <width>301</width>
-     <height>301</height>
+     <height>241</height>
     </rect>
    </property>
    <property name="minimumSize">
@@ -37,7 +37,7 @@
       <x>0</x>
       <y>0</y>
       <width>299</width>
-      <height>299</height>
+      <height>239</height>
      </rect>
     </property>
    </widget>
@@ -48,7 +48,7 @@
      <x>10</x>
      <y>10</y>
      <width>101</width>
-     <height>371</height>
+     <height>441</height>
     </rect>
    </property>
    <property name="title">
@@ -85,8 +85,8 @@
      <rect>
       <x>2</x>
       <y>38</y>
-      <width>50</width>
-      <height>15</height>
+      <width>81</width>
+      <height>16</height>
      </rect>
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -111,7 +111,7 @@
      <rect>
       <x>2</x>
       <y>58</y>
-      <width>50</width>
+      <width>81</width>
       <height>20</height>
      </rect>
     </property>
@@ -137,8 +137,8 @@
      <rect>
       <x>2</x>
       <y>88</y>
-      <width>50</width>
-      <height>15</height>
+      <width>81</width>
+      <height>16</height>
      </rect>
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout_4">
@@ -162,7 +162,7 @@
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>120</y>
+      <y>140</y>
       <width>50</width>
       <height>15</height>
      </rect>
@@ -188,7 +188,7 @@
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>140</y>
+      <y>160</y>
       <width>50</width>
       <height>15</height>
      </rect>
@@ -213,8 +213,8 @@
    <widget class="QLabel" name="libTailleGeneral">
     <property name="geometry">
      <rect>
-      <x>1</x>
-      <y>171</y>
+      <x>0</x>
+      <y>190</y>
       <width>84</width>
       <height>16</height>
      </rect>
@@ -227,8 +227,8 @@
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>220</y>
-      <width>96</width>
+      <y>240</y>
+      <width>101</width>
       <height>22</height>
      </rect>
     </property>
@@ -249,7 +249,7 @@
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>190</y>
+      <y>210</y>
       <width>101</width>
       <height>22</height>
      </rect>
@@ -270,139 +270,307 @@
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>320</y>
-      <width>62</width>
-      <height>42</height>
+      <x>0</x>
+      <y>110</y>
+      <width>81</width>
+      <height>16</height>
      </rect>
     </property>
-    <layout class="QVBoxLayout" name="imageSelector">
+    <layout class="QHBoxLayout" name="horizontalLayout_12">
      <item>
-      <widget class="QRadioButton" name="radioButtonImg1">
+      <widget class="QLabel" name="libCoulA">
        <property name="text">
-        <string>image 1</string>
+        <string>Alpha:</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QRadioButton" name="radioButtonImg2">
+      <widget class="QLabel" name="valCoulA">
        <property name="text">
-        <string>image 2</string>
+        <string>0</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="layoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>1</x>
+      <y>280</y>
+      <width>88</width>
+      <height>102</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_13">
+       <item>
+        <widget class="QRadioButton" name="radioButtonImg1">
+         <property name="text">
+          <string>image 1</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="val_alpha_img1">
+         <property name="text">
+          <string>100</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <widget class="QSlider" name="horizontalSlider_img1">
+       <property name="maximum">
+        <number>100</number>
+       </property>
+       <property name="value">
+        <number>100</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_14">
+       <item>
+        <widget class="QRadioButton" name="radioButtonImg2">
+         <property name="text">
+          <string>image 2</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="val_alpha_img2">
+         <property name="text">
+          <string>100</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <widget class="QSlider" name="horizontalSlider_img2">
+       <property name="maximum">
+        <number>100</number>
+       </property>
+       <property name="value">
+        <number>100</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <zorder>layoutWidget</zorder>
+   <zorder>layoutWidget</zorder>
+   <zorder>layoutWidget</zorder>
+   <zorder>layoutWidget</zorder>
+   <zorder>layoutWidget_2</zorder>
+   <zorder>layoutWidget_3</zorder>
+   <zorder>layoutWidget_4</zorder>
+   <zorder>libTailleGeneral</zorder>
+   <zorder>layoutWidget_5</zorder>
+   <zorder>layoutWidget</zorder>
+   <zorder>layoutWidget</zorder>
+  </widget>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>130</x>
+     <y>0</y>
+     <width>47</width>
+     <height>13</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QGroupBox" name="groupBox_2">
+   <property name="geometry">
+    <rect>
+     <x>120</x>
+     <y>10</y>
+     <width>801</width>
+     <height>111</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>Paramètres :</string>
+   </property>
+   <widget class="QWidget" name="layoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>20</y>
+      <width>261</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout_9">
+     <item>
+      <widget class="QCheckBox" name="checkBoxFlou">
+       <property name="text">
+        <string>Flou</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="libFlou1">
+       <property name="text">
+        <string>Taille noyau :</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="lineEditFlou1"/>
+     </item>
+     <item>
+      <widget class="QComboBox" name="comboBoxFlou1">
+       <item>
+        <property name="text">
+         <string>Moyenneur</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Gaussien</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="layoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>50</y>
+      <width>242</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout_10">
+     <item>
+      <widget class="QCheckBox" name="checkBox_Rehaus">
+       <property name="text">
+        <string>Rehaussement</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="lib_Rehaus">
+       <property name="text">
+        <string>Coeff de rendu :</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="lineEdit_Rehaus"/>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="layoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>290</x>
+      <y>20</y>
+      <width>271</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout_11">
+     <item>
+      <widget class="QCheckBox" name="checkBox_Etal">
+       <property name="text">
+        <string>Etalement</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="lib_Etal1">
+       <property name="text">
+        <string>Alpha :</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="lineEdit_Etal1">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="lib_Etal2">
+       <property name="text">
+        <string>Beta :</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="lineEdit_Etal2"/>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="layoutWidget_6">
+    <property name="geometry">
+     <rect>
+      <x>290</x>
+      <y>50</y>
+      <width>401</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout_15">
+     <item>
+      <widget class="QCheckBox" name="checkBox_Filtre">
+       <property name="text">
+        <string>Filtre personalisé</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="lib_Filtre1">
+       <property name="text">
+        <string>Taille noyau :</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="lineEdit_Filtre">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButtonFiltreEdition">
+       <property name="text">
+        <string>Edition</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_FiltreLaunch">
+       <property name="text">
+        <string>Filtre</string>
        </property>
       </widget>
      </item>
     </layout>
    </widget>
   </widget>
-  <widget class="QGroupBox" name="groupBox_2">
-   <property name="geometry">
-    <rect>
-     <x>180</x>
-     <y>10</y>
-     <width>151</width>
-     <height>81</height>
-    </rect>
-   </property>
-   <property name="title">
-    <string>Matrice de convolution</string>
-   </property>
-   <widget class="QLabel" name="label_3">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>50</y>
-      <width>47</width>
-      <height>13</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Y :</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>30</y>
-      <width>47</width>
-      <height>13</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>X :</string>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="lineEdit">
-    <property name="geometry">
-     <rect>
-      <x>40</x>
-      <y>30</y>
-      <width>51</width>
-      <height>20</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="lineEdit_2">
-    <property name="geometry">
-     <rect>
-      <x>40</x>
-      <y>50</y>
-      <width>51</width>
-      <height>20</height>
-     </rect>
-    </property>
-   </widget>
-  </widget>
-  <widget class="QGroupBox" name="groupBox_3">
-   <property name="geometry">
-    <rect>
-     <x>340</x>
-     <y>10</y>
-     <width>120</width>
-     <height>80</height>
-    </rect>
-   </property>
-   <property name="title">
-    <string>Coefficient</string>
-   </property>
-   <widget class="QComboBox" name="comboBox">
-    <property name="geometry">
-     <rect>
-      <x>40</x>
-      <y>30</y>
-      <width>69</width>
-      <height>22</height>
-     </rect>
-    </property>
-    <item>
-     <property name="text">
-      <string>3</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>5</string>
-     </property>
-    </item>
-   </widget>
-   <widget class="QLabel" name="label_2">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>30</y>
-      <width>47</width>
-      <height>13</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Noyau :</string>
-    </property>
-   </widget>
-  </widget>
-  <zorder>groupBox</zorder>
-  <zorder>groupBox_2</zorder>
-  <zorder>groupBox_3</zorder>
   <zorder>scrollAreaP</zorder>
+  <zorder>label</zorder>
+  <zorder>groupBox_2</zorder>
+  <zorder>groupBox</zorder>
  </widget>
  <resources/>
  <connections/>

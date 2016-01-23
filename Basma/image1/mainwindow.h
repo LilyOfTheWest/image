@@ -34,6 +34,8 @@ public:
 
 private slots:
     void open();
+    void saveas();
+    void save();
     void print();
     void inverseColor();
     void updateActionsWithoutImage();
@@ -82,6 +84,8 @@ private slots:
 
     void on_actionValider_triggered();
 
+    void on_actionSupprimer_triggered();
+
     void on_actionRotation_90_Horaire_triggered();
 
     void on_action_Rotation_90_antihoraire_triggered();
@@ -90,7 +94,11 @@ private slots:
 
     void on_action_Annuler_triggered();
 
+    void on_actionHistogramme_triggered();
+
     void on_actionContour_triggered();
+
+    void on_actionHistogramme_2_triggered();
 
     void on_actionRehaussement_triggered();
 
@@ -98,12 +106,23 @@ private slots:
 
     void on_actionEgalisation_triggered();
 
+    void on_action_Enregistrer_sous_triggered();
+
+    void on_action_Enregistrer_triggered();
+
+    void on_actionFiltre_Scharr_triggered();
+
+    void on_actionFiltre_Sobel_triggered();
+
+    void on_action_Filtre_Prewitt_triggered();
+
 private:
     Ui::MainWindow *ui;
     void updateActions();
     void scaleImage(double factor);
     void adjustScrollBar(QScrollBar *scrollBar, double factor);
     bool loadFileToMerge(const QString &fileName);
+    void actionContour(int mode);
     PictLabel *imageLabel;
     //QScrollArea *scrollArea;
     PicDisplay *pdis;

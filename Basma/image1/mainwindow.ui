@@ -76,47 +76,28 @@
      </property>
      <addaction name="action_Flou_gaussien"/>
      <addaction name="action_Flou_moyenneur"/>
-     <addaction name="action_Personnalis_flou"/>
      <addaction name="separator"/>
-     <addaction name="action_Taille_filtre"/>
     </widget>
     <widget class="QMenu" name="menu_Datetction_de_contours">
      <property name="title">
-      <string>&amp;Datetction de contours</string>
+      <string>&amp;Detection de contours</string>
      </property>
-     <addaction name="action_Flou_Sobel"/>
-     <addaction name="action_Flou_Roberts"/>
-     <addaction name="action_Personnalis_Detec"/>
+     <addaction name="action_Filtre_Prewitt"/>
+     <addaction name="actionFiltre_Sobel"/>
+     <addaction name="actionFiltre_Scharr"/>
      <addaction name="separator"/>
-     <addaction name="actionRehaussement"/>
-     <addaction name="actionEtalement"/>
-     <addaction name="actionEgalisation"/>
-    </widget>
-    <widget class="QMenu" name="menuType_Here">
-     <property name="title">
-      <string>Type Here</string>
-     </property>
     </widget>
     <addaction name="menu_Flou"/>
     <addaction name="menu_Datetction_de_contours"/>
-    <addaction name="menuType_Here"/>
-   </widget>
-   <widget class="QMenu" name="menu_Fen_tre">
-    <property name="title">
-     <string>&amp;Fenêtre</string>
-    </property>
-    <addaction name="actionFusion"/>
-    <addaction name="actionBarre_d_outil"/>
-    <addaction name="actionBarre_de_menu"/>
-    <addaction name="actionCouleurs"/>
-    <addaction name="actionHistogramme"/>
+    <addaction name="actionEtalement"/>
+    <addaction name="actionEgalisation"/>
+    <addaction name="actionRehaussement"/>
    </widget>
    <addaction name="menuTest"/>
    <addaction name="menu_Edition"/>
    <addaction name="menu_Affichage"/>
    <addaction name="menu_Image"/>
    <addaction name="menu_Effet"/>
-   <addaction name="menu_Fen_tre"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QToolBar" name="toolBar">
@@ -380,14 +361,9 @@
     <string>&amp;Personnalisé...</string>
    </property>
   </action>
-  <action name="action_Flou_Sobel">
+  <action name="action_Filtre_Prewitt">
    <property name="text">
-    <string>&amp;Flou Sobel</string>
-   </property>
-  </action>
-  <action name="action_Flou_Roberts">
-   <property name="text">
-    <string>&amp;Flou Roberts</string>
+    <string>&amp;Filtre Prewitt</string>
    </property>
   </action>
   <action name="action_Personnalis_Detec">
@@ -581,6 +557,16 @@
   <action name="actionEgalisation">
    <property name="text">
     <string>Egalisation</string>
+   </property>
+  </action>
+  <action name="actionFiltre_Scharr">
+   <property name="text">
+    <string>Filtre Scharr</string>
+   </property>
+  </action>
+  <action name="actionFiltre_Sobel">
+   <property name="text">
+    <string>Filtre Sobel</string>
    </property>
   </action>
  </widget>

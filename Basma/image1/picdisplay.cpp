@@ -10,9 +10,13 @@ PicDisplay::PicDisplay(PictLabel *imageLabel, QWidget *parent) :
 {
     ui->setupUi(this);
     ui->scrollAreaP->setWidgetResizable(false);
-        ui->scrollAreaP->setWidget(imageLabel);
+    ui->scrollAreaP->setWidget(imageLabel);
     this->imageLabel=imageLabel;
-        ui->radioButtonRGB->setChecked(true);
+    ui->radioButtonRGB->setChecked(true);
+    displayImage2Selector(false);
+    displayFlouProperties(false);
+    displayRehausProperties(false);
+    displayEtalProperties(false);
 }
 
 PicDisplay::~PicDisplay()
@@ -38,6 +42,11 @@ int PicDisplay::getResizedHeightRequired()
     return ret;
 }
 
+int PicDisplay::getYUVMode()
+{
+    int ret = (this->ui->radioButton_YUV->isChecked()) ? 1 : 0;
+    return ret;
+}
 
 void PicDisplay::refreshPixelProperties()
 {
@@ -48,7 +57,9 @@ void PicDisplay::refreshPixelProperties()
     ui->valPosX->setText(valx);
     QString valy= QString::number(position.y());
     ui->valPosY->setText(valy);
-    QString val1,val2,val3;
+    QString val1,val2,val3,val4;
+    val4= QString::number(qAlpha(color));
+    ui->valCoulA->setText(val4);
 
     if (ui->radioButtonRGB->isChecked())
     {
@@ -99,9 +110,9 @@ void PicDisplay::scaleImage(double factor)
     scaleFactor *= factor;
     imageLabel->resize(scaleFactor * imageLabel->pixmap()->size());*/
 
-      //adjustScrollBar( ui->scrollAreaP->horizontalScrollBar(), factor);
-       //adjustScrollBar( ui->scrollAreaP->verticalScrollBar(), factor);
-/*
+    //adjustScrollBar( ui->scrollAreaP->horizontalScrollBar(), factor);
+    //adjustScrollBar( ui->scrollAreaP->verticalScrollBar(), factor);
+    /*
     zoomInAct->setEnabled(scaleFactor < 3.0);
     zoomOutAct->setEnabled(scaleFactor > 0.333);*/
 }
@@ -151,12 +162,10 @@ void PicDisplay::updateDisplay()
 
         if (imageLabel->getImage2() == NULL)
         {
-            ui->radioButtonImg1->setVisible(false);
-            ui->radioButtonImg2->setVisible(false);
+            displayImage2Selector(false);
         } else
         {
-            ui->radioButtonImg1->setVisible(true);
-            ui->radioButtonImg2->setVisible(true);
+            displayImage2Selector(true);
         }
 
     } else
@@ -166,7 +175,110 @@ void PicDisplay::updateDisplay()
         ui->libTailleWidth->setVisible(false);
         ui->lineEdit_Width->setVisible(false);
         ui->lineEdit_Height->setVisible(false);
-        ui->radioButtonImg1->setVisible(false);
-        ui->radioButtonImg2->setVisible(false);
+
+        displayImage2Selector(false);
     }
 }
+
+void PicDisplay::displayImage2Selector(bool visible)
+{
+    bool image1Selected = !imageLabel->getSecondImgAsSelect();
+    if (image1Selected) {
+        ui->radioButtonImg1->setChecked(image1Selected);
+        ui->radioButtonImg2->setChecked(!image1Selected);
+    }
+    ui->radioButtonImg1->setVisible(visible);
+    ui->radioButtonImg2->setVisible(visible);
+    ui->val_alpha_img1->setVisible(visible);
+    ui->val_alpha_img2->setVisible(visible);
+    ui->horizontalSlider_img1->setVisible(visible);
+    ui->horizontalSlider_img2->setVisible(visible);
+}
+
+void PicDisplay::displayFlouProperties(bool visible)
+{
+    //ui->checkBoxFlou->setChecked(visible);
+    ui->libFlou1->setVisible(visible);
+    ui->comboBoxFlou1->setVisible(visible);
+    ui->lineEditFlou1->setVisible(visible);
+}
+
+void PicDisplay::displayRehausProperties(bool visible)
+{
+    ui->checkBox_Rehaus->setChecked(visible);
+    ui->lib_Rehaus->setVisible(visible);
+    ui->lineEdit_Rehaus->setVisible(visible);
+}
+
+void PicDisplay::displayEtalProperties(bool visible)
+{
+    ui->checkBox_Etal->setChecked(visible);
+    ui->lib_Etal1->setVisible(visible);
+    ui->lib_Etal2->setVisible(visible);
+    ui->lineEdit_Etal1->setVisible(visible);
+    ui->lineEdit_Etal2->setVisible(visible);
+}
+
+void PicDisplay::displayFiltreProperties(bool visible)
+{
+    ui->checkBox_Filtre->setChecked(visible);
+    ui->lib_Filtre1->setVisible(visible);
+    ui->lineEdit_Filtre->setVisible(visible);
+    ui->pushButtonFiltreEdition->setVisible(visible);
+    ui->pushButton_FiltreLaunch->setVisible(visible);
+}
+
+void PicDisplay::on_checkBoxFlou_stateChanged(int arg1)
+{
+    displayFlouProperties(arg1 != Qt::Unchecked);
+}
+
+void PicDisplay::on_checkBox_Rehaus_stateChanged(int arg1)
+{
+    displayRehausProperties(arg1 != Qt::Unchecked);
+}
+
+void PicDisplay::on_checkBox_Etal_stateChanged(int arg1)
+{
+    displayEtalProperties(arg1 != Qt::Unchecked);
+}
+
+void PicDisplay::on_checkBox_Filtre_stateChanged(int arg1)
+{
+    displayFiltreProperties(arg1 != Qt::Unchecked);
+}
+
+void PicDisplay::on_radioButtonImg1_clicked()
+{
+    this->imageLabel->setSecondImgAsSelect(false);
+}
+
+void PicDisplay::on_radioButtonImg2_clicked()
+{
+    this->imageLabel->setSecondImgAsSelect(true);
+}
+
+void PicDisplay::on_horizontalSlider_img1_valueChanged(int value)
+{
+    ui->val_alpha_img1->setText(QString::number(value));
+    this->imageLabel->setAlphaImg1(value);
+    this->imageLabel->drawImage();
+}
+
+void PicDisplay::on_horizontalSlider_img2_valueChanged(int value)
+{
+    ui->val_alpha_img2->setText(QString::number(value));
+    this->imageLabel->setAlphaImg2(value);
+    this->imageLabel->drawImage();
+}
+
+void PicDisplay::on_pushButtonFiltreEdition_clicked()
+{
+
+}
+
+void PicDisplay::on_pushButton_FiltreLaunch_clicked()
+{
+
+}
+
