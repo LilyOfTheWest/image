@@ -33,8 +33,8 @@ void PictLabel::setInitialContext()
     origin_select.setX(0);
     origin_select.setY(0);
     mouseListenerState=0;
-    alphaImg1=100;
-    alphaImg2=100;
+    alphaImg1=255;
+    alphaImg2=255;
     if (secondImg != NULL)
     {
         delete secondImg;
@@ -139,6 +139,12 @@ QImage *PictLabel::getImage1()
 QImage *PictLabel::getImage2()
 {
     return secondImg;
+}
+
+void PictLabel::closeImages()
+{
+    firstImg = NULL;
+    this->setInitialContext();
 }
 
 void PictLabel::setSelectedImage(QImage *selectImgPar)
@@ -355,6 +361,7 @@ void PictLabel::setSelection(QMouseEvent * event)
     secondImg=NULL;
     delete rubberBand;
     drawImage();
+    signalValidateCancelVivibility();
 }
 
 void PictLabel::pasteSelection()
@@ -476,6 +483,7 @@ void PictLabel::drawImage()
     p.setBrush(Qt::NoBrush);
     if (firstImg != NULL)
     {
+        p.setOpacity(alphaImg1/255.0);
         const QImage imageFirstFirstImg = *firstImg;
         p.drawPixmap(position_firstImg.x(),
                      position_firstImg.y(),
@@ -485,9 +493,19 @@ void PictLabel::drawImage()
     }
 
     if (end_select != NULL)
-        p.drawRect(QRect(origin_select,*end_select));
+        if (bCouperMode)
+        {
+            const QBrush *b = new QBrush(Qt::white,Qt::Dense1Pattern);
+            p.setBrush(*b);
+            p.drawRect(QRect(origin_select,*end_select));
+            delete b;
+            p.setBrush(Qt::NoBrush);
+        }
+        else
+            p.drawRect(QRect(origin_select,*end_select));
     if (secondImg != NULL)
     {
+        p.setOpacity(alphaImg2/255.0);
         const QImage imageSecondImge = *secondImg;
         p.drawPixmap(position_secondImg.x(),
                      position_secondImg.y(),
@@ -540,7 +558,7 @@ void PictLabel::validateTransfo()
     //signalValidateCancelVivibility();
     switch(mouseListenerState){
     case 12: // Deplace première image
-        newImage =resizer->displaceImage(principal,firstImg,position_firstImg,secondImg,position_secondImg);
+        newImage =resizer->displaceImage(principal,firstImg,position_firstImg,secondImg,position_secondImg,bCouperMode,origin_select,end_select);
         setPrincipal(newImage);
         break;
     case 110: // Crop select
@@ -577,3 +595,9 @@ bool PictLabel::getValidateCancelVisibility()
 {
     return this->bValidateCancelVisibility;
 }
+
+bool PictLabel::getCutCopyVisibility()
+{
+    return ((mouseListenerState==11)&&(end_select != NULL)&&(secondImg == NULL));
+}
+

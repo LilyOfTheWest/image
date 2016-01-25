@@ -11,6 +11,7 @@
 #include "transfocouleur.h"
 #include "imageresizer.h"
 #include "seamcarver.h"
+#include "kernelconv.h"
 
 /*QT_BEGIN_NAMESPACE
 class QWidget;
@@ -36,6 +37,7 @@ public:
     QImage *getSelectedImage();
     QImage *getImage1();
     QImage *getImage2();
+    void closeImages();
     void setSelectedImage(QImage *selectImg);
     QRgb getColorPicked();
     QPoint getPixelPicked();
@@ -58,6 +60,7 @@ public:
     void setSeamLinesDisplayMode(bool value);
     bool getUndoVisibility();
     bool getValidateCancelVisibility();
+    bool getCutCopyVisibility();
 
 signals:
     void signalNewPixelPicked();
@@ -106,6 +109,7 @@ protected:
     int alphaImg2;
     SeamCarver *sc;
     bool bValidateCancelVisibility;
+    KernelConv *filtrePerso;
 };
 
 #endif // PICTLABEL_H

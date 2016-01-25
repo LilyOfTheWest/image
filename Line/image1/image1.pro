@@ -10,7 +10,6 @@ HEADERS       = \
     imageanalyse.h \
     kernelconvmoyenneur.h \
     kernelconvbinomial.h \
-    couleurs.h \
     imageresizer.h \
     seamcarver.h
 SOURCES       = \
@@ -23,7 +22,6 @@ SOURCES       = \
     imageanalyse.cpp \
     kernelconvmoyenneur.cpp \
     kernelconvbinomial.cpp \
-    couleurs.cpp \
     imageresizer.cpp \
     seamcarver.cpp
 
@@ -39,7 +37,6 @@ wince {
 FORMS += \
     picdisplay.ui \
     mainwindow.ui \
-    couleurs.ui \
     histogramme.ui \
     fusion.ui
 

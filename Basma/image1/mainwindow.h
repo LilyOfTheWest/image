@@ -38,13 +38,12 @@ private slots:
     void save();
     void print();
     void inverseColor();
-    void updateActionsWithoutImage();
-    void updateActionsWithImage();
+    void updateActionsIconDisplay(bool visible);
+    void updateActionsIconAccess(bool access);
     void zoomIn();
     void zoomOut();
     void normalSize();
     void fitToWindow();
-    void about();
 
     void on_action_Ouvrir_triggered();
 
@@ -119,6 +118,10 @@ private slots:
     void on_UndoVivibilityRedefined();
 
     void on_UndoValidateCancelRedefined();
+
+    void on_action_Flou_moyenneur_triggered();
+
+    void on_action_Flou_gaussien_triggered();
 
 private:
     Ui::MainWindow *ui;

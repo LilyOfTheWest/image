@@ -17,7 +17,7 @@ class QScrollArea;
 class PictLabel;
 class QLabel;
 class QKernelConv;
-
+class KernelDialog;
 class PicDisplay;
 class QWidget;
 QT_END_NAMESPACE

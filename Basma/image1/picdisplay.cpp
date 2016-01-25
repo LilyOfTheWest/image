@@ -275,16 +275,6 @@ void PicDisplay::on_horizontalSlider_img2_valueChanged(int value)
     this->imageLabel->drawImage();
 }
 
-void PicDisplay::on_pushButtonFiltreEdition_clicked()
-{
-
-}
-
-void PicDisplay::on_pushButton_FiltreLaunch_clicked()
-{
-
-}
-
 void PicDisplay::displaySeamProperties(bool visible)
 {
     ui->checkBoxSeam->setChecked(visible);
@@ -359,4 +349,79 @@ void PicDisplay::on_comboBoxSeamActions_currentIndexChanged(int index)
         displaySeamCarvedImage();
         break;
     }
+}
+
+int PicDisplay::getFlouMode(){
+    int ret = 1;
+    QComboBox *q1=ui->comboBoxFlou1;
+    if (!q1->currentText().isEmpty()){
+        if(q1->currentText().compare("Moyenneur", Qt::CaseInsensitive) == 0){
+            ret = 0;
+        }
+        else if(q1->currentText().compare("Gaussien", Qt::CaseInsensitive) == 0){
+            ret = 1;
+        }
+    }
+    return ret;
+}
+
+int PicDisplay::getFlouTaille(){
+    int ret = 3;
+    QLineEdit *q1=ui->lineEditFlou1;
+    if (!q1->text().isEmpty())
+        ret=q1->text().toInt();
+
+    // EMPECHER LES TAILLES PAIR
+    if(ret%2 == 0){
+        ret+=1;
+    }
+    return ret;
+}
+
+double PicDisplay::getRehaussCoef(){
+    double ret = 0.5;
+    QLineEdit *q1=ui->lineEdit_Rehaus;
+    if (!q1->text().isEmpty())
+        ret=q1->text().toDouble();
+    return ret;
+}
+
+double PicDisplay::getEtalAlpha(){
+    double ret = 1.5;
+    QLineEdit *q1=ui->lineEdit_Etal1;
+    if (!q1->text().isEmpty())
+        ret=q1->text().toDouble();
+    return ret;
+}
+
+double PicDisplay::getEtalBeta(){
+    double ret = 1.0;
+    QLineEdit *q1=ui->lineEdit_Etal2;
+    if (!q1->text().isEmpty())
+        ret=q1->text().toDouble();
+    return ret;
+}
+
+int PicDisplay::getFiltrePersoTaille(){
+    int ret = 3;
+    QLineEdit *q1=ui->lineEdit_Filtre;
+    if (!q1->text().isEmpty())
+        ret=q1->text().toDouble();
+
+    // EMPECHER LES TAILLES PAIR
+    if(ret%2 == 0){
+        ret+=1;
+    }
+    return ret;
+}
+
+void PicDisplay::on_pushButtonFiltreEdition_clicked()
+{
+
+
+}
+
+void PicDisplay::on_pushButton_FiltreLaunch_clicked()
+{
+
 }

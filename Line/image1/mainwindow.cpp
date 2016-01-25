@@ -9,6 +9,7 @@
 #endif
 #include "kernelconv.h"
 #include "seamcarver.h"
+#include <QDialog>
 
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -28,7 +29,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QObject::connect(imageLabel,SIGNAL(signalRedisplayRequired()),pdis,SLOT(on_displayRedefined()));
     QObject::connect(imageLabel,SIGNAL(signalUndoVivibility()),this,SLOT(on_UndoVivibilityRedefined()));
     QObject::connect(imageLabel,SIGNAL(signalValidateCancelVivibility()),this,SLOT(on_UndoValidateCancelRedefined()));
-    updateActionsWithoutImage();
+    updateActionsIconDisplay(false);
     resize(QGuiApplication::primaryScreen()->availableSize() * 3 / 5);
     scaleFactor = 1;
 
@@ -64,7 +65,7 @@ bool MainWindow::loadFile(const QString &fileName)
     imageLabel->setNomImg(nom);
     //imageLabel->adjustSize();
     pdis->resizePictureArea();
-    updateActionsWithImage();
+    updateActionsIconDisplay(true);
 
     //if (!fitToWindowAct->isChecked())
 
@@ -174,86 +175,63 @@ void MainWindow::fitToWindow()
     //if (!fitToWindow) {
     //    normalSize();
     //}
-    updateActionsWithImage();
+    updateActionsIconDisplay(true);
 }
 
-void MainWindow::about()
+void MainWindow::updateActionsIconDisplay(bool visible)
 {
-    QMessageBox::about(this, tr("About Image Viewer"),
-            tr("<p>The <b>Image Viewer</b> example shows how to combine QLabel "
-               "and QScrollArea to display an image. QLabel is typically used "
-               "for displaying a text, but it can also display an image. "
-               "QScrollArea provides a scrolling view around another widget. "
-               "If the child widget exceeds the size of the frame, QScrollArea "
-               "automatically provides scroll bars. </p><p>The example "
-               "demonstrates how QLabel's ability to scale its contents "
-               "(QLabel::scaledContents), and QScrollArea's ability to "
-               "automatically resize its contents "
-               "(QScrollArea::widgetResizable), can be used to implement "
-               "zooming and scaling features. </p><p>In addition the example "
-               "shows how to use QPainter to print an image.</p>"));
-}
-//void MainWindow::createActions()
-//{
-//    normalSizeAct = new QAction(tr("&Normal Size"), this);
-//    normalSizeAct->setShortcut(tr("Ctrl+S"));
-//    normalSizeAct->setEnabled(false);
-//    connect(normalSizeAct, SIGNAL(triggered()), this, SLOT(normalSize()));
-
-//    fitToWindowAct = new QAction(tr("&Fit to Window"), this);
-//    fitToWindowAct->setEnabled(false);
-//    fitToWindowAct->setCheckable(true);
-//    fitToWindowAct->setShortcut(tr("Ctrl+F"));
-//    connect(fitToWindowAct, SIGNAL(triggered()), this, SLOT(fitToWindow()));
-
-//    aboutAct = new QAction(tr("&About"), this);
-//    connect(aboutAct, SIGNAL(triggered()), this, SLOT(about()));
-
-//    aboutQtAct = new QAction(tr("About &Qt"), this);
-//    connect(aboutQtAct, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
-//}
-
-
-void MainWindow::updateActionsWithoutImage()
-{
-    ui->action_Fermer->setEnabled(false);
-    ui->action_Imprimer->setEnabled(false);
-    ui->actionPipette->setVisible(false);
-    ui->action_Selection->setVisible(false);
-    ui->actionZoom_avant->setEnabled(false);
-    ui->action_Zoom_arriere->setEnabled(false);
-    ui->actionSeamCarving->setVisible(false);
-    ui->action_Copier->setVisible(false);
-    ui->action_Couper->setVisible(false);
+    ui->action_Nouveau->setVisible(false);
     ui->action_Coller->setVisible(false);
+    ui->action_Fermer->setEnabled(visible);
+    ui->action_Imprimer->setEnabled(visible);
+    ui->actionPipette->setVisible(visible);
+    ui->action_Selection->setVisible(visible);
+    ui->actionZoom_avant->setEnabled(visible);
+    ui->action_Zoom_arriere->setEnabled(visible);
+    ui->actionSeamCarving->setVisible(visible);
+    ui->actionDeplacement->setVisible(visible);
+    ui->actionCrop->setVisible(visible);
+    ui->actionFlou->setVisible(visible);
+    ui->actionInverseCoul->setVisible(visible);
+    ui->actionImageGris->setVisible(visible);
+    ui->actionFusion_2->setVisible(visible);
+    ui->actionHistogramme_2->setVisible(visible);
+    ui->actionContour->setVisible(visible);
+    ui->actionZoom_avant->setVisible(visible);
+    ui->actionRotation_90_Horaire->setEnabled(visible);
+    ui->action_Rotation_90_antihoraire->setEnabled(visible);
+    ui->actionRotation_180->setEnabled(visible);
+    ui->action_Copier->setVisible(visible);
+    ui->action_Couper->setVisible(visible);
     this->on_UndoVivibilityRedefined();
     this->on_UndoValidateCancelRedefined();
-
-
     this->pdis->updateDisplay();
-
 }
 
 
-void MainWindow::updateActionsWithImage()
+void MainWindow::updateActionsIconAccess(bool access)
 {
-    ui->action_Fermer->setEnabled(true);
-    ui->action_Imprimer->setEnabled(true);
-    ui->actionPipette->setVisible(true);
-    ui->action_Selection->setVisible(true);
-    ui->actionZoom_avant->setEnabled(true);
-    ui->action_Zoom_arriere->setEnabled(true);
-    ui->actionSeamCarving->setVisible(true);
-    ui->action_Enregistrer_sous->setEnabled(true);
-    ui->action_Enregistrer->setEnabled(true);
-    this->on_UndoVivibilityRedefined();
-    this->on_UndoValidateCancelRedefined();
-    this->pdis->updateDisplay();
-//    inverseColorAct->setEnabled(!fitToWindowAct->isChecked());
-//    prodConvAct->setEnabled(!fitToWindowAct->isChecked());
-//    zoomInAct->setEnabled(!fitToWindowAct->isChecked());
-//    zoomOutAct->setEnabled(!fitToWindowAct->isChecked());
-//    normalSizeAct->setEnabled(!fitToWindowAct->isChecked());
+    ui->action_Fermer->setEnabled(access);
+    ui->action_Imprimer->setEnabled(access);
+    ui->actionPipette->setEnabled(access);
+    ui->action_Selection->setEnabled(access);
+    ui->actionZoom_avant->setEnabled(access);
+    ui->action_Zoom_arriere->setEnabled(access);
+    ui->actionSeamCarving->setEnabled(access);
+    ui->actionDeplacement->setEnabled(access);
+    ui->actionCrop->setEnabled(access);
+    ui->actionFlou->setEnabled(access);
+    ui->actionInverseCoul->setEnabled(access);
+    ui->actionImageGris->setEnabled(access);
+    ui->actionFusion_2->setEnabled(access);
+    ui->actionHistogramme_2->setEnabled(access);
+    ui->actionContour->setEnabled(access);
+    ui->actionZoom_avant->setEnabled(access);
+    ui->actionRotation_90_Horaire->setEnabled(access);
+    ui->action_Rotation_90_antihoraire->setEnabled(access);
+    ui->actionRotation_180->setEnabled(access);
+    ui->action_Enregistrer_sous->setEnabled(access);
+    ui->action_Enregistrer->setEnabled(access);
 }
 
 void MainWindow::scaleImage(double factor)
@@ -300,7 +278,8 @@ void MainWindow::on_action_Ouvrir_triggered()
 
 void MainWindow::on_action_Fermer_triggered()
 {
-    close();
+    imageLabel->closeImages();
+    updateActionsIconDisplay(false);
 }
 
 void MainWindow::on_action_Imprimer_triggered()
@@ -346,27 +325,29 @@ void MainWindow::on_actionDeplacement_triggered()
 void MainWindow::on_action_Selection_triggered()
 {
     imageLabel->setMouseListenerState(11);
-    ui->action_Copier->setVisible(true);
-    ui->action_Couper->setVisible(true);
-    ui->action_Coller->setVisible(true);
+    ui->action_Coller->setVisible(false);
 }
 
 
 void MainWindow::on_action_Copier_triggered()
 {
+    imageLabel->pasteSelection();
+    imageLabel->setMouseListenerState(12);
+    imageLabel->setSecondImgAsSelect(true);
 
 }
 
 void MainWindow::on_action_Coller_triggered()
 {
-    imageLabel->pasteSelection();
-    imageLabel->setMouseListenerState(12);
-    imageLabel->setSecondImgAsSelect(true);
+
 }
 
 void MainWindow::on_action_Couper_triggered()
 {
     imageLabel->setCouperMode(true);
+    imageLabel->pasteSelection();
+    imageLabel->setMouseListenerState(12);
+    imageLabel->setSecondImgAsSelect(true);
 }
 
 void MainWindow::on_actionImageGris_triggered()
@@ -583,13 +564,6 @@ void MainWindow::on_action_Filtre_Prewitt_triggered()
     actionContour(0);
 }
 
-void MainWindow::on_actionSeamCarving_triggered()
-{
-    imageLabel->getSeamCarver()->initImage(imageLabel->getImage1());
-    imageLabel->getSeamCarver()->initStrengthRoutes(imageLabel->getImage1()->height()/10);
-    pdis->setSeamDisplay(imageLabel->getImage1()->height()/10);
-}
-
 void MainWindow::on_UndoVivibilityRedefined()
 {
     bool visibility = imageLabel->getUndoVisibility();
@@ -601,6 +575,8 @@ void MainWindow::on_UndoValidateCancelRedefined()
     bool visibility = imageLabel->getValidateCancelVisibility();
     ui->actionValider->setVisible(visibility);
     ui->actionSupprimer->setVisible(visibility);
+    ui->action_Copier->setVisible(imageLabel->getCutCopyVisibility());
+    ui->action_Couper->setVisible(imageLabel->getCutCopyVisibility());
 }
 
 void MainWindow::on_action_Flou_moyenneur_triggered()
@@ -625,4 +601,11 @@ void MainWindow::on_action_Flou_gaussien_triggered()
     const QImage imageConv = *imageLabel->getSelectedImage();
     imageLabel->setPixmap(QPixmap::fromImage(imageConv));
     scaleFactor = 1.0;//scaleImage(1.5);
+}
+
+void MainWindow::on_actionSeamCarving_triggered()
+{
+    imageLabel->getSeamCarver()->initImage(imageLabel->getImage1());
+    imageLabel->getSeamCarver()->initStrengthRoutes(imageLabel->getImage1()->height()/30);
+    pdis->setSeamDisplay(imageLabel->getImage1()->height()/10);
 }

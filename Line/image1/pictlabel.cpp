@@ -141,6 +141,12 @@ QImage *PictLabel::getImage2()
     return secondImg;
 }
 
+void PictLabel::closeImages()
+{
+    firstImg = NULL;
+    this->setInitialContext();
+}
+
 void PictLabel::setSelectedImage(QImage *selectImgPar)
 {
     if (selectedImg == secondImg)
@@ -355,6 +361,7 @@ void PictLabel::setSelection(QMouseEvent * event)
     secondImg=NULL;
     delete rubberBand;
     drawImage();
+    signalValidateCancelVivibility();
 }
 
 void PictLabel::pasteSelection()
@@ -486,7 +493,16 @@ void PictLabel::drawImage()
     }
 
     if (end_select != NULL)
-        p.drawRect(QRect(origin_select,*end_select));
+        if (bCouperMode)
+        {
+            const QBrush *b = new QBrush(Qt::white,Qt::Dense1Pattern);
+            p.setBrush(*b);
+            p.drawRect(QRect(origin_select,*end_select));
+            delete b;
+            p.setBrush(Qt::NoBrush);
+        }
+        else
+            p.drawRect(QRect(origin_select,*end_select));
     if (secondImg != NULL)
     {
         p.setOpacity(alphaImg2/255.0);
@@ -542,7 +558,7 @@ void PictLabel::validateTransfo()
     //signalValidateCancelVivibility();
     switch(mouseListenerState){
     case 12: // Deplace première image
-        newImage =resizer->displaceImage(principal,firstImg,position_firstImg,secondImg,position_secondImg);
+        newImage =resizer->displaceImage(principal,firstImg,position_firstImg,secondImg,position_secondImg,bCouperMode,origin_select,end_select);
         setPrincipal(newImage);
         break;
     case 110: // Crop select
@@ -579,3 +595,9 @@ bool PictLabel::getValidateCancelVisibility()
 {
     return this->bValidateCancelVisibility;
 }
+
+bool PictLabel::getCutCopyVisibility()
+{
+    return ((mouseListenerState==11)&&(end_select != NULL)&&(secondImg == NULL));
+}
+

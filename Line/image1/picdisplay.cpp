@@ -275,16 +275,6 @@ void PicDisplay::on_horizontalSlider_img2_valueChanged(int value)
     this->imageLabel->drawImage();
 }
 
-void PicDisplay::on_pushButtonFiltreEdition_clicked()
-{
-
-}
-
-void PicDisplay::on_pushButton_FiltreLaunch_clicked()
-{
-
-}
-
 void PicDisplay::displaySeamProperties(bool visible)
 {
     ui->checkBoxSeam->setChecked(visible);
@@ -423,4 +413,15 @@ int PicDisplay::getFiltrePersoTaille(){
         ret+=1;
     }
     return ret;
+}
+
+void PicDisplay::on_pushButtonFiltreEdition_clicked()
+{
+
+
+}
+
+void PicDisplay::on_pushButton_FiltreLaunch_clicked()
+{
+
 }

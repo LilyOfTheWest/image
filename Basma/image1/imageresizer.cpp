@@ -14,9 +14,13 @@ ImageResizer::ImageResizer(QObject *parent) : QObject(parent)
 QImage *ImageResizer::extractSubImage(QImage *src,QPoint *origin_select,QPoint *end_select)
 {
     int x_min = qMin(origin_select->x(),end_select->x());
+    x_min = qMax(x_min,0);
     int x_max = qMax(origin_select->x(),end_select->x());
+    x_max = qMin(x_max,src->width());
     int y_min = qMin(origin_select->y(),end_select->y());
+    y_min = qMax(y_min,0);
     int y_max = qMax(origin_select->y(),end_select->y());
+    y_max = qMin(y_max,src->height());
     QRgb color;
     int width = x_max-x_min;
     int height = y_max-y_min;
@@ -45,7 +49,8 @@ QPoint ImageResizer::isPicked(QPoint mousePosition,QImage *imgPicked,QPoint *pos
     return ret;
 }
 
-QImage *ImageResizer::displaceImage(QImage *principal, QImage *img1,QPoint pos_rel1,QImage *img2,QPoint pos_rel2)
+QImage *ImageResizer::displaceImage(QImage *principal, QImage *img1,QPoint pos_rel1,
+                                    QImage *img2,QPoint pos_rel2,bool couperMode,QPoint origin_select,QPoint *end_select)
 {
     int x1_min = qMax(pos_rel1.x(),0);
     int x1_max = qMin(pos_rel1.x()+img1->width(),principal->width());
@@ -55,6 +60,15 @@ QImage *ImageResizer::displaceImage(QImage *principal, QImage *img1,QPoint pos_r
     int x_max = x1_max;
     int y_min = y1_min;
     int y_max = y1_max;
+
+    int x_couper_min,x_couper_max,y_couper_min,y_couper_max;
+    if ((couperMode)&&(end_select != NULL))
+    {
+        x_couper_min=qMin(origin_select.x(),end_select->x());
+        x_couper_max=qMax(origin_select.x(),end_select->x());
+        y_couper_min=qMin(origin_select.y(),end_select->y());
+        y_couper_max=qMax(origin_select.y(),end_select->y());
+    }
 
     if (img2 != NULL)
     {
@@ -81,13 +95,28 @@ QImage *ImageResizer::displaceImage(QImage *principal, QImage *img1,QPoint pos_r
             x_in_img1 = x_min+j-pos_rel1.x();
             y_in_img1 = y_min+i-pos_rel1.y();
             if ((x_in_img1 < img1->width()) && (x_in_img1  >= 0) && (y_in_img1 < img1->height()) && (y_in_img1  >= 0))
-                color = img1->pixel(x_in_img1,y_in_img1);
+            {
+                if ((couperMode)&&(end_select != NULL))
+                {
+                    if (!((x_in_img1>=x_couper_min)&&
+                          (x_in_img1<=x_couper_max)&&
+                          (y_in_img1>=y_couper_min)&&
+                          (y_in_img1<=y_couper_max)))
+                    {
+                        color = img1->pixel(x_in_img1,y_in_img1); // BUG TRANSPARENCE ICI
+                    }
+                }
+                else
+                {
+                    color = img1->pixel(x_in_img1,y_in_img1); // BUG TRANSPARENCE ICI
+                }
+            }
             if (img2 != NULL)
             {
                 x_in_img2 = x_min+j-pos_rel2.x();
                 y_in_img2 = y_min+i-pos_rel2.y();
                 if ((x_in_img2 < img2->width()) && (x_in_img2 >=0) && (y_in_img2 < img2->height()) && (y_in_img2 >= 0))
-                    color=img2->pixel(x_in_img2,y_in_img2);
+                    color=img2->pixel(x_in_img2,y_in_img2); // BUG TRANSPARENCE ICI
             }
             ret->setPixel(j,i,color);
         }
