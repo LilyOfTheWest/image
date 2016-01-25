@@ -120,6 +120,10 @@ private slots:
 
     void on_UndoValidateCancelRedefined();
 
+    void on_action_Flou_moyenneur_triggered();
+
+    void on_action_Flou_gaussien_triggered();
+
 private:
     Ui::MainWindow *ui;
     void updateActions();

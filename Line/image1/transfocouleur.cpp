@@ -49,7 +49,7 @@ QImage *TransfoCouleur::convertYuvToRgb(QImage *src)
     return ret;
 }
 
-QImage *TransfoCouleur::flou(QImage *src)
+QImage *TransfoCouleur::flou(QImage *src, int mode, int taille)
 {
     /* Test de base
     QImage *tmp = convertRgbToYuv(src);
@@ -69,10 +69,13 @@ QImage *TransfoCouleur::flou(QImage *src)
     r3=qRed(color3);
     g3=qGreen(color3);
     b3=qBlue(color3);*/
-
+    KernelConv *kMoy;
     /* Final test */
     // appel dialog pour properties /
-    KernelConv *kMoy = new KernelConvBinomial(3);
+    if (mode == 0)
+        kMoy = new KernelConvMoyenneur(taille);
+    else if (mode == 1)
+        kMoy = new KernelConvBinomial(taille);
     ImageAnalyse *imA = new ImageAnalyse(src);
     imA->initYuvImagris();
 

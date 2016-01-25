@@ -325,7 +325,9 @@ void MainWindow::on_actionFlou_triggered()
 {
     TransfoCouleur *tc = new TransfoCouleur;
     //PictLabel *jj = static_cast<PictLabel*>(ui->scrollAreaPict->widget());
-    QImage *imageFloutee = tc->flou(imageLabel->getSelectedImage());
+
+    // RATTACHER LES PROPRIETES DU FLOU : TAILLE + TYPE
+    QImage *imageFloutee = tc->flou(imageLabel->getSelectedImage(), 1, 3);
     imageLabel->setPrincipal(imageFloutee);
     const QImage imageConv = *imageLabel->getSelectedImage();
     imageLabel->setPixmap(QPixmap::fromImage(imageConv));
@@ -603,5 +605,28 @@ void MainWindow::on_UndoValidateCancelRedefined()
     ui->actionSupprimer->setVisible(visibility);
 }
 
+void MainWindow::on_action_Flou_moyenneur_triggered()
+{
+    TransfoCouleur *tc = new TransfoCouleur;
+    //PictLabel *jj = static_cast<PictLabel*>(ui->scrollAreaPict->widget());
 
+    // RATTACHER LA TAILLE CHOISIE !
+    QImage *imageFloutee = tc->flou(imageLabel->getSelectedImage(), 0, 3);
+    imageLabel->setPrincipal(imageFloutee);
+    const QImage imageConv = *imageLabel->getSelectedImage();
+    imageLabel->setPixmap(QPixmap::fromImage(imageConv));
+    scaleFactor = 1.0;//scaleImage(1.5);
+}
 
+void MainWindow::on_action_Flou_gaussien_triggered()
+{
+    TransfoCouleur *tc = new TransfoCouleur;
+    //PictLabel *jj = static_cast<PictLabel*>(ui->scrollAreaPict->widget());
+
+    // RATTACHER LA TAILLE CHOISIE !
+    QImage *imageFloutee = tc->flou(imageLabel->getSelectedImage(), 1, 3);
+    imageLabel->setPrincipal(imageFloutee);
+    const QImage imageConv = *imageLabel->getSelectedImage();
+    imageLabel->setPixmap(QPixmap::fromImage(imageConv));
+    scaleFactor = 1.0;//scaleImage(1.5);
+}
