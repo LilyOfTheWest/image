@@ -26,6 +26,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QObject::connect(imageLabel,SIGNAL(signalNewPixelPicked()),pdis,SLOT(on_refreshPixelProperties()));
     QObject::connect(imageLabel,SIGNAL(signalResizingRequired()),pdis,SLOT(on_resizingRequired()));
     QObject::connect(imageLabel,SIGNAL(signalRedisplayRequired()),pdis,SLOT(on_displayRedefined()));
+    QObject::connect(imageLabel,SIGNAL(signalUndoVivibility()),this,SLOT(on_UndoVivibilityRedefined()));
     updateActionsWithoutImage();
     resize(QGuiApplication::primaryScreen()->availableSize() * 3 / 5);
     scaleFactor = 1;
@@ -220,10 +221,12 @@ void MainWindow::updateActionsWithoutImage()
     ui->action_Selection->setVisible(false);
     ui->actionZoom_avant->setEnabled(false);
     ui->action_Zoom_arriere->setEnabled(false);
-    //ui->actionSeamCarving->setVisible(false);
+    ui->actionSeamCarving->setVisible(false);
     ui->action_Copier->setVisible(false);
     ui->action_Couper->setVisible(false);
     ui->action_Coller->setVisible(false);
+    on_UndoVivibilityRedefined();
+
 
     this->pdis->updateDisplay();
 
@@ -241,6 +244,7 @@ void MainWindow::updateActionsWithImage()
     ui->actionSeamCarving->setVisible(true);
     ui->action_Enregistrer_sous->setEnabled(true);
     ui->action_Enregistrer->setEnabled(true);
+    on_UndoVivibilityRedefined();
     this->pdis->updateDisplay();
 //    inverseColorAct->setEnabled(!fitToWindowAct->isChecked());
 //    prodConvAct->setEnabled(!fitToWindowAct->isChecked());
@@ -581,4 +585,10 @@ void MainWindow::on_actionSeamCarving_triggered()
     imageLabel->getSeamCarver()->initImage(imageLabel->getImage1());
     imageLabel->getSeamCarver()->initStrengthRoutes(imageLabel->getImage1()->height()/10);
     pdis->setSeamDisplay(imageLabel->getImage1()->height()/10);
+}
+
+void MainWindow::on_UndoVivibilityRedefined()
+{
+    bool visibility = imageLabel->getUndoVisibility();
+    ui->action_Annuler->setVisible(visibility);
 }

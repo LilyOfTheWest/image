@@ -50,6 +50,7 @@ void PictLabel::setInitialContext()
     position_firstImg.setY(0);
     position_secondImg.setX(0);
     position_secondImg.setY(0);
+    signalUndoVivibility();
 }
 
 void PictLabel::addImageToMerge(QImage *src)
@@ -385,6 +386,7 @@ void PictLabel::saveTemp(QImage *svgFirstImg) {
     //const QPixmap *dd = this->pixmap();
     //QImage image2=dd->toImage();
     undo.append(svgFirstImg);//image2);
+    signalUndoVivibility();
 }
 
 void PictLabel::undoLast() {
@@ -393,6 +395,7 @@ void PictLabel::undoLast() {
         setPrincipalWithoutPrevSaved(undo.last());
         undo.removeLast();
     }
+    signalUndoVivibility();
 }
 
 void PictLabel::setMouseListenerState(int mouseListenerStateVal)
@@ -548,3 +551,7 @@ void PictLabel::setSeamLinesDisplayMode(bool value)
     visuSeamLines = value;
 }
 
+bool PictLabel::getUndoVisibility()
+{
+    return (undo.count()>0);
+}

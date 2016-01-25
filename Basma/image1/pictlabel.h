@@ -56,11 +56,13 @@ public:
     SeamCarver *getSeamCarver();
     void setNbSeamLinesToDisplay(int value);
     void setSeamLinesDisplayMode(bool value);
+    bool getUndoVisibility();
 
 signals:
     void signalNewPixelPicked();
     void signalResizingRequired();
     void signalRedisplayRequired();
+    void signalUndoVivibility();
 
 public slots:
 

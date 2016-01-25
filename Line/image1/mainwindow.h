@@ -116,6 +116,8 @@ private slots:
 
     void on_action_Filtre_Prewitt_triggered();
 
+    void on_UndoVivibilityRedefined();
+
 private:
     Ui::MainWindow *ui;
     void updateActions();
