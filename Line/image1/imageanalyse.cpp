@@ -180,16 +180,16 @@ void ImageAnalyse::histoToPoints(int mode){
                 valeur = histo_rgb[i][j];
             }
             if(i==0){
-                serie1.append(QPoint(j,0));
-                serie1.append(QPoint(j,valeur));
+                serie1.insert(j, QPoint(j,0));
+                serie1.insert(j, QPoint(j,valeur));
             }
             else if(i == 1){
-                serie2.append(QPoint(j,0));
-                serie2.append(QPoint(j,valeur));
+                serie2.insert(j, QPoint(j,0));
+                serie2.insert(j, QPoint(j,valeur));
             }
             else{
-                serie3.append(QPoint(j,0));
-                serie3.append(QPoint(j,valeur));
+                serie3.insert(j, QPoint(j,0));
+                serie3.insert(j, QPoint(j,valeur));
             }
         }
     }
