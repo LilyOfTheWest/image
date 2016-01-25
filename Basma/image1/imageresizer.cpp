@@ -287,10 +287,11 @@ QImage *ImageResizer::resizeImage_h(QImage *src,int width, int newHeight)
 void ImageResizer::interpol(QImage *dest, int wDest,int hDest,int nb_interpo_w,QRgb color1,
                             QRgb  color2,bool width_sens)
 {
+    int denomin;
     if (nb_interpo_w <= 0)
         return;
     dest->setPixel(wDest,hDest,color1);
-    if (nb_interpo_w >1)
+    if (nb_interpo_w >=1)
     {
         int r1=qRed(color1);
         int g1=qGreen(color1);
@@ -301,15 +302,16 @@ void ImageResizer::interpol(QImage *dest, int wDest,int hDest,int nb_interpo_w,Q
         int b2=qBlue(color2);
         int alpha2=qAlpha(color2);
         QRgb color_tmp;
-        for (int k_mult=0; k_mult<nb_interpo_w; k_mult++) {
-            color_tmp = qRgba(r1+(r2-r1)*k_mult/nb_interpo_w,
-                              g1+(g2-g1)*k_mult/nb_interpo_w,
-                              b1+(b2-b1)*k_mult/nb_interpo_w,
-                              alpha1+(alpha2-alpha1)*k_mult/nb_interpo_w);
+        for (int k_mult=1; k_mult<=nb_interpo_w; k_mult++) {
+            denomin=nb_interpo_w+1;
+            color_tmp = qRgba(r1+(r2-r1)*k_mult/denomin,
+                              g1+(g2-g1)*k_mult/denomin,
+                              b1+(b2-b1)*k_mult/denomin,
+                              alpha1+(alpha2-alpha1)*k_mult/denomin);
             if (width_sens)
-                dest->setPixel(wDest+k_mult,hDest,color_tmp);
+                dest->setPixel(wDest+k_mult-1,hDest,color_tmp);
             else
-                dest->setPixel(wDest,hDest+k_mult,color_tmp);
+                dest->setPixel(wDest,hDest+k_mult-1,color_tmp);
         }
     }
 }

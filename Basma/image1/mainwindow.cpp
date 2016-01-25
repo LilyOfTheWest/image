@@ -31,6 +31,7 @@ MainWindow::MainWindow(QWidget *parent) :
     scaleFactor = 1;
 
     //loadFile("C:/Users/Fredd/Pictures/Rafael-icon.png");
+    //loadFile("C:/Users/Fredd/Pictures/lac.jpg");
     //loadFile("D:/Lily/Bureau/Dossier Line/M1-Info/PROJET/image/Fred/imageviewer/Rio-2-Official-Trailer-3-40.jpg");
     //on_actionSeamCarving_triggered();
 }
@@ -219,7 +220,7 @@ void MainWindow::updateActionsWithoutImage()
     ui->action_Selection->setVisible(false);
     ui->actionZoom_avant->setEnabled(false);
     ui->action_Zoom_arriere->setEnabled(false);
-    ui->actionSeamCarving->setVisible(false);
+    //ui->actionSeamCarving->setVisible(false);
     ui->action_Copier->setVisible(false);
     ui->action_Couper->setVisible(false);
     ui->action_Coller->setVisible(false);
@@ -462,17 +463,6 @@ void MainWindow::on_actionRecadrer_triggered()
     pdis->resizePictureArea();
 }
 
-void MainWindow::on_actionSeamCarving_triggered()
-{
-    //loadFile("C:/Users/Fredd/Pictures/Rafael-icon.png");
-    SeamCarver *sc = new SeamCarver(imageLabel->getSelectedImage(),this);
-    sc->init(20);
-    QImage *imageSeamCarved = sc->extendWidth(20,true);
-    imageLabel->setPrincipal(imageSeamCarved);
-    imageLabel->setInitialContext();
-    pdis->resizePictureArea();
-}
-
 void MainWindow::on_actionHistogramme_triggered()
 {
     QImage *imageSrc = imageLabel->getSelectedImage();
@@ -584,4 +574,11 @@ void MainWindow::on_actionFiltre_Sobel_triggered()
 void MainWindow::on_action_Filtre_Prewitt_triggered()
 {
     actionContour(0);
+}
+
+void MainWindow::on_actionSeamCarving_triggered()
+{
+    imageLabel->getSeamCarver()->initImage(imageLabel->getImage1());
+    imageLabel->getSeamCarver()->initStrengthRoutes(imageLabel->getImage1()->height()/10);
+    pdis->setSeamDisplay(imageLabel->getImage1()->height()/10);
 }

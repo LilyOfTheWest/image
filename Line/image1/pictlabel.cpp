@@ -14,12 +14,17 @@ PictLabel::PictLabel(QWidget *parent) :
     selectedImg = NULL;
     scaleFactor = 1;
     setInitialContext();
+    sc = new SeamCarver(this);
+    resizer = new ImageResizer(this);
+    setSeamLinesDisplayMode(false);
 }
 
 PictLabel::~PictLabel()
 {
     delete principal;
     qDeleteAll(undo);
+    delete sc;
+    delete resizer;
 }
 
 void PictLabel::setInitialContext()
@@ -190,8 +195,14 @@ void PictLabel::setAlphaImg2(int value)
     }
 }
 
+SeamCarver *PictLabel::getSeamCarver()
+{
+    return sc;
+}
+
 void PictLabel::mouseMoveEvent ( QMouseEvent * event )
 {
+    QPoint mouse_position;
     switch(mouseListenerState){
     case 10: // Pipette
 
@@ -201,6 +212,18 @@ void PictLabel::mouseMoveEvent ( QMouseEvent * event )
         rubberBand->setGeometry(QRect(rubberBand->geometry().topLeft(), event->pos()).normalized());
         break;
     case 12: // Deplace première image
+        break;
+    case 31: // Sélection des zones à garder seam carver.
+        mouse_position = resizer->isPicked(resizeWithScaling(event->pos()),firstImg,&position_firstImg);
+        if (mouse_position.x() != -1) {
+            *sc->getPointAGarder() << mouse_position;
+        }
+        break;
+    case 32: // Sélection des zones à supprimer seam carver.
+        mouse_position = resizer->isPicked(resizeWithScaling(event->pos()),firstImg,&position_firstImg);
+        if (mouse_position.x() != -1) {
+            *sc->getPointASup() << mouse_position;
+        }
         break;
     case 110: // Crop select
         //rubberBand->setGeometry(QRect(resizeWithScaling(origin_select), event->pos()).normalized());
@@ -215,10 +238,8 @@ void PictLabel::mousePressEvent ( QMouseEvent * event )
 {
     QPoint mouse_position = resizeWithScaling(event->pos());
     QPoint rep;
-    ImageResizer *resizer;
     switch(mouseListenerState){
     case 10: // Pipette
-        resizer = new ImageResizer;
         mouse_position = resizer->isPicked(resizeWithScaling(event->pos()),firstImg,&position_firstImg);
         if (mouse_position.x() != -1) {
             mouse_origin = mouse_position;
@@ -262,6 +283,18 @@ void PictLabel::mousePressEvent ( QMouseEvent * event )
         }
 
         break;
+    case 31: // Sélection garde seam carver.
+        mouse_position = resizer->isPicked(resizeWithScaling(event->pos()),firstImg,&position_firstImg);
+        if (mouse_position.x() != -1) {
+            *sc->getPointAGarder() << mouse_position;
+        }
+        break;
+    case 32: // Sélection garde seam carver.
+        mouse_position = resizer->isPicked(resizeWithScaling(event->pos()),firstImg,&position_firstImg);
+        if (mouse_position.x() != -1) {
+            *sc->getPointASup() << mouse_position;
+        }
+        break;
     case 110: // Crop select
         origin_select = mouse_position;
         rubberBand = new QRubberBand(QRubberBand::Rectangle, this);
@@ -290,6 +323,12 @@ void PictLabel::mouseReleaseEvent ( QMouseEvent * event )
             {
                 moveSelection(mouse_end,selectedImg,position_firstImg);
             }
+        break;
+    case 31: // Sélection garde seam carver.
+        drawImage();
+        break;
+    case 32: // Sélection garde seam carver.
+        drawImage();
         break;
     case 110: // Crop select
         setSelection(event);
@@ -360,6 +399,12 @@ void PictLabel::setMouseListenerState(int mouseListenerStateVal)
 {
     mouseListenerState=mouseListenerStateVal;
 }
+
+int PictLabel::getMouseListenerState()
+{
+    return mouseListenerState;
+}
+
 
 QRgb PictLabel::getColorPicked()
 {
@@ -432,6 +477,36 @@ void PictLabel::drawImage()
                      secondImg->height(),
                      QPixmap::fromImage(imageSecondImge));
     }
+    if (visuSeamLines)
+    {
+        QList<QPolygon *> listStrengthLines = this->sc->getListLignesMostSuitable();
+        if (!listStrengthLines.isEmpty())
+        {
+            int colorLines=255;
+            QListIterator<QPolygon *> qit(listStrengthLines);
+            int counterExtractLignes = nbSeamLinesToDisplay;
+            while ((qit.hasNext()) && (counterExtractLignes >0))
+            {
+                QRgb ligneColor = qRgb(colorLines,colorLines,colorLines);
+                p.setPen(ligneColor);
+                //colorLines--;
+                p.drawPoints(*qit.next());
+                counterExtractLignes--;
+            }
+        }
+        QPolygon *lignesAGarder = sc->getPointAGarder();
+        if ((lignesAGarder != NULL) && (!lignesAGarder->isEmpty()))
+        {
+            p.setPen(QColor(Qt::yellow));
+            p.drawPoints(*lignesAGarder);
+        }
+        QPolygon *lignesASup = sc->getPointASup();
+        if ((lignesASup != NULL) && (!lignesASup->isEmpty()))
+        {
+            p.setPen(QColor(Qt::red));
+            p.drawPoints(*lignesASup);
+        }
+    }
     p.end();
     const QImage image = image2;
     //    this->setPixmap(QPixmap::fromImage(image));
@@ -463,5 +538,13 @@ void PictLabel::setNomImg(QString nom){
     nomImg = nom;
 }
 
+void PictLabel::setNbSeamLinesToDisplay(int value)
+{
+    nbSeamLinesToDisplay = value;
+}
 
+void PictLabel::setSeamLinesDisplayMode(bool value)
+{
+    visuSeamLines = value;
+}
 

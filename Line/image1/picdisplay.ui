@@ -18,8 +18,8 @@
     <rect>
      <x>130</x>
      <y>140</y>
-     <width>301</width>
-     <height>241</height>
+     <width>16</width>
+     <height>16</height>
     </rect>
    </property>
    <property name="minimumSize">
@@ -36,8 +36,8 @@
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>299</width>
-      <height>239</height>
+      <width>16</width>
+      <height>16</height>
      </rect>
     </property>
    </widget>
@@ -395,7 +395,7 @@
   <widget class="QGroupBox" name="groupBox_2">
    <property name="geometry">
     <rect>
-     <x>120</x>
+     <x>130</x>
      <y>10</y>
      <width>801</width>
      <height>111</height>
@@ -561,6 +561,89 @@
       <widget class="QPushButton" name="pushButton_FiltreLaunch">
        <property name="text">
         <string>Filtre</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="">
+    <property name="geometry">
+     <rect>
+      <x>12</x>
+      <y>80</y>
+      <width>681</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout_16">
+     <item>
+      <widget class="QCheckBox" name="checkBoxSeam">
+       <property name="text">
+        <string>Seam Carving</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="checkSeamVisu">
+       <property name="text">
+        <string>Visu lignes</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="comboBoxSeamActions">
+       <item>
+        <property name="text">
+         <string>-- Actions en option --</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Déf. zones à protéger</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Déf. zones à supprimer</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Recalcul lignes d'énergie</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="checkBoxSeamCompress">
+       <property name="text">
+        <string>Compression</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="lineEditSeamSize">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>40</width>
+         <height>16777215</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QSlider" name="horizontalSliderSeamSize">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
        </property>
       </widget>
      </item>

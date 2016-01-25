@@ -35,8 +35,8 @@ public:
     int getResizedWidthRequired();
     int getResizedHeightRequired();
     int getYUVMode();
-
     void updateDisplay();
+    void setSeamDisplay(int nbRoutes);
 
 private slots:
     void on_refreshPixelProperties();
@@ -65,6 +65,18 @@ private slots:
 
     void on_checkBox_Filtre_stateChanged(int arg1);
 
+    void on_checkBoxSeam_stateChanged(int arg1);
+
+    void on_horizontalSliderSeamSize_valueChanged(int value);
+
+    void on_horizontalSliderSeamSize_sliderReleased();
+
+    void on_checkSeamVisu_stateChanged(int arg1);
+
+    void on_checkBoxSeamCompress_stateChanged(int arg1);
+
+    void on_comboBoxSeamActions_currentIndexChanged(int index);
+
 private:
     Ui::PicDisplay *ui;
     PictLabel *imageLabel;
@@ -74,6 +86,8 @@ private:
     void displayRehausProperties(bool visible);
     void displayEtalProperties(bool visible);
     void displayFiltreProperties(bool visible);
+    void displaySeamProperties(bool visible);
+    void displaySeamCarvedImage();
     //void adjustScrollBar(QScrollBar *scrollBar, double factor);
 };
 

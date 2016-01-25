@@ -10,6 +10,7 @@
 #include <QStack>
 #include "transfocouleur.h"
 #include "imageresizer.h"
+#include "seamcarver.h"
 
 /*QT_BEGIN_NAMESPACE
 class QWidget;
@@ -39,6 +40,7 @@ public:
     QRgb getColorPicked();
     QPoint getPixelPicked();
     void setScaleFactor(double scaleFactor);
+    int getMouseListenerState();
     void setMouseListenerState(int mouseListenerStateVal);
     void setCouperMode(bool couperMode);
     void setSecondImgAsSelect(bool secondImgAsSelect);
@@ -51,6 +53,9 @@ public:
     void validateTransfo();
     QString getNomImg();
     void setNomImg(QString nom);
+    SeamCarver *getSeamCarver();
+    void setNbSeamLinesToDisplay(int value);
+    void setSeamLinesDisplayMode(bool value);
 
 signals:
     void signalNewPixelPicked();
@@ -73,6 +78,7 @@ protected:
     void setPrincipalWithoutPrevSaved(QImage *src);
 
     QRubberBand *rubberBand;
+    ImageResizer *resizer;
     QPoint origin_select;
     QPoint *end_select;
     QPoint mouse_origin;
@@ -90,8 +96,11 @@ protected:
     double scaleFactor;
     bool couperMode;
     bool firstImgSelected;
+    bool visuSeamLines;
+    int nbSeamLinesToDisplay;
     int alphaImg1;
     int alphaImg2;
+    SeamCarver *sc;
 };
 
 #endif // PICTLABEL_H

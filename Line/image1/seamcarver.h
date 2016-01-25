@@ -9,12 +9,15 @@ class SeamCarver : public QObject
 {
     Q_OBJECT
 public:
-    explicit SeamCarver(QImage *src, QObject *parent = 0);
+    explicit SeamCarver(QObject *parent = 0);
     ~SeamCarver();
+    void initImage(QImage *src);
     QPoint leastRouteNextPointAt(QPoint prec, int &strengthValue);
-    void init(int w_extent);
-    QList<QPolygon *> listLignesMostSuitable;
-    QImage * extendWidth(int w_extent,bool compression);
+    void initStrengthRoutes(int nbLines);
+    QList<QPolygon *> getListLignesMostSuitable();
+    QImage * extendWidth(int w_extent,bool compression,bool afficheLignes);
+    QPolygon *getPointAGarder();
+    QPolygon *getPointASup();
 
 signals:
 
@@ -22,8 +25,11 @@ public slots:
 
 private:
     QImage *imgOrigine;
-    ImageAnalyse *imA;
+    double **dx_dy;
+    QPolygon *pointAGarder;
+    QPolygon *pointASup;
     bool ** b_Pos_interdit;
+    QList<QPolygon *> listLignesMostSuitable;
     double getPointEnergy(int x, int y);
     void iteration();
 };

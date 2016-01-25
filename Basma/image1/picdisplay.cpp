@@ -17,6 +17,9 @@ PicDisplay::PicDisplay(PictLabel *imageLabel, QWidget *parent) :
     displayFlouProperties(false);
     displayRehausProperties(false);
     displayEtalProperties(false);
+    displayFiltreProperties(false);
+    displaySeamProperties(false);
+    ui->checkBoxSeam->setEnabled(false);
 }
 
 PicDisplay::~PicDisplay()
@@ -282,3 +285,78 @@ void PicDisplay::on_pushButton_FiltreLaunch_clicked()
 
 }
 
+void PicDisplay::displaySeamProperties(bool visible)
+{
+    ui->checkBoxSeam->setChecked(visible);
+    ui->checkSeamVisu->setVisible(visible);
+    ui->comboBoxSeamActions->setVisible(visible);
+    ui->checkBoxSeamCompress->setVisible(visible);
+    ui->lineEditSeamSize->setVisible(visible);
+    ui->horizontalSliderSeamSize->setVisible(visible);
+}
+
+void PicDisplay::on_checkBoxSeam_stateChanged(int arg1)
+{
+    displaySeamProperties(arg1 != Qt::Unchecked);
+}
+
+void PicDisplay::on_horizontalSliderSeamSize_valueChanged(int value)
+{
+    ui->lineEditSeamSize->setText(QString::number(value));
+}
+
+void PicDisplay::displaySeamCarvedImage()
+{
+    QImage *imageSeamCarved = imageLabel->getSeamCarver()->extendWidth(ui->horizontalSliderSeamSize->value(),
+                                                                       ui->checkBoxSeamCompress->isChecked(),
+                                                                       ui->checkSeamVisu->isChecked());
+    imageLabel->setPrincipal(imageSeamCarved);
+    imageLabel->setInitialContext();
+    imageLabel->setNbSeamLinesToDisplay(ui->horizontalSliderSeamSize->value());
+    ui->comboBoxSeamActions->setCurrentIndex(0);
+    imageLabel->drawImage();
+    this->resizePictureArea();
+}
+
+void PicDisplay::on_horizontalSliderSeamSize_sliderReleased()
+{
+    displaySeamCarvedImage();
+}
+
+void PicDisplay::on_checkSeamVisu_stateChanged(int arg1)
+{
+    imageLabel->setSeamLinesDisplayMode(arg1);
+    displaySeamCarvedImage();
+}
+
+void PicDisplay::on_checkBoxSeamCompress_stateChanged(int arg1)
+{
+    displaySeamCarvedImage();
+}
+
+void PicDisplay::setSeamDisplay(int nbRoutes)
+{
+    ui->horizontalSliderSeamSize->setMaximum(nbRoutes);
+    ui->checkBoxSeam->setChecked(true);
+    ui->checkBoxSeam->setEnabled(true);
+
+}
+
+void PicDisplay::on_comboBoxSeamActions_currentIndexChanged(int index)
+{
+    switch(index) {
+    case 0:
+        imageLabel->setMouseListenerState(0);
+        break;
+    case 1:
+        imageLabel->setMouseListenerState(31);
+        break;
+    case 2:
+        imageLabel->setMouseListenerState(32);
+        break;
+    case 3:
+        imageLabel->getSeamCarver()->initStrengthRoutes(imageLabel->getImage1()->height()/10);
+        displaySeamCarvedImage();
+        break;
+    }
+}
