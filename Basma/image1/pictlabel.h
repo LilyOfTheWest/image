@@ -57,12 +57,14 @@ public:
     void setNbSeamLinesToDisplay(int value);
     void setSeamLinesDisplayMode(bool value);
     bool getUndoVisibility();
+    bool getValidateCancelVisibility();
 
 signals:
     void signalNewPixelPicked();
     void signalResizingRequired();
     void signalRedisplayRequired();
     void signalUndoVivibility();
+    void signalValidateCancelVivibility();
 
 public slots:
 
@@ -96,13 +98,14 @@ protected:
     QRgb colorPicked;
     QString nomImg;
     double scaleFactor;
-    bool couperMode;
-    bool firstImgSelected;
-    bool visuSeamLines;
+    bool bCouperMode;
+    bool bFirstImgSelected;
+    bool bVisuSeamLines;
     int nbSeamLinesToDisplay;
     int alphaImg1;
     int alphaImg2;
     SeamCarver *sc;
+    bool bValidateCancelVisibility;
 };
 
 #endif // PICTLABEL_H

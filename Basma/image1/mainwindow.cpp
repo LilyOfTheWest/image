@@ -27,6 +27,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QObject::connect(imageLabel,SIGNAL(signalResizingRequired()),pdis,SLOT(on_resizingRequired()));
     QObject::connect(imageLabel,SIGNAL(signalRedisplayRequired()),pdis,SLOT(on_displayRedefined()));
     QObject::connect(imageLabel,SIGNAL(signalUndoVivibility()),this,SLOT(on_UndoVivibilityRedefined()));
+    QObject::connect(imageLabel,SIGNAL(signalValidateCancelVivibility()),this,SLOT(on_UndoValidateCancelRedefined()));
     updateActionsWithoutImage();
     resize(QGuiApplication::primaryScreen()->availableSize() * 3 / 5);
     scaleFactor = 1;
@@ -225,7 +226,8 @@ void MainWindow::updateActionsWithoutImage()
     ui->action_Copier->setVisible(false);
     ui->action_Couper->setVisible(false);
     ui->action_Coller->setVisible(false);
-    on_UndoVivibilityRedefined();
+    this->on_UndoVivibilityRedefined();
+    this->on_UndoValidateCancelRedefined();
 
 
     this->pdis->updateDisplay();
@@ -244,7 +246,8 @@ void MainWindow::updateActionsWithImage()
     ui->actionSeamCarving->setVisible(true);
     ui->action_Enregistrer_sous->setEnabled(true);
     ui->action_Enregistrer->setEnabled(true);
-    on_UndoVivibilityRedefined();
+    this->on_UndoVivibilityRedefined();
+    this->on_UndoValidateCancelRedefined();
     this->pdis->updateDisplay();
 //    inverseColorAct->setEnabled(!fitToWindowAct->isChecked());
 //    prodConvAct->setEnabled(!fitToWindowAct->isChecked());
@@ -592,3 +595,13 @@ void MainWindow::on_UndoVivibilityRedefined()
     bool visibility = imageLabel->getUndoVisibility();
     ui->action_Annuler->setVisible(visibility);
 }
+
+void MainWindow::on_UndoValidateCancelRedefined()
+{
+    bool visibility = imageLabel->getValidateCancelVisibility();
+    ui->actionValider->setVisible(visibility);
+    ui->actionSupprimer->setVisible(visibility);
+}
+
+
+

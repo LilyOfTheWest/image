@@ -17,6 +17,7 @@ PictLabel::PictLabel(QWidget *parent) :
     sc = new SeamCarver(this);
     resizer = new ImageResizer(this);
     setSeamLinesDisplayMode(false);
+    this->bValidateCancelVisibility = false;
 }
 
 PictLabel::~PictLabel()
@@ -50,12 +51,19 @@ void PictLabel::setInitialContext()
     position_firstImg.setY(0);
     position_secondImg.setX(0);
     position_secondImg.setY(0);
+    this->bValidateCancelVisibility=false;
+    signalValidateCancelVivibility();
     signalUndoVivibility();
+    if (this->firstImg != NULL)
+    {
+        drawImage();
+        signalResizingRequired();
+    }
 }
 
 void PictLabel::addImageToMerge(QImage *src)
 {
-    firstImgSelected=false;
+    this->bFirstImgSelected=false;
     position_firstImg.setX(0);
     position_firstImg.setY(0);
     end_select = NULL;
@@ -85,6 +93,8 @@ void PictLabel::addImageToMerge(QImage *src)
     mouse_origin.setY(0);
     setMouseListenerState(12);
     drawImage();
+    this->bValidateCancelVisibility=true;
+    signalValidateCancelVivibility();
 }
 
 
@@ -109,9 +119,6 @@ void PictLabel::setPrincipalWithoutPrevSaved(QImage *src)
         }
     }
     setInitialContext();
-    drawImage();
-    signalResizingRequired();
-    signalRedisplayRequired();
 }
 
 QImage *PictLabel::getPrincipal()
@@ -152,6 +159,8 @@ void PictLabel::setSelectedImage(QImage *selectImgPar)
     }
     drawImage();
     signalRedisplayRequired();
+    this->bValidateCancelVisibility=true;
+    signalValidateCancelVivibility();
 }
 
 int PictLabel::getAlphaImg1()
@@ -333,6 +342,8 @@ void PictLabel::mouseReleaseEvent ( QMouseEvent * event )
         break;
     case 110: // Crop select
         setSelection(event);
+        this->bValidateCancelVisibility=true;
+        signalValidateCancelVivibility();
         break;
     }
 }
@@ -355,6 +366,8 @@ void PictLabel::pasteSelection()
         position_secondImg.setY(0);
         drawImage();
         mouseListenerState=18;
+        this->bValidateCancelVisibility=true;
+        signalValidateCancelVivibility();
     }
     signalRedisplayRequired();
 }
@@ -378,6 +391,8 @@ void PictLabel::moveSelection(QPoint *mouse_end,QImage *imgToMove,QPoint &positi
     positionRelative.setX(x_pos);
     positionRelative.setY(y_pos);
     drawImage();
+    this->bValidateCancelVisibility=true;
+    signalValidateCancelVivibility();
 }
 
 void PictLabel::saveTemp(QImage *svgFirstImg) {
@@ -436,18 +451,18 @@ QPoint PictLabel::resizeWithScaling(QPoint mousePointed)
 
 void PictLabel::setCouperMode(bool couperMode)
 {
-    this->couperMode=couperMode;
+    this->bCouperMode=couperMode;
 }
 
 void PictLabel::setSecondImgAsSelect(bool secondImgAsSelect)
 {
     selectedImg=(secondImgAsSelect)?secondImg:firstImg;
-    this->firstImgSelected=!secondImgAsSelect;
+    this->bFirstImgSelected=!secondImgAsSelect;
 }
 
 bool PictLabel::getSecondImgAsSelect()
 {
-    return !this->firstImgSelected;
+    return !this->bFirstImgSelected;
 }
 
 
@@ -480,7 +495,7 @@ void PictLabel::drawImage()
                      secondImg->height(),
                      QPixmap::fromImage(imageSecondImge));
     }
-    if (visuSeamLines)
+    if (this->bVisuSeamLines)
     {
         QList<QPolygon *> listStrengthLines = this->sc->getListLignesMostSuitable();
         if (!listStrengthLines.isEmpty())
@@ -521,6 +536,8 @@ void PictLabel::validateTransfo()
 {
     ImageResizer *resizer = new ImageResizer;
     QImage *newImage;
+    //validateCancelVivibility=false;
+    //signalValidateCancelVivibility();
     switch(mouseListenerState){
     case 12: // Deplace première image
         newImage =resizer->displaceImage(principal,firstImg,position_firstImg,secondImg,position_secondImg);
@@ -548,10 +565,15 @@ void PictLabel::setNbSeamLinesToDisplay(int value)
 
 void PictLabel::setSeamLinesDisplayMode(bool value)
 {
-    visuSeamLines = value;
+    this->bVisuSeamLines = value;
 }
 
 bool PictLabel::getUndoVisibility()
 {
     return (undo.count()>0);
+}
+
+bool PictLabel::getValidateCancelVisibility()
+{
+    return this->bValidateCancelVisibility;
 }

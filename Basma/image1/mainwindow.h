@@ -118,6 +118,8 @@ private slots:
 
     void on_UndoVivibilityRedefined();
 
+    void on_UndoValidateCancelRedefined();
+
 private:
     Ui::MainWindow *ui;
     void updateActions();
