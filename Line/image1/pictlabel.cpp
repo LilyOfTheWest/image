@@ -33,8 +33,8 @@ void PictLabel::setInitialContext()
     origin_select.setX(0);
     origin_select.setY(0);
     mouseListenerState=0;
-    alphaImg1=100;
-    alphaImg2=100;
+    alphaImg1=255;
+    alphaImg2=255;
     if (secondImg != NULL)
     {
         delete secondImg;
@@ -476,6 +476,7 @@ void PictLabel::drawImage()
     p.setBrush(Qt::NoBrush);
     if (firstImg != NULL)
     {
+        p.setOpacity(alphaImg1/255.0);
         const QImage imageFirstFirstImg = *firstImg;
         p.drawPixmap(position_firstImg.x(),
                      position_firstImg.y(),
@@ -488,6 +489,7 @@ void PictLabel::drawImage()
         p.drawRect(QRect(origin_select,*end_select));
     if (secondImg != NULL)
     {
+        p.setOpacity(alphaImg2/255.0);
         const QImage imageSecondImge = *secondImg;
         p.drawPixmap(position_secondImg.x(),
                      position_secondImg.y(),

@@ -11,6 +11,7 @@
 #include "transfocouleur.h"
 #include "imageresizer.h"
 #include "seamcarver.h"
+#include "kernelconv.h"
 
 /*QT_BEGIN_NAMESPACE
 class QWidget;
@@ -106,6 +107,7 @@ protected:
     int alphaImg2;
     SeamCarver *sc;
     bool bValidateCancelVisibility;
+    KernelConv *filtrePerso;
 };
 
 #endif // PICTLABEL_H

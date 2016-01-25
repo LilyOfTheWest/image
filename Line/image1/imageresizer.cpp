@@ -81,13 +81,13 @@ QImage *ImageResizer::displaceImage(QImage *principal, QImage *img1,QPoint pos_r
             x_in_img1 = x_min+j-pos_rel1.x();
             y_in_img1 = y_min+i-pos_rel1.y();
             if ((x_in_img1 < img1->width()) && (x_in_img1  >= 0) && (y_in_img1 < img1->height()) && (y_in_img1  >= 0))
-                color = img1->pixel(x_in_img1,y_in_img1);
+                color = img1->pixel(x_in_img1,y_in_img1); // BUG TRANSPARENCE ICI
             if (img2 != NULL)
             {
                 x_in_img2 = x_min+j-pos_rel2.x();
                 y_in_img2 = y_min+i-pos_rel2.y();
                 if ((x_in_img2 < img2->width()) && (x_in_img2 >=0) && (y_in_img2 < img2->height()) && (y_in_img2 >= 0))
-                    color=img2->pixel(x_in_img2,y_in_img2);
+                    color=img2->pixel(x_in_img2,y_in_img2); // BUG TRANSPARENCE ICI
             }
             ret->setPixel(j,i,color);
         }
