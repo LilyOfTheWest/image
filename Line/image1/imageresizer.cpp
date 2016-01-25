@@ -14,9 +14,13 @@ ImageResizer::ImageResizer(QObject *parent) : QObject(parent)
 QImage *ImageResizer::extractSubImage(QImage *src,QPoint *origin_select,QPoint *end_select)
 {
     int x_min = qMin(origin_select->x(),end_select->x());
+    x_min = qMax(x_min,0);
     int x_max = qMax(origin_select->x(),end_select->x());
+    x_max = qMin(x_max,src->width());
     int y_min = qMin(origin_select->y(),end_select->y());
+    y_min = qMax(y_min,0);
     int y_max = qMax(origin_select->y(),end_select->y());
+    y_max = qMin(y_max,src->height());
     QRgb color;
     int width = x_max-x_min;
     int height = y_max-y_min;
