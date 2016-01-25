@@ -326,8 +326,7 @@ void MainWindow::on_actionFlou_triggered()
     TransfoCouleur *tc = new TransfoCouleur;
     //PictLabel *jj = static_cast<PictLabel*>(ui->scrollAreaPict->widget());
 
-    // RATTACHER LES PROPRIETES DU FLOU : TAILLE + TYPE
-    QImage *imageFloutee = tc->flou(imageLabel->getSelectedImage(), 1, 3);
+    QImage *imageFloutee = tc->flou(imageLabel->getSelectedImage(), pdis->getFlouMode(), pdis->getFlouTaille());
     imageLabel->setPrincipal(imageFloutee);
     const QImage imageConv = *imageLabel->getSelectedImage();
     imageLabel->setPixmap(QPixmap::fromImage(imageConv));
@@ -489,7 +488,7 @@ void MainWindow::actionContour(int mode)
     if (imageSrc != NULL)
     {
         TransfoCouleur *tc = new TransfoCouleur;
-        // CABLER LE MODE DE CONTOUR
+
         imageLabel->setPrincipal(tc->contour(imageSrc, mode));
         const QImage imageConv = *imageLabel->getSelectedImage();
         imageLabel->setPixmap(QPixmap::fromImage(imageConv));
@@ -520,8 +519,7 @@ void MainWindow::on_actionRehaussement_triggered()
     if (imageSrc != NULL)
     {
         TransfoCouleur *tc = new TransfoCouleur;
-        // RECUPERER LA VALEUR DE ALPHA ! rehaussement(imageSrc, alpha)
-        imageLabel->setPrincipal(tc->rehaussement(imageSrc, 0.5));
+        imageLabel->setPrincipal(tc->rehaussement(imageSrc, pdis->getRehaussCoef()));
         const QImage imageConv = *imageLabel->getSelectedImage();
         imageLabel->setPixmap(QPixmap::fromImage(imageConv));
         scaleFactor = 1.0;//scaleImage(1.5);
@@ -534,8 +532,8 @@ void MainWindow::on_actionEtalement_triggered()
     if (imageSrc != NULL)
     {
         TransfoCouleur *tc = new TransfoCouleur;
-        // RECUPERER LES VALEURS DE ALPHA ET BETA ! etalement(imageSrc, alpha, beta)
-        imageLabel->setPrincipal(tc->etalement(imageSrc, 1.5, 1));
+
+        imageLabel->setPrincipal(tc->etalement(imageSrc, pdis->getEtalAlpha(), pdis->getEtalBeta()));
         const QImage imageConv = *imageLabel->getSelectedImage();
         imageLabel->setPixmap(QPixmap::fromImage(imageConv));
         scaleFactor = 1.0;//scaleImage(1.5);
@@ -610,8 +608,7 @@ void MainWindow::on_action_Flou_moyenneur_triggered()
     TransfoCouleur *tc = new TransfoCouleur;
     //PictLabel *jj = static_cast<PictLabel*>(ui->scrollAreaPict->widget());
 
-    // RATTACHER LA TAILLE CHOISIE !
-    QImage *imageFloutee = tc->flou(imageLabel->getSelectedImage(), 0, 3);
+    QImage *imageFloutee = tc->flou(imageLabel->getSelectedImage(), 0, pdis->getFlouTaille());
     imageLabel->setPrincipal(imageFloutee);
     const QImage imageConv = *imageLabel->getSelectedImage();
     imageLabel->setPixmap(QPixmap::fromImage(imageConv));
@@ -623,8 +620,7 @@ void MainWindow::on_action_Flou_gaussien_triggered()
     TransfoCouleur *tc = new TransfoCouleur;
     //PictLabel *jj = static_cast<PictLabel*>(ui->scrollAreaPict->widget());
 
-    // RATTACHER LA TAILLE CHOISIE !
-    QImage *imageFloutee = tc->flou(imageLabel->getSelectedImage(), 1, 3);
+    QImage *imageFloutee = tc->flou(imageLabel->getSelectedImage(), 1, pdis->getFlouTaille());
     imageLabel->setPrincipal(imageFloutee);
     const QImage imageConv = *imageLabel->getSelectedImage();
     imageLabel->setPixmap(QPixmap::fromImage(imageConv));

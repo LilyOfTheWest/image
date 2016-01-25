@@ -34,6 +34,12 @@ public:
     void scaleImage(double factor);
     int getResizedWidthRequired();
     int getResizedHeightRequired();
+    int getFlouMode();
+    int getFlouTaille();
+    double getRehaussCoef();
+    double getEtalAlpha();
+    double getEtalBeta();
+    int getFiltrePersoTaille();
     int getYUVMode();
     void updateDisplay();
     void setSeamDisplay(int nbRoutes);
