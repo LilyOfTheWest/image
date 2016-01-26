@@ -356,38 +356,80 @@ int PicDisplay::getFlouMode(){
 
 int PicDisplay::getFlouTaille(){
     int ret = 3;
-    QLineEdit *q1=ui->lineEditFlou1;
-    if (!q1->text().isEmpty())
-        ret=q1->text().toInt();
-
-    // EMPECHER LES TAILLES PAIR
-    if(ret%2 == 0){
-        ret+=1;
+    QRegExp re("\\d*");
+    const QString w =  ui->lineEditFlou1->text();
+    if (w.isEmpty())
+        setErrorMsg("Taille de la matrice de convolution chargée à 3 par défaut.");
+    else
+    {
+        if (re.exactMatch(w))
+        {
+            ret = w.toInt();
+            if(ret%2 == 0)
+            {
+                setErrorMsg("La taille de la matrice de convolution doit être impaire.");
+                ret += 1;
+                ui->lineEditFlou1->setText(QString::number(ret));
+            }
+        } else
+        {
+            setErrorMsg("Taille de la matrice de convolution non numérique entier. Taille de 3 chargée par défaut.");
+        }
     }
     return ret;
 }
 
 double PicDisplay::getRehaussCoef(){
     double ret = 0.5;
-    QLineEdit *q1=ui->lineEdit_Rehaus;
-    if (!q1->text().isEmpty())
-        ret=q1->text().toDouble();
+    bool ok;
+    const QString w =  ui->lineEdit_Rehaus->text();
+    if (w.isEmpty())
+        setErrorMsg("Coef. de rehaussement de 0.5 chargée par défaut.");
+    else
+    {
+        ret = w.toDouble(&ok);
+        if (!ok)
+        {
+            ret = 0.5;
+            setErrorMsg("Coef. de rehaussement non reconnu. 1.5 chargé par défaut.");
+        }
+    }
     return ret;
 }
 
 double PicDisplay::getEtalAlpha(){
     double ret = 1.5;
-    QLineEdit *q1=ui->lineEdit_Etal1;
-    if (!q1->text().isEmpty())
-        ret=q1->text().toDouble();
+    bool ok;
+    const QString w =  ui->lineEdit_Etal1->text();
+    if (w.isEmpty())
+        setErrorMsg("Alpha de 1.5 chargée par défaut.");
+    else
+    {
+        ret = w.toDouble(&ok);
+        if (!ok)
+        {
+            ret = 1.5;
+            setErrorMsg("Float Alpha non reconnu. 1.5 chargé par défaut.");
+        }
+    }
     return ret;
 }
 
 double PicDisplay::getEtalBeta(){
     double ret = 1.0;
-    QLineEdit *q1=ui->lineEdit_Etal2;
-    if (!q1->text().isEmpty())
-        ret=q1->text().toDouble();
+    bool ok;
+    const QString w =  ui->lineEdit_Etal2->text();
+    if (w.isEmpty())
+        setErrorMsg("Beta de 1.0 chargée par défaut.");
+    else
+    {
+        ret = w.toDouble(&ok);
+        if (!ok)
+        {
+            ret = 1.0;
+            setErrorMsg("Float Beta non reconnu. 1.0 chargé par défaut.");
+        }
+    }
     return ret;
 }
 
