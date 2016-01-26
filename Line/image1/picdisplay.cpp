@@ -27,24 +27,6 @@ PicDisplay::~PicDisplay()
     delete ui;
 }
 
-int PicDisplay:: getResizedWidthRequired()
-{
-    int ret=imageLabel->getSelectedImage()->width();
-    QLineEdit *q1=ui->lineEdit_Width;
-    if (!q1->text().isEmpty())
-        ret=q1->text().toInt();
-    return ret;
-}
-
-int PicDisplay::getResizedHeightRequired()
-{
-    int ret=imageLabel->getSelectedImage()->height();
-    QLineEdit *q1=ui->lineEdit_Height;
-    if (!q1->text().isEmpty())
-        ret=q1->text().toInt();
-    return ret;
-}
-
 int PicDisplay::getYUVMode()
 {
     int ret = (this->ui->radioButton_YUV->isChecked()) ? 1 : 0;
@@ -196,6 +178,7 @@ void PicDisplay::displayImage2Selector(bool visible)
     ui->val_alpha_img2->setVisible(visible);
     ui->horizontalSlider_img1->setVisible(visible);
     ui->horizontalSlider_img2->setVisible(visible);
+    ui->pushButtonResize->setVisible((visible)&&(ui->val_alpha_img1->text().size()>0));
 }
 
 void PicDisplay::displayFlouProperties(bool visible)
@@ -424,4 +407,67 @@ void PicDisplay::on_pushButtonFiltreEdition_clicked()
 void PicDisplay::on_pushButton_FiltreLaunch_clicked()
 {
 
+}
+
+void PicDisplay::on_pushButtonResize_clicked()
+{
+    int ret_w,ret_h;
+    QRegExp re("\\d*");
+    const QString w =  ui->lineEdit_Width->text();
+    if (w.isEmpty())
+        ret_w = -1;
+    else
+    {
+        if (re.exactMatch(w))
+            ret_w = w.toInt();
+        else
+        {
+            setErrorMsg("Largeur demandée non numérique entier.");
+            return;
+        }
+    }
+    const QString h =  ui->lineEdit_Height->text();
+    if (h.isEmpty())
+        ret_h = -1;
+    else
+    {
+        if (re.exactMatch(h))
+            ret_h = h.toInt();
+        else
+        {
+            setErrorMsg("Hauteur demandée non numérique entier.");
+            return;
+        }
+    }
+    imageLabel->resizeSelectedImage(ret_w,ret_h);
+    this->resizePictureArea();
+    ui->lineEdit_Width->clear();
+    ui->lineEdit_Height->setText("");
+}
+
+void PicDisplay::on_lineEdit_Width_textChanged(const QString &arg1)
+{
+    if ((arg1.size() > 0) || (ui->lineEdit_Height->text().size() >0))
+        ui->pushButtonResize->setVisible(true);
+    else
+        ui->pushButtonResize->setVisible(false);
+}
+
+void PicDisplay::on_lineEdit_Height_textChanged(const QString &arg1)
+{
+    if ((arg1.size() > 0) || (ui->lineEdit_Width->text().size() >0))
+        ui->pushButtonResize->setVisible(true);
+    else
+        ui->pushButtonResize->setVisible(false);
+}
+
+void PicDisplay::setErrorMsg(QString errorMsgVal)
+{
+    this->errorMsg=errorMsgVal;
+    signalError();
+}
+
+QString PicDisplay::getErrorMsg()
+{
+    return this->errorMsg;
 }

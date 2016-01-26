@@ -61,6 +61,7 @@ public:
     bool getUndoVisibility();
     bool getValidateCancelVisibility();
     bool getCutCopyVisibility();
+    void resizeSelectedImage(int newWidth, int newHeight);
 
 signals:
     void signalNewPixelPicked();

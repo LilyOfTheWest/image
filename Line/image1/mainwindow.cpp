@@ -29,12 +29,13 @@ MainWindow::MainWindow(QWidget *parent) :
     QObject::connect(imageLabel,SIGNAL(signalRedisplayRequired()),pdis,SLOT(on_displayRedefined()));
     QObject::connect(imageLabel,SIGNAL(signalUndoVivibility()),this,SLOT(on_UndoVivibilityRedefined()));
     QObject::connect(imageLabel,SIGNAL(signalValidateCancelVivibility()),this,SLOT(on_UndoValidateCancelRedefined()));
+    QObject::connect(pdis,SIGNAL(signalError()),this,SLOT(displayErrorMessage()));
     updateActionsIconDisplay(false);
     resize(QGuiApplication::primaryScreen()->availableSize() * 3 / 5);
     scaleFactor = 1;
 
     //loadFile("C:/Users/Fredd/Pictures/Rafael-icon.png");
-    //loadFile("C:/Users/Fredd/Pictures/lac.jpg");
+    loadFile("C:/Users/Fredd/Pictures/lac.jpg");
     //loadFile("D:/Lily/Bureau/Dossier Line/M1-Info/PROJET/image/Fred/imageviewer/Rio-2-Official-Trailer-3-40.jpg");
     //on_actionSeamCarving_triggered();
 }
@@ -446,10 +447,10 @@ void MainWindow::on_actionRecadrer_triggered()
 {
     //loadFile("C:/Users/Fredd/Pictures/Rafael-icon.png");
     ImageResizer *resizer = new ImageResizer;
-    QImage *resizedImg =resizer->resizeImage(imageLabel->getSelectedImage(),pdis->getResizedWidthRequired(),pdis->getResizedHeightRequired());
+    /*QImage *resizedImg =resizer->resizeImage(imageLabel->getSelectedImage(),pdis->getResizedWidthRequired(),pdis->getResizedHeightRequired());
     imageLabel->setPrincipal(resizedImg);
     imageLabel->setInitialContext();
-    pdis->resizePictureArea();
+    pdis->resizePictureArea();*/
 }
 
 void MainWindow::on_actionHistogramme_triggered()
@@ -608,4 +609,11 @@ void MainWindow::on_actionSeamCarving_triggered()
     imageLabel->getSeamCarver()->initImage(imageLabel->getImage1());
     imageLabel->getSeamCarver()->initStrengthRoutes(imageLabel->getImage1()->height()/30);
     pdis->setSeamDisplay(imageLabel->getImage1()->height()/10);
+}
+
+void MainWindow::displayErrorMessage()
+{
+    QMessageBox msgBox;
+    msgBox.setText(pdis->getErrorMsg());
+    msgBox.exec();
 }

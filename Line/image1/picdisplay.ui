@@ -296,8 +296,8 @@
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>1</x>
-      <y>280</y>
+      <x>0</x>
+      <y>310</y>
       <width>88</width>
       <height>102</height>
      </rect>
@@ -367,6 +367,19 @@
      </item>
     </layout>
    </widget>
+   <widget class="QPushButton" name="pushButtonResize">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>270</y>
+      <width>91</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Change</string>
+    </property>
+   </widget>
    <zorder>layoutWidget</zorder>
    <zorder>layoutWidget</zorder>
    <zorder>layoutWidget</zorder>
@@ -378,6 +391,7 @@
    <zorder>layoutWidget_5</zorder>
    <zorder>layoutWidget</zorder>
    <zorder>layoutWidget</zorder>
+   <zorder>pushButtonResize</zorder>
   </widget>
   <widget class="QLabel" name="label">
    <property name="geometry">

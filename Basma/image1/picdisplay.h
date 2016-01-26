@@ -32,8 +32,6 @@ public:
     ~PicDisplay();
     void resizePictureArea();
     void scaleImage(double factor);
-    int getResizedWidthRequired();
-    int getResizedHeightRequired();
     int getFlouMode();
     int getFlouTaille();
     double getRehaussCoef();
@@ -43,6 +41,11 @@ public:
     int getYUVMode();
     void updateDisplay();
     void setSeamDisplay(int nbRoutes);
+    void setErrorMsg(QString errorMsg);
+    QString getErrorMsg();
+
+signals:
+    void signalError();
 
 private slots:
     void on_refreshPixelProperties();
@@ -83,9 +86,16 @@ private slots:
 
     void on_comboBoxSeamActions_currentIndexChanged(int index);
 
+    void on_pushButtonResize_clicked();
+
+    void on_lineEdit_Width_textChanged(const QString &arg1);
+
+    void on_lineEdit_Height_textChanged(const QString &arg1);
+
 private:
     Ui::PicDisplay *ui;
     PictLabel *imageLabel;
+    QString errorMsg;
     void refreshPixelProperties();
     void displayImage2Selector(bool visible);
     void displayFlouProperties(bool visible);

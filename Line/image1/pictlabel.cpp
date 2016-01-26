@@ -601,3 +601,12 @@ bool PictLabel::getCutCopyVisibility()
     return ((mouseListenerState==11)&&(end_select != NULL)&&(secondImg == NULL));
 }
 
+void PictLabel::resizeSelectedImage(int newWidth, int newHeight) {
+    ImageResizer *resizer = new ImageResizer;
+    int widthRequired = (newWidth == -1) ? this->getSelectedImage()->width() : newWidth;
+    int heightRequired = (newHeight == -1) ? this->getSelectedImage()->height() : newHeight;
+    QImage *resizedImg = resizer->resizeImage(this->getSelectedImage(),widthRequired,heightRequired);
+    setPrincipal(resizedImg);
+    setInitialContext();
+
+}

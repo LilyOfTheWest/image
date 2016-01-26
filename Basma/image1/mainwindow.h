@@ -44,6 +44,7 @@ private slots:
     void zoomOut();
     void normalSize();
     void fitToWindow();
+    void displayErrorMessage();
 
     void on_action_Ouvrir_triggered();
 
