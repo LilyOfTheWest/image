@@ -19,6 +19,7 @@ public:
     QImage *resizeImage(QImage *src,int newWidth, int newHeight);
     void interpol(QImage *dest, int wDest,int hDest,int nb_interpo_w,QRgb color1,
                                 QRgb  color2,bool width_sens);
+    QImage *resizeImageSingleDim(QImage *src,int renewedDimVal,int otherDimVal,bool widthChanged);
 
 signals:
 

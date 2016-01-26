@@ -156,160 +156,10 @@ QImage *ImageResizer::rotateImage180(QImage *src)
 
 QImage *ImageResizer::resizeImage(QImage *src,int newWidth, int newHeight)
 {
-    QImage *resized_w = resizeImage_w(src,newWidth,src->height());
-    QImage *ret = resizeImage_h(resized_w,newWidth,newHeight);
+    QImage *resized_w = resizeImageSingleDim(src,newWidth,src->height(),true);
+    QImage *ret = resizeImageSingleDim(resized_w,newHeight,newWidth,false);
     if (resized_w != NULL)
         delete resized_w;
-    return ret;
-}
-
-QImage *ImageResizer::resizeImage_w(QImage *src,int newWidth, int height)
-{
-    int width_multiple = newWidth / src->width();
-    int width_added = newWidth % src->width();
-    int width_added_tmp = width_added;
-    int w_impair_count=0;
-    bool every_2=false;
-    int mult_2 = 2;
-    while ((width_added_tmp < (src->width()/mult_2)) && (mult_2 <= 32)) {
-        mult_2 *= 2;
-    }
-
-    if (width_added_tmp >= (src->width()/mult_2))
-    {
-        every_2 = true;
-        width_added_tmp -= src->width()/mult_2;
-    }
-    int width_step = src->width();
-    if (width_added_tmp > 0)
-        width_step = src->width() / width_added_tmp;
-    int width_index = 0;
-    //int width_nb
-    int r,g,b;
-    width_added_tmp = width_step;
-    QRgb color1,color2;
-    int nb_interpolation=0;
-    QImage *ret = new QImage(newWidth,height,src->format());
-    for (int h=0; h<src->height()  ; h++) {
-        width_index = 0;
-        w_impair_count = 0;
-        width_added_tmp = width_added;
-
-        for (int w=0; w<src->width(); w++) {
-            nb_interpolation=width_multiple;
-            color1 = src->pixel(w,h);
-            if (w < (src->width()-1))
-                color2 = src->pixel(w+1,h);
-            else
-                color2 = src->pixel(w,h);
-            if (every_2)
-            {
-                if ((w % mult_2) == 0)
-                {
-                    if (width_added_tmp > 0)
-                    {
-                        nb_interpolation++;
-                        width_added_tmp--;
-                    }
-                }
-                else
-                {
-                    if ((w_impair_count % width_step) == 0)
-                        if (width_added_tmp > 0)
-                        {
-                            nb_interpolation++;
-                            width_added_tmp--;
-                        }
-                    w_impair_count++;
-                }
-            }
-            else
-            {
-                if ((w % width_step) == 0)
-                    if (width_added_tmp > 0)
-                    {
-                        nb_interpolation++;
-                        width_added_tmp--;
-                    }
-            }
-            interpol(ret,width_index,h,nb_interpolation,color1,color2,true);
-            width_index += nb_interpolation;
-        }
-    }
-    return ret;
-}
-
-QImage *ImageResizer::resizeImage_h(QImage *src,int width, int newHeight)
-{
-    int height_multiple = newHeight / src->height();
-    int height_added = newHeight % src->height();
-    int height_added_tmp = height_added;
-    int h_impair_count=0;
-    bool every_2=false;
-    int mult_2 = 2;
-    while ((height_added_tmp < (src->height()/mult_2)) && (mult_2 <= 32)) {
-        mult_2 *= 2;
-    }
-    if (height_added_tmp >= (src->height()/mult_2))
-    {
-        every_2 = true;
-        height_added_tmp -= src->height()/mult_2;
-    }
-    int height_step = src->height();
-    if (height_added_tmp > 0)
-        height_step = src->height() / height_added_tmp;
-    int height_index = 0;
-    //int width_nb
-    int r,g,b;
-    height_added_tmp = height_step;
-    QRgb color1,color2;
-    int nb_interpolation=0;
-    QImage *ret = new QImage(width,newHeight,src->format());
-    for (int w=0; w<src->width(); w++) {
-        height_index = 0;
-        h_impair_count = 0;
-        height_added_tmp = height_added;
-        for (int h=0; h<src->height()  ; h++) {
-            nb_interpolation=height_multiple;
-            color1 = src->pixel(w,h);
-            if (h < (src->height()-1))
-                color2 = src->pixel(w,h+1);
-            else
-                color2 = src->pixel(w,h);
-            if (every_2)
-            {
-                if ((h % mult_2) == 0)
-                {
-                    if (height_added_tmp > 0)
-                    {
-                        nb_interpolation++;
-                        height_added_tmp--;
-                    }
-                }
-                else
-                {
-                    if ((h_impair_count % height_step) == 0)
-                        if (height_added_tmp > 0)
-                        {
-                            nb_interpolation++;
-                            height_added_tmp--;
-                        }
-                    h_impair_count++;
-                }
-            }
-            else
-            {
-                if ((h % height_step) == 0)
-                    if (height_added_tmp > 0)
-                    {
-                        nb_interpolation++;
-                        height_added_tmp--;
-                    }
-            }
-            interpol(ret,w,height_index,nb_interpolation,color1,color2,false);
-            height_index += nb_interpolation;
-        }
-    }
     return ret;
 }
 
@@ -320,7 +170,7 @@ void ImageResizer::interpol(QImage *dest, int wDest,int hDest,int nb_interpo_w,Q
     if (nb_interpo_w <= 0)
         return;
     dest->setPixel(wDest,hDest,color1);
-    if (nb_interpo_w >=1)
+    if (nb_interpo_w > 1)
     {
         int r1=qRed(color1);
         int g1=qGreen(color1);
@@ -343,4 +193,117 @@ void ImageResizer::interpol(QImage *dest, int wDest,int hDest,int nb_interpo_w,Q
                 dest->setPixel(wDest,hDest+k_mult-1,color_tmp);
         }
     }
+}
+
+QImage *ImageResizer::resizeImageSingleDim(QImage *src,int renewedDimVal,int otherDimVal,bool widthChanged)
+{
+    int previousDimValue = (widthChanged) ? src->width() : src->height();
+    int wsel_dim_multiple = renewedDimVal / previousDimValue;
+    int wsel_dim_added = renewedDimVal % previousDimValue;
+    int wsel_dim_added_tmp = wsel_dim_added;
+    int wsel_dim_added_mult2 = 0;
+    int wsel_dim_added_Non_mult2 = wsel_dim_added;
+    int wsel_dim_added_tmp_Non_mult2 = 0;
+    int w_Non_mult2_count=0;
+    bool every_2=false;
+    int mult_2 = 2;
+    bool b_Add=true;
+    int tmp_add,tmp_nb_points_del,tmp_del=0;
+    int wsel_dim_step_Non_mult2 = previousDimValue+8; // cas où les positions mult2 couvrent le besoin
+    while ((wsel_dim_added_tmp < (previousDimValue/mult_2)) && (mult_2 <= 32)) {
+        mult_2 *= 2;
+    }
+    if (wsel_dim_added_tmp >= (previousDimValue/mult_2))
+    {
+        every_2 = true;
+        wsel_dim_added_mult2 = previousDimValue/mult_2;
+        wsel_dim_added_Non_mult2 -= wsel_dim_added_mult2;
+    }
+    if (wsel_dim_added_Non_mult2 > 0)
+    {
+        tmp_add = (previousDimValue-wsel_dim_added_mult2) / wsel_dim_added_Non_mult2;
+        tmp_nb_points_del = previousDimValue-wsel_dim_added_mult2-wsel_dim_added_Non_mult2;
+        if (tmp_nb_points_del > 0)
+            tmp_del = (previousDimValue-wsel_dim_added_mult2) / tmp_nb_points_del;
+        if (tmp_del > tmp_add)
+        {
+            b_Add=false;
+            wsel_dim_step_Non_mult2 = tmp_del;
+        } else
+        {
+            b_Add=true;
+            wsel_dim_step_Non_mult2 = tmp_add;
+        }
+    }
+    int wsel_dim_index = 0;
+    QRgb color1,color2;
+    int nb_interpolation=0;
+    QImage *ret = (widthChanged) ? new QImage(renewedDimVal,otherDimVal,src->format()) :
+                                   new QImage(otherDimVal,renewedDimVal,src->format());
+    int otherDimLimit = (widthChanged) ? src->height() : src->width();
+    int thisDimLimit = (widthChanged) ? src->width() : src->height();
+    for (int otherDimParam=0; otherDimParam < otherDimLimit  ; otherDimParam++) {
+        wsel_dim_index = 0;
+        w_Non_mult2_count = 0;
+        wsel_dim_added_tmp = wsel_dim_added;
+        wsel_dim_added_tmp_Non_mult2 = wsel_dim_added - wsel_dim_added_mult2;
+        if (!b_Add)
+            wsel_dim_added_tmp_Non_mult2 = tmp_nb_points_del;
+        for (int thisDimParam = 0; thisDimParam < thisDimLimit; thisDimParam++) {
+            nb_interpolation=wsel_dim_multiple;
+            if (widthChanged)
+            {
+                color1 = src->pixel(thisDimParam,otherDimParam);
+                if (thisDimParam < (thisDimLimit-1))
+                    color2 = src->pixel(thisDimParam+1,otherDimParam);
+                else
+                    color2 = src->pixel(thisDimParam,otherDimParam);
+            } else
+            {
+                color1 = src->pixel(otherDimParam,thisDimParam);
+                if (thisDimParam < (thisDimLimit-1))
+                    color2 = src->pixel(otherDimParam,thisDimParam+1);
+                else
+                    color2 = src->pixel(otherDimParam,thisDimParam);
+            }
+            if (every_2)
+            {
+                if ((thisDimParam % mult_2) == 0)
+                {
+                    if (wsel_dim_added_tmp > 0)
+                    {
+                        nb_interpolation++;
+                        wsel_dim_added_tmp--;
+                    }
+                }
+                else
+                {
+                    if (((b_Add)&&((w_Non_mult2_count % wsel_dim_step_Non_mult2) == 0)&&(wsel_dim_added_tmp_Non_mult2 > 0))
+                            ||((!b_Add)&&(((w_Non_mult2_count % wsel_dim_step_Non_mult2) != 0)||(wsel_dim_added_tmp_Non_mult2<=0))))
+                        if (wsel_dim_added_tmp > 0)
+                        {
+                            nb_interpolation++;
+                            wsel_dim_added_tmp_Non_mult2--;
+                            wsel_dim_added_tmp--;
+                        }
+                    w_Non_mult2_count++;
+                }
+            }
+            else
+            {
+                if ((thisDimParam % wsel_dim_step_Non_mult2) == 0)
+                    if (wsel_dim_added_tmp > 0)
+                    {
+                        nb_interpolation++;
+                        wsel_dim_added_tmp--;
+                    }
+            }
+            if (widthChanged)
+                interpol(ret,wsel_dim_index,otherDimParam,nb_interpolation,color1,color2,widthChanged);
+            else
+                interpol(ret,otherDimParam,wsel_dim_index,nb_interpolation,color1,color2,widthChanged);
+            wsel_dim_index += nb_interpolation;
+        }
+    }
+    return ret;
 }
