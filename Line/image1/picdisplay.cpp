@@ -7,6 +7,7 @@
 #include <QScrollBar>
 #include <QTableWidget>
 #include "kernelconv.h"
+#include "kernelconvmoyenneur.h"
 
 PicDisplay::PicDisplay(PictLabel *imageLabel, QWidget *parent) :
     QWidget(parent),
@@ -24,6 +25,7 @@ PicDisplay::PicDisplay(PictLabel *imageLabel, QWidget *parent) :
     displayFiltreProperties(false);
     displaySeamProperties(false);
     ui->checkBoxSeam->setEnabled(false);
+    tailleFiltre = 3;
 }
 
 PicDisplay::~PicDisplay()
@@ -430,10 +432,14 @@ void PicDisplay::on_pushButtonFiltreEdition_clicked()
 
 void PicDisplay::on_pushButton_FiltreLaunch_clicked()
 {
-    TransfoCouleur *tc = new TransfoCouleur;
-
-    QImage *imageCible = tc->convPerso(filtrePerso, imageLabel->getSelectedImage());
-    imageLabel->setPrincipal(imageCible);
+    if(imageLabel->getSelectedImage()!= NULL){
+        TransfoCouleur *tc = new TransfoCouleur;
+        if(filtrePerso == NULL){
+            filtrePerso = new KernelConvMoyenneur(tailleFiltre);
+        }
+        QImage *imageCible = tc->convPerso(filtrePerso, imageLabel->getSelectedImage());
+        imageLabel->setPrincipal(imageCible);
+    }
 //    const QImage imageConv = *imageLabel->getSelectedImage();
 //    imageLabel->setPixmap(QPixmap::fromImage(imageConv));
 }
