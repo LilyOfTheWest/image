@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QImage>
+#include "kernelconv.h"
 
 class TransfoCouleur : public QObject
 {
@@ -17,6 +18,7 @@ public:
     QImage *gris(QImage *src);
     QImage *etalement(QImage *src, double alpha, double beta);
     QImage *egalisation(QImage *src);
+    QImage *convPerso(KernelConv *noy, QImage *src);
     void histogramme(QImage *src,int mode);
     /* A mettre dans imageanalyse !!
      * double *rgb_YUV_image(QImage *src);

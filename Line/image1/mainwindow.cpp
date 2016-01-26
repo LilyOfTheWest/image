@@ -204,6 +204,8 @@ void MainWindow::updateActionsIconDisplay(bool visible)
     ui->actionRotation_180->setEnabled(visible);
     ui->action_Copier->setVisible(visible);
     ui->action_Couper->setVisible(visible);
+    ui->action_Enregistrer_sous->setEnabled(visible);
+    ui->action_Enregistrer->setEnabled(visible);
     this->on_UndoVivibilityRedefined();
     this->on_UndoValidateCancelRedefined();
     this->pdis->updateDisplay();

@@ -19,8 +19,8 @@
 
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_PicDisplay_t {
-    QByteArrayData data[30];
-    char stringdata0[795];
+    QByteArrayData data[31];
+    char stringdata0[809];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -58,7 +58,8 @@ QT_MOC_LITERAL(25, 657, 42), // "on_comboBoxSeamActions_curren..."
 QT_MOC_LITERAL(26, 700, 5), // "index"
 QT_MOC_LITERAL(27, 706, 27), // "on_pushButtonResize_clicked"
 QT_MOC_LITERAL(28, 734, 29), // "on_lineEdit_Width_textChanged"
-QT_MOC_LITERAL(29, 764, 30) // "on_lineEdit_Height_textChanged"
+QT_MOC_LITERAL(29, 764, 30), // "on_lineEdit_Height_textChanged"
+QT_MOC_LITERAL(30, 795, 13) // "genererFiltre"
 
     },
     "PicDisplay\0signalError\0\0"
@@ -83,7 +84,8 @@ QT_MOC_LITERAL(29, 764, 30) // "on_lineEdit_Height_textChanged"
     "on_comboBoxSeamActions_currentIndexChanged\0"
     "index\0on_pushButtonResize_clicked\0"
     "on_lineEdit_Width_textChanged\0"
-    "on_lineEdit_Height_textChanged"
+    "on_lineEdit_Height_textChanged\0"
+    "genererFiltre"
 };
 #undef QT_MOC_LITERAL
 
@@ -93,7 +95,7 @@ static const uint qt_meta_data_PicDisplay[] = {
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-      25,   14, // methods
+      26,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -101,33 +103,34 @@ static const uint qt_meta_data_PicDisplay[] = {
        1,       // signalCount
 
  // signals: name, argc, parameters, tag, flags
-       1,    0,  139,    2, 0x06 /* Public */,
+       1,    0,  144,    2, 0x06 /* Public */,
 
  // slots: name, argc, parameters, tag, flags
-       3,    0,  140,    2, 0x08 /* Private */,
-       4,    0,  141,    2, 0x08 /* Private */,
-       5,    0,  142,    2, 0x08 /* Private */,
-       6,    0,  143,    2, 0x08 /* Private */,
-       7,    0,  144,    2, 0x08 /* Private */,
-       8,    1,  145,    2, 0x08 /* Private */,
-      10,    1,  148,    2, 0x08 /* Private */,
-      11,    1,  151,    2, 0x08 /* Private */,
-      12,    0,  154,    2, 0x08 /* Private */,
-      13,    0,  155,    2, 0x08 /* Private */,
-      14,    1,  156,    2, 0x08 /* Private */,
-      16,    1,  159,    2, 0x08 /* Private */,
-      17,    0,  162,    2, 0x08 /* Private */,
-      18,    0,  163,    2, 0x08 /* Private */,
-      19,    1,  164,    2, 0x08 /* Private */,
-      20,    1,  167,    2, 0x08 /* Private */,
-      21,    1,  170,    2, 0x08 /* Private */,
-      22,    0,  173,    2, 0x08 /* Private */,
-      23,    1,  174,    2, 0x08 /* Private */,
-      24,    1,  177,    2, 0x08 /* Private */,
-      25,    1,  180,    2, 0x08 /* Private */,
-      27,    0,  183,    2, 0x08 /* Private */,
-      28,    1,  184,    2, 0x08 /* Private */,
-      29,    1,  187,    2, 0x08 /* Private */,
+       3,    0,  145,    2, 0x08 /* Private */,
+       4,    0,  146,    2, 0x08 /* Private */,
+       5,    0,  147,    2, 0x08 /* Private */,
+       6,    0,  148,    2, 0x08 /* Private */,
+       7,    0,  149,    2, 0x08 /* Private */,
+       8,    1,  150,    2, 0x08 /* Private */,
+      10,    1,  153,    2, 0x08 /* Private */,
+      11,    1,  156,    2, 0x08 /* Private */,
+      12,    0,  159,    2, 0x08 /* Private */,
+      13,    0,  160,    2, 0x08 /* Private */,
+      14,    1,  161,    2, 0x08 /* Private */,
+      16,    1,  164,    2, 0x08 /* Private */,
+      17,    0,  167,    2, 0x08 /* Private */,
+      18,    0,  168,    2, 0x08 /* Private */,
+      19,    1,  169,    2, 0x08 /* Private */,
+      20,    1,  172,    2, 0x08 /* Private */,
+      21,    1,  175,    2, 0x08 /* Private */,
+      22,    0,  178,    2, 0x08 /* Private */,
+      23,    1,  179,    2, 0x08 /* Private */,
+      24,    1,  182,    2, 0x08 /* Private */,
+      25,    1,  185,    2, 0x08 /* Private */,
+      27,    0,  188,    2, 0x08 /* Private */,
+      28,    1,  189,    2, 0x08 /* Private */,
+      29,    1,  192,    2, 0x08 /* Private */,
+      30,    0,  195,    2, 0x08 /* Private */,
 
  // signals: parameters
     QMetaType::Void,
@@ -157,6 +160,7 @@ static const uint qt_meta_data_PicDisplay[] = {
     QMetaType::Void,
     QMetaType::Void, QMetaType::QString,    9,
     QMetaType::Void, QMetaType::QString,    9,
+    QMetaType::Void,
 
        0        // eod
 };
@@ -192,6 +196,7 @@ void PicDisplay::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 22: _t->on_pushButtonResize_clicked(); break;
         case 23: _t->on_lineEdit_Width_textChanged((*reinterpret_cast< const QString(*)>(_a[1]))); break;
         case 24: _t->on_lineEdit_Height_textChanged((*reinterpret_cast< const QString(*)>(_a[1]))); break;
+        case 25: _t->genererFiltre(); break;
         default: ;
         }
     } else if (_c == QMetaObject::IndexOfMethod) {
@@ -231,13 +236,13 @@ int PicDisplay::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 25)
+        if (_id < 26)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 25;
+        _id -= 26;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 25)
+        if (_id < 26)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 25;
+        _id -= 26;
     }
     return _id;
 }

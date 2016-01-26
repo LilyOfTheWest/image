@@ -327,3 +327,14 @@ QRgb TransfoCouleur::changeAlphaColor(QRgb color,int alpha)
     return color;
 
 }
+
+QImage *TransfoCouleur::convPerso(KernelConv *noy, QImage *src)
+{
+    ImageAnalyse *imA = new ImageAnalyse(src);
+    imA->initYuvImagris();
+
+    imA->setImagris(noy->produitConv(imA->getImagris(), src->width(), src->height()));
+    imA->fromYuvToRgb();
+
+    return imA->getDataRGB();
+}

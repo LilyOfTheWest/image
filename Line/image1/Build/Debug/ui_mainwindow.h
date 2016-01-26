@@ -397,7 +397,7 @@ public:
         action_Enregistrer_sous->setShortcut(QApplication::translate("MainWindow", "Ctrl+Shift+S", 0));
         action_Imprimer->setText(QApplication::translate("MainWindow", "&Imprimer", 0));
         action_Imprimer->setShortcut(QApplication::translate("MainWindow", "Ctrl+P", 0));
-        actionExit->setText(QApplication::translate("MainWindow", "Exit", 0));
+        actionExit->setText(QApplication::translate("MainWindow", "Quitter", 0));
         action_Annuler->setText(QApplication::translate("MainWindow", "&Annuler", 0));
         action_Annuler->setShortcut(QApplication::translate("MainWindow", "Ctrl+Z", 0));
         action_Couper->setText(QApplication::translate("MainWindow", "&Couper", 0));
