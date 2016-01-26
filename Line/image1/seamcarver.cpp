@@ -90,7 +90,7 @@ QPoint SeamCarver::leastRouteNextPointAt(QPoint prec, int &strengthValue) {
         {
             y_most_suitable = y;
             dy_val = dy_val_cmp;
-            dy_val_prio = dy_val_cmp * 1.5;
+            dy_val_prio = dy_val_cmp / 1.5;
         }
 
     }
