@@ -82,16 +82,7 @@ QPoint SeamCarver::leastRouteNextPointAt(QPoint prec, int &strengthValue) {
     int y_most_suitable=-1;
     double dy_val = 20000;
     double dy_val_cmp;
-    if (b_Pos_interdit[y-1][x] == false)
-    {
-        dy_val_cmp = this->getPointEnergy(y-1,x);
-        if (dy_val_cmp < dy_val)
-        {
-            y_most_suitable = y-1;
-            dy_val = dy_val_cmp;
-        }
-
-    }
+    double dy_val_prio=30000;
     if (b_Pos_interdit[y][x] == false)
     {
         dy_val_cmp = this->getPointEnergy(y,x);
@@ -99,13 +90,24 @@ QPoint SeamCarver::leastRouteNextPointAt(QPoint prec, int &strengthValue) {
         {
             y_most_suitable = y;
             dy_val = dy_val_cmp;
+            dy_val_prio = dy_val_cmp * 1.5;
+        }
+
+    }
+    if (b_Pos_interdit[y-1][x] == false)
+    {
+        dy_val_cmp = this->getPointEnergy(y-1,x);
+        if ((dy_val_cmp < dy_val) && (dy_val_cmp < dy_val_prio))
+        {
+            y_most_suitable = y-1;
+            dy_val = dy_val_cmp;
         }
 
     }
     if (!b_Pos_interdit[y+1][x])
     {
         dy_val_cmp = this->getPointEnergy(y+1,x);
-        if (dy_val_cmp < dy_val)
+        if ((dy_val_cmp < dy_val) && (dy_val_cmp < dy_val_prio))
         {
             y_most_suitable = y+1;
             dy_val = dy_val_cmp;
