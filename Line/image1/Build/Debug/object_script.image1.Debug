@@ -8,7 +8,6 @@ INPUT(
 ./debug\imageanalyse.o
 ./debug\kernelconvmoyenneur.o
 ./debug\kernelconvbinomial.o
-./debug\couleurs.o
 ./debug\imageresizer.o
 ./debug\seamcarver.o
 ./debug\qrc_res.o
@@ -17,7 +16,6 @@ INPUT(
 ./debug\moc_transfocouleur.o
 ./debug\moc_mainwindow.o
 ./debug\moc_imageanalyse.o
-./debug\moc_couleurs.o
 ./debug\moc_imageresizer.o
 ./debug\moc_seamcarver.o
 );

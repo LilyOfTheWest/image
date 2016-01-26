@@ -8,7 +8,6 @@ INPUT(
 ./release\imageanalyse.o
 ./release\kernelconvmoyenneur.o
 ./release\kernelconvbinomial.o
-./release\couleurs.o
 ./release\imageresizer.o
 ./release\seamcarver.o
 ./release\qrc_res.o
@@ -17,7 +16,6 @@ INPUT(
 ./release\moc_transfocouleur.o
 ./release\moc_mainwindow.o
 ./release\moc_imageanalyse.o
-./release\moc_couleurs.o
 ./release\moc_imageresizer.o
 ./release\moc_seamcarver.o
 );
