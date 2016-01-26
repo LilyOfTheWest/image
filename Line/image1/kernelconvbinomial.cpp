@@ -4,6 +4,7 @@ KernelConvBinomial::KernelConvBinomial(int ordre) : KernelConv(ordre)
 {
     double K[2]={1,1};
     double *K2=new double[ordre];
+    double m;
     int n = 2;
     for(int i=0;i<ordre-2;i++){
         if(i==0){

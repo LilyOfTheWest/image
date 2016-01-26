@@ -29,8 +29,9 @@ double ** KernelConv::produitConv(double **src, int n, int m) {
 
     int lk = (w-1)/2;
     int ck = (w-1)/2;
-    int sum, x1, y1;
-
+    double sum;
+    double test;
+    double db,db2;
     /* Régler problème des tailles de noyau sup */
     for(int i=0;i<m;i++){
         for(int j=0;j<n;j++){
@@ -44,11 +45,15 @@ double ** KernelConv::produitConv(double **src, int n, int m) {
                 sum = 0;
                 for(int l=-lk;l<=lk;l++){
                     for(int c = -ck;c<=ck;c++){
+                        db = buf[l+lk][c+ck];
+                        db2= src[i+l][j+c];
                         sum+=buf[l+lk][c+ck]*src[i+l][j+c];
                     }
                 }
-                if(coef != 0)
+                if(coef != 0){
+                    test = sum/coef;
                     S[i][j] = sum/coef;
+                }
             }
         }
     }
