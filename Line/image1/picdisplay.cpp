@@ -2,6 +2,7 @@
 #include "ui_picdisplay.h"
 #include "pictlabel.h"
 #include "TransfoCouleur.h"
+#include <QMessageBox>
 #include <QScrollBar>
 
 PicDisplay::PicDisplay(PictLabel *imageLabel, QWidget *parent) :
@@ -400,7 +401,6 @@ int PicDisplay::getFiltrePersoTaille(){
 
 void PicDisplay::on_pushButtonFiltreEdition_clicked()
 {
-
 
 }
 

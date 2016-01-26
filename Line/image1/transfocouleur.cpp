@@ -206,7 +206,7 @@ QImage *TransfoCouleur::etalement(QImage *src, double alpha, double beta){
 
     for(int i=0;i<src->height();i++){
         for(int j=0;j<src->width();j++){
-            ret[i][j] = normalizeColorValue(255*((pic[i][j]-pic_min)/(pic_max/pic_min)));
+            ret[i][j] = normalizeColorValue(255*((pic[i][j]-pic_min)/(pic_max-pic_min)));
         }
     }
 
