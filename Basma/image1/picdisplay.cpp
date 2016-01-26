@@ -393,13 +393,25 @@ double PicDisplay::getEtalBeta(){
 
 int PicDisplay::getFiltrePersoTaille(){
     int ret = 3;
-    QLineEdit *q1=ui->lineEdit_Filtre;
-    if (!q1->text().isEmpty())
-        ret=q1->text().toDouble();
-
-    // EMPECHER LES TAILLES PAIR
-    if(ret%2 == 0){
-        ret+=1;
+    QRegExp re("\\d*");
+    const QString w =  ui->lineEdit_Filtre->text();
+    if (w.isEmpty())
+        setErrorMsg("Taille de 3 chargée par défaut.");
+    else
+    {
+        if (re.exactMatch(w))
+        {
+            ret = w.toInt();
+            if(ret%2 == 0)
+            {
+                setErrorMsg("La taille du filtre doit être impaire.");
+                ret += 1;
+                ui->lineEdit_Filtre->setText(QString::number(ret));
+            }
+        } else
+        {
+            setErrorMsg("Taille demandée non numérique entier. Taille de 3 chargée par défaut.");
+        }
     }
     return ret;
 }
@@ -440,8 +452,8 @@ void PicDisplay::on_pushButton_FiltreLaunch_clicked()
         QImage *imageCible = tc->convPerso(filtrePerso, imageLabel->getSelectedImage());
         imageLabel->setPrincipal(imageCible);
     }
-//    const QImage imageConv = *imageLabel->getSelectedImage();
-//    imageLabel->setPixmap(QPixmap::fromImage(imageConv));
+    //    const QImage imageConv = *imageLabel->getSelectedImage();
+    //    imageLabel->setPixmap(QPixmap::fromImage(imageConv));
 }
 
 void PicDisplay::on_pushButtonResize_clicked()
