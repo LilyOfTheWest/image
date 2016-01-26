@@ -46,7 +46,7 @@
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
-    QGuiApplication::setApplicationDisplayName(MainWindow::tr("Image 1"));
+    QGuiApplication::setApplicationDisplayName(MainWindow::tr("Projet Image"));
     QCommandLineParser commandLineParser;
     commandLineParser.addHelpOption();
     commandLineParser.addPositionalArgument(MainWindow::tr("[file]"), MainWindow::tr("Image file to open."));
@@ -56,6 +56,7 @@ int main(int argc, char *argv[])
         && !mainWindow.loadFile(commandLineParser.positionalArguments().front())) {
         return -1;
     }
+    mainWindow.setWindowTitle("");
     mainWindow.show();
     return app.exec();
 }
