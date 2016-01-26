@@ -334,8 +334,8 @@ void PicDisplay::on_comboBoxSeamActions_currentIndexChanged(int index)
         imageLabel->setMouseListenerState(32);
         break;
     case 3:
-        imageLabel->getSeamCarver()->initStrengthRoutes(imageLabel->getImage1()->height()/10);
-        displaySeamCarvedImage();
+        int maxNbLignes = imageLabel->getSeamCarver()->initStrengthRoutes(imageLabel->getImage1()->height()/8);
+        setSeamDisplay(maxNbLignes);
         break;
     }
 }

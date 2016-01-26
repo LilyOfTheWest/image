@@ -2,7 +2,12 @@
 #include "ui_picdisplay.h"
 #include "pictlabel.h"
 #include "TransfoCouleur.h"
+#include <QMessageBox>
+#include <QDialog>
 #include <QScrollBar>
+#include <QTableWidget>
+#include "kernelconv.h"
+#include "kernelconvmoyenneur.h"
 
 PicDisplay::PicDisplay(PictLabel *imageLabel, QWidget *parent) :
     QWidget(parent),
@@ -20,6 +25,7 @@ PicDisplay::PicDisplay(PictLabel *imageLabel, QWidget *parent) :
     displayFiltreProperties(false);
     displaySeamProperties(false);
     ui->checkBoxSeam->setEnabled(false);
+    tailleFiltre = 3;
 }
 
 PicDisplay::~PicDisplay()
@@ -328,8 +334,8 @@ void PicDisplay::on_comboBoxSeamActions_currentIndexChanged(int index)
         imageLabel->setMouseListenerState(32);
         break;
     case 3:
-        imageLabel->getSeamCarver()->initStrengthRoutes(imageLabel->getImage1()->height()/10);
-        displaySeamCarvedImage();
+        int maxNbLignes = imageLabel->getSeamCarver()->initStrengthRoutes(imageLabel->getImage1()->height()/8);
+        setSeamDisplay(maxNbLignes);
         break;
     }
 }
@@ -400,13 +406,42 @@ int PicDisplay::getFiltrePersoTaille(){
 
 void PicDisplay::on_pushButtonFiltreEdition_clicked()
 {
+    int taille = getFiltrePersoTaille();
+    tailleFiltre = taille;
+    QDialog *filtre = new QDialog(this,0);
+    filtre->setWindowTitle("Filtre perso");
+    filtre->setFixedHeight(60*taille);
+    filtre->setFixedWidth(50*taille);
+    tab = new QTableWidget(taille, taille, filtre);
+    tab->setFixedHeight(50*taille);
+    tab->setFixedWidth(50*taille);
+    for(int i=0;i<taille;i++){
+        for(int j=0;j<taille;j++){
+            tab->setItem(i, j, new QTableWidgetItem);
+            tab->item(i,j)->setText("1");
+            tab->setColumnWidth(j,40);
+        }
+    }
 
-
+    QPushButton *valider = new QPushButton("Valider", filtre);
+    valider->setGeometry((filtre->pos().x()+filtre->width()/2)-valider->width()/2,(filtre->pos().y()+filtre->height()-15)-valider->height()/2,valider->width(),valider->height());
+    filtre->show();
+    connect(valider,SIGNAL(clicked(bool)),this,SLOT(genererFiltre()));
+    connect(valider, SIGNAL(clicked(bool)), filtre, SLOT(close()));
 }
 
 void PicDisplay::on_pushButton_FiltreLaunch_clicked()
 {
-
+    if(imageLabel->getSelectedImage()!= NULL){
+        TransfoCouleur *tc = new TransfoCouleur;
+        if(filtrePerso == NULL){
+            filtrePerso = new KernelConvMoyenneur(tailleFiltre);
+        }
+        QImage *imageCible = tc->convPerso(filtrePerso, imageLabel->getSelectedImage());
+        imageLabel->setPrincipal(imageCible);
+    }
+//    const QImage imageConv = *imageLabel->getSelectedImage();
+//    imageLabel->setPixmap(QPixmap::fromImage(imageConv));
 }
 
 void PicDisplay::on_pushButtonResize_clicked()
@@ -470,4 +505,13 @@ void PicDisplay::setErrorMsg(QString errorMsgVal)
 QString PicDisplay::getErrorMsg()
 {
     return this->errorMsg;
+}
+
+void PicDisplay::genererFiltre(){
+    filtrePerso = new KernelConv(tailleFiltre);
+    for(int i=0;i<tailleFiltre;i++){
+        for(int j=0;j<tailleFiltre;j++){
+            filtrePerso->setIndex(tab->item(i,j)->text().toInt(),i,j);
+        }
+    }
 }

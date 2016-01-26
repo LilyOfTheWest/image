@@ -35,7 +35,7 @@ MainWindow::MainWindow(QWidget *parent) :
     scaleFactor = 1;
 
     //loadFile("C:/Users/Fredd/Pictures/Rafael-icon.png");
-    //loadFile("C:/Users/Fredd/Pictures/lac.jpg");
+    loadFile("C:/Users/Fredd/Pictures/lac.jpg");
     //loadFile("D:/Lily/Bureau/Dossier Line/M1-Info/PROJET/image/Fred/imageviewer/Rio-2-Official-Trailer-3-40.jpg");
     //on_actionSeamCarving_triggered();
 }
@@ -609,8 +609,8 @@ void MainWindow::on_action_Flou_gaussien_triggered()
 void MainWindow::on_actionSeamCarving_triggered()
 {
     imageLabel->getSeamCarver()->initImage(imageLabel->getImage1());
-    imageLabel->getSeamCarver()->initStrengthRoutes(imageLabel->getImage1()->height()/30);
-    pdis->setSeamDisplay(imageLabel->getImage1()->height()/10);
+    int maxNbLignes = imageLabel->getSeamCarver()->initStrengthRoutes(imageLabel->getImage1()->height()/8);
+    pdis->setSeamDisplay(maxNbLignes);
 }
 
 void MainWindow::displayErrorMessage()

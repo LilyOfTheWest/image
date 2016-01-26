@@ -116,7 +116,7 @@ QPoint SeamCarver::leastRouteNextPointAt(QPoint prec, int &strengthValue) {
     return QPoint(x,y_most_suitable);
 }
 
-void SeamCarver::initStrengthRoutes(int nbLines)
+int SeamCarver::initStrengthRoutes(int nbLines)
 {
     QPoint item;
     if (b_Pos_interdit != NULL)
@@ -164,11 +164,11 @@ void SeamCarver::initStrengthRoutes(int nbLines)
     for (int iter=0 ; iter<nbLines ; iter++)
     {
         iteration();
-        //if (iter == 80)
-        //   iter=80;
-
+        if (iter == 77)
+            int u = 7;
     }
     int y=0;
+    return listLignesMostSuitable.size();
 }
 
 void SeamCarver::iteration()
@@ -221,11 +221,14 @@ void SeamCarver::iteration()
         polyg = listLignes.takeAt(index);
         listLignesMostSuitable << polyg;
     }
-    QVectorIterator<QPoint> qit(*polyg);
-    while (qit.hasNext())
+    if (polyg != NULL)
     {
-        item=qit.next();
-        b_Pos_interdit[item.y()][item.x()]= true;
+        QVectorIterator<QPoint> qit(*polyg);
+        while (qit.hasNext())
+        {
+            item=qit.next();
+            b_Pos_interdit[item.y()][item.x()]= true;
+        }
     }
     qDeleteAll(listLignes);
     count=0;
@@ -235,7 +238,6 @@ QImage * SeamCarver::extendWidth(int w_extent,bool compression,bool afficheLigne
 {
     QPolygon *ligneBest;// = listLignesMostSuitable.first();
     QRgb color1,color2;
-    QRgb ligneColor = qRgb(255,255,255);
     int y_ligneBest;
     QPoint pp;
     int extendedSize = 0;//2*w_extent;
@@ -270,7 +272,9 @@ QImage * SeamCarver::extendWidth(int w_extent,bool compression,bool afficheLigne
             color1=imgOrigine->pixel(x,y);
             if ((afficheLignes) || (y != y_ligneBest))
             {
-                dataRet->setPixel(x,y+delta_y,color1);
+                int w_newPosition = y+delta_y;
+                if (w_newPosition < dataRet->height())
+                    dataRet->setPixel(x,w_newPosition,color1);
             } else
             {
                 if (compression)

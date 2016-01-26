@@ -13,7 +13,7 @@ public:
     ~SeamCarver();
     void initImage(QImage *src);
     QPoint leastRouteNextPointAt(QPoint prec, int &strengthValue);
-    void initStrengthRoutes(int nbLines);
+    int initStrengthRoutes(int nbLines);
     QList<QPolygon *> getListLignesMostSuitable();
     QImage * extendWidth(int w_extent,bool compression,bool afficheLignes);
     QPolygon *getPointAGarder();
