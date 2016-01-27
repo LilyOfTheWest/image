@@ -295,6 +295,11 @@ void PicDisplay::displaySeamCarvedImage()
 void PicDisplay::on_horizontalSliderSeamSize_sliderReleased()
 {
     displaySeamCarvedImage();
+    if (ui->horizontalSliderSeamSize->value() > 0)
+    {
+
+    }
+
 }
 
 void PicDisplay::on_checkSeamVisu_stateChanged(int arg1)
