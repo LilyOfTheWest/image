@@ -40,7 +40,13 @@ ImageAnalyse::ImageAnalyse(QImage *qimageRgbSrc,QObject *parent) : QObject(paren
 
 ImageAnalyse::~ImageAnalyse()
 {
-
+    delete dataRGB;
+    delete histo1;
+    delete histo2;
+    delete histo3;
+    delete histo_rgb;
+    delete histo_yuv;
+    delete tc;
 }
 
 void ImageAnalyse::fromYuvToRgb(){

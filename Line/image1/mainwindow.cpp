@@ -305,7 +305,7 @@ void MainWindow::on_action_Zoom_arriere_triggered()
 
 void MainWindow::on_actionFlou_triggered()
 {
-    TransfoCouleur *tc = new TransfoCouleur;
+    TransfoCouleur *tc = new TransfoCouleur();
     //PictLabel *jj = static_cast<PictLabel*>(ui->scrollAreaPict->widget());
 
     QImage *imageFloutee = tc->flou(imageLabel->getSelectedImage(), pdis->getFlouMode(), pdis->getFlouTaille());
@@ -313,6 +313,7 @@ void MainWindow::on_actionFlou_triggered()
     const QImage imageConv = *imageLabel->getSelectedImage();
     imageLabel->setPixmap(QPixmap::fromImage(imageConv));
     scaleFactor = 1.0;//scaleImage(1.5);
+    delete tc;
 }
 
 void MainWindow::on_actionPipette_triggered()

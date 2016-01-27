@@ -13,7 +13,7 @@ KernelConv::KernelConv(int ordre)
 }
 
 KernelConv::~KernelConv() {
-
+    delete buf;
 }
 
 double ** KernelConv::produitConv(double **src, int n, int m) {

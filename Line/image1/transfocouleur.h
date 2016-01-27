@@ -11,6 +11,7 @@ class TransfoCouleur : public QObject
 
 public:
     explicit TransfoCouleur(QObject *parent = 0);
+    ~TransfoCouleur();
     QImage *inverseColor(QImage *src);
     QImage *flou(QImage *src, int mode, int taille);
     QImage *rehaussement(QImage *src, double alpha);

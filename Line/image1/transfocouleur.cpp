@@ -8,6 +8,9 @@
 TransfoCouleur::TransfoCouleur(QObject *parent) : QObject(parent)
 {
 
+}
+
+TransfoCouleur::~TransfoCouleur(){
 
 }
 
@@ -35,15 +38,17 @@ QImage *TransfoCouleur::convertYuvToRgb(QImage *src)
     QRgb color,color2;
     int r,g,b,alpha;
     QImage *ret = new QImage(src->width(),src->height(),src->format());
-    for (int i=0; i< src->height() ; i++) {
-        for (int j=0; j<src->width() ; j++) {
-            color=src->pixel(j,i);
-            r=get_RVal_Pixel_FromYuv(color);
-            g=get_GVal_Pixel_FromYuv(color);
-            b=get_BVal_Pixel_FromYuv(color);
-            alpha=qAlpha(color);
-            color2=qRgba(r,g,b,alpha);
-            ret->setPixel(j,i,color2);
+    if(ret != NULL){
+        for (int i=0; i< src->height() ; i++) {
+            for (int j=0; j<src->width() ; j++) {
+                color=src->pixel(j,i);
+                r=get_RVal_Pixel_FromYuv(color);
+                g=get_GVal_Pixel_FromYuv(color);
+                b=get_BVal_Pixel_FromYuv(color);
+                alpha=qAlpha(color);
+                color2=qRgba(r,g,b,alpha);
+                ret->setPixel(j,i,color2);
+            }
         }
     }
     return ret;
@@ -51,24 +56,8 @@ QImage *TransfoCouleur::convertYuvToRgb(QImage *src)
 
 QImage *TransfoCouleur::flou(QImage *src, int mode, int taille)
 {
-    /* Test de base
-    QImage *tmp = convertRgbToYuv(src);
-    QImage *ret = convertYuvToRgb(tmp);
-
-    int r,g,b,r2,g2,b2,r3,g3,b3,y,u,v;
-    QRgb color1,color2,color3;
-    color1 = src->pixel(206,156);
-    r=qRed(color1);
-    g=qGreen(color1);
-    b=qBlue(color1);
-    color2 = tmp->pixel(206,156);
-    r2=qRed(color2);
-    g2=qGreen(color2);
-    b2=qBlue(color2);
-    color3 = ret->pixel(206,156);
-    r3=qRed(color3);
-    g3=qGreen(color3);
-    b3=qBlue(color3);*/
+    QRgb color, color2;
+    int r, g, b, alpha;
     KernelConv *kMoy;
     /* Final test */
     // appel dialog pour properties /
@@ -80,10 +69,24 @@ QImage *TransfoCouleur::flou(QImage *src, int mode, int taille)
     imA->initYuvImagris();
 
     imA->setImagris(kMoy->produitConv(imA->getImagris(), src->width(), src->height()));
-    // -> nvle image flouter ; passe pictlabel ; undo + ;
+
     imA->fromYuvToRgb();
 
-    return imA->getDataRGB();
+    QImage *ret = new QImage(src->width(),src->height(),src->format());
+    for (int i=0; i< src->height() ; i++) {
+        for (int j=0; j<src->width() ; j++) {
+            color=(imA->getDataRGB())->pixel(j,i);
+            r=qRed(color);
+            g=qGreen(color);
+            b=qBlue(color);
+            alpha=qAlpha(color);
+            color2=qRgba(r,g,b,alpha);
+            ret->setPixel(j,i,color2);
+        }
+    }
+    delete imA;
+    delete kMoy;
+    return ret;
     // delete de tous les new créés.
 
 }
@@ -108,6 +111,8 @@ QImage *TransfoCouleur::inverseColor(QImage *src) {
 
 QImage * TransfoCouleur::rehaussement(QImage *src, double alpha){
     int ordre = 3;
+    QRgb color,color2;
+    int r,g,b,a;
     // Filtre Passe Bas
     KernelConv *kerPB = new KernelConvBinomial(ordre);
     // On génère notre noyau impulsionnel
@@ -145,11 +150,27 @@ QImage * TransfoCouleur::rehaussement(QImage *src, double alpha){
 
     imA->setImagris(kerRH->produitConv(imA->getImagris(), src->width(), src->height()));
     imA->fromYuvToRgb();
+    delete kerRH;
 
-    return imA->getDataRGB();
+    QImage *ret = new QImage(src->width(),src->height(),src->format());
+        for (int i=0; i< src->height() ; i++) {
+            for (int j=0; j<src->width() ; j++) {
+                color=(imA->getDataRGB())->pixel(j,i);
+                r=qRed(color);
+                g=qGreen(color);
+                b=qBlue(color);
+                a=qAlpha(color);
+                color2=qRgba(r,g,b,alpha);
+                ret->setPixel(j,i,color2);
+            }
+        }
+    delete imA;
+    return ret;
 }
 
 QImage * TransfoCouleur::contour(QImage *src, int mode){
+    QRgb color,color2;
+    int r,g,b,alpha;
     double ** norm = new double*[src->height()];
     for(int i=0;i<src->height();i++){
         norm[i] = new double[src->width()];
@@ -169,7 +190,20 @@ QImage * TransfoCouleur::contour(QImage *src, int mode){
 
     imA->fromYuvToRgb();
 
-    return imA->getDataRGB();
+    QImage *ret = new QImage(src->width(),src->height(),src->format());
+        for (int i=0; i< src->height() ; i++) {
+            for (int j=0; j<src->width() ; j++) {
+                color=(imA->getDataRGB())->pixel(j,i);
+                r=qRed(color);
+                g=qGreen(color);
+                b=qBlue(color);
+                alpha=qAlpha(color);
+                color2=qRgba(r,g,b,alpha);
+                ret->setPixel(j,i,color2);
+            }
+        }
+    delete imA;
+    return ret;
 }
 
 QImage *TransfoCouleur::gris(QImage *src){
@@ -178,6 +212,7 @@ QImage *TransfoCouleur::gris(QImage *src){
     QRgb color, color2;
     int y, alpha;
     QImage *gris = new QImage(src->width(),src->height(),src->format());
+
     double ** imaGris = imA->getImagris();
     for(int i=0;i<gris->height();i++){
         for(int j=0;j<gris->width();j++){
@@ -192,6 +227,8 @@ QImage *TransfoCouleur::gris(QImage *src){
 }
 
 QImage *TransfoCouleur::etalement(QImage *src, double alpha, double beta){
+    QRgb color,color2;
+    int r,g,b,a;
     ImageAnalyse *imA = new ImageAnalyse(src);
     imA->initYuvImagris();
     int min = imA->min();
@@ -213,10 +250,25 @@ QImage *TransfoCouleur::etalement(QImage *src, double alpha, double beta){
     imA->setImagris(ret);
     imA->fromYuvToRgb();
 
-    return imA->getDataRGB();
+    QImage *out = new QImage(src->width(),src->height(),src->format());
+        for (int i=0; i< src->height() ; i++) {
+            for (int j=0; j<src->width() ; j++) {
+                color=(imA->getDataRGB())->pixel(j,i);
+                r=qRed(color);
+                g=qGreen(color);
+                b=qBlue(color);
+                a=qAlpha(color);
+                color2=qRgba(r,g,b,alpha);
+                out->setPixel(j,i,color2);
+            }
+        }
+    delete imA;
+    return out;
 }
 
 QImage *TransfoCouleur::egalisation(QImage *src){
+    QRgb color,color2;
+    int r,g,b,alpha;
     int nbr_pixels = src->height()*src->width();
     ImageAnalyse *imA = new ImageAnalyse(src);
     imA->initYuvImagris();
@@ -243,7 +295,20 @@ QImage *TransfoCouleur::egalisation(QImage *src){
     imA->setImagris(yuv);
     imA->fromYuvToRgb();
 
-    return imA->getDataRGB();
+    QImage *ret = new QImage(src->width(),src->height(),src->format());
+        for (int i=0; i< src->height() ; i++) {
+            for (int j=0; j<src->width() ; j++) {
+                color=(imA->getDataRGB())->pixel(j,i);
+                r=qRed(color);
+                g=qGreen(color);
+                b=qBlue(color);
+                alpha=qAlpha(color);
+                color2=qRgba(r,g,b,alpha);
+                ret->setPixel(j,i,color2);
+            }
+        }
+    delete imA;
+    return ret;
 }
 
 void TransfoCouleur::histogramme(QImage *src,int mode){
@@ -330,11 +395,26 @@ QRgb TransfoCouleur::changeAlphaColor(QRgb color,int alpha)
 
 QImage *TransfoCouleur::convPerso(KernelConv *noy, QImage *src)
 {
+    QRgb color,color2;
+    int r,g,b,alpha;
     ImageAnalyse *imA = new ImageAnalyse(src);
     imA->initYuvImagris();
 
     imA->setImagris(noy->produitConv(imA->getImagris(), src->width(), src->height()));
     imA->fromYuvToRgb();
 
-    return imA->getDataRGB();
+    QImage *ret = new QImage(src->width(),src->height(),src->format());
+    for (int i=0; i< src->height() ; i++) {
+            for (int j=0; j<src->width() ; j++) {
+                color=(imA->getDataRGB())->pixel(j,i);
+                r=qRed(color);
+                g=qGreen(color);
+                b=qBlue(color);
+                alpha=qAlpha(color);
+                color2=qRgba(r,g,b,alpha);
+                ret->setPixel(j,i,color2);
+            }
+        }
+    delete imA;
+    return ret;
 }
