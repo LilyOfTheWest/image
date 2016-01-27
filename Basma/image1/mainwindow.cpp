@@ -35,7 +35,7 @@ MainWindow::MainWindow(QWidget *parent) :
     scaleFactor = 1;
 
     //loadFile("C:/Users/Fredd/Pictures/Rafael-icon.png");
-    loadFile("C:/Users/Fredd/Pictures/lac.jpg");
+    //loadFile("C:/Users/Fredd/Pictures/lac.jpg");
     //loadFile("D:/Lily/Bureau/Dossier Line/M1-Info/PROJET/image/Fred/imageviewer/Rio-2-Official-Trailer-3-40.jpg");
     //on_actionSeamCarving_triggered();
 }
@@ -463,10 +463,8 @@ void MainWindow::on_actionRotation_180_triggered()
 
 void MainWindow::on_action_Annuler_triggered()
 {
-    updateActionsIconAccess(false);
     imageLabel->undoLast();
     pdis->resizePictureArea();
-    updateActionsIconAccess(true);
 }
 
 void MainWindow::on_actionRecadrer_triggered()
@@ -574,7 +572,6 @@ void MainWindow::on_actionEgalisation_triggered()
 
 void MainWindow::on_actionSupprimer_triggered()
 {
-    updateActionsIconAccess(false);
     imageLabel->setInitialContext();
 }
 
