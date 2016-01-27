@@ -44,7 +44,7 @@ void SeamCarver::initImage(QImage *src)
     ImageAnalyse *imA = new ImageAnalyse(src);
     imA->initYuvImagris();
     imA->calculgradient(1);
-    imgOrigine = imA->getDataRGB();
+    imgOrigine = src;
     dx_dy = new double *[src->height()];
     for(int y=0;y<src->height();y++){
         dx_dy[y] = new double[src->width()];
@@ -128,6 +128,8 @@ QPoint SeamCarver::leastRouteNextPointAt(QPoint prec, int &strengthValue) {
 int SeamCarver::initStrengthRoutes(int nbLines)
 {
     QPoint item;
+    bool lineStillFound=true;
+    int iter=0;
     if (b_Pos_interdit != NULL)
     {
         for(int y = 0 ; y < imgOrigine->height() ; y++){
@@ -158,9 +160,11 @@ int SeamCarver::initStrengthRoutes(int nbLines)
     }
     qDeleteAll(listLignesMostSuitable);
     listLignesMostSuitable.clear();
-    for (int iter=0 ; iter<nbLines ; iter++)
+    while ((lineStillFound)&&(iter<nbLines))
     {
-        iteration();
+        lineStillFound =iteration();
+        if (!lineStillFound)
+            int o =9;
         if (iter == 108)
             int u = 7;
     }
@@ -168,7 +172,7 @@ int SeamCarver::initStrengthRoutes(int nbLines)
     return listLignesMostSuitable.size();
 }
 
-void SeamCarver::iteration()
+bool SeamCarver::iteration()
 {
     QList<QPolygon *> listLignes;
     QPoint item;
@@ -206,19 +210,17 @@ void SeamCarver::iteration()
                 delete polyg;
         }
     }
+    if (listOrderedStrengthValue.isEmpty())
+        return false;
     qSort(listOrderedStrengthValue);
     int strLeast;
     int index=1;
-    int count=0;
     polyg = NULL;
-    if (!listOrderedStrengthValue.isEmpty())
-    {
-        strLeast = listOrderedStrengthValue.takeFirst();
-        index = listStrengthValue.indexOf(strLeast);
-        listStrengthValue.takeAt(index);
-        polyg = listLignes.takeAt(index);
-        listLignesMostSuitable << polyg;
-    }
+    strLeast = listOrderedStrengthValue.takeFirst();
+    index = listStrengthValue.indexOf(strLeast);
+    listStrengthValue.takeAt(index);
+    polyg = listLignes.takeAt(index);
+    listLignesMostSuitable << polyg;
     if ((polyg != NULL) && (!polyg->isEmpty()))
     {
         QVectorIterator<QPoint> qit(*polyg);
@@ -229,7 +231,7 @@ void SeamCarver::iteration()
         }
     }
     qDeleteAll(listLignes);
-    count=0;
+    return true;
 }
 
 QImage * SeamCarver::extendWidth(int w_extent,bool compression,bool afficheLignes)

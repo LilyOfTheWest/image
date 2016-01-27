@@ -31,7 +31,7 @@ private:
     bool ** b_Pos_interdit;
     QList<QPolygon *> listLignesMostSuitable;
     double getPointEnergy(int x, int y);
-    void iteration();
+    bool iteration();
 };
 
 #endif // SEAMCARVER_H

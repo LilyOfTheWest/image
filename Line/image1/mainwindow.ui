@@ -38,7 +38,6 @@
     <addaction name="action_Enregistrer"/>
     <addaction name="action_Enregistrer_sous"/>
     <addaction name="separator"/>
-    <addaction name="action_Imprimer"/>
     <addaction name="separator"/>
     <addaction name="actionExit"/>
    </widget>
@@ -118,7 +117,6 @@
    <addaction name="action_Ouvrir"/>
    <addaction name="action_Enregistrer"/>
    <addaction name="separator"/>
-   <addaction name="action_Imprimer"/>
    <addaction name="separator"/>
    <addaction name="action_Couper"/>
    <addaction name="action_Copier"/>
