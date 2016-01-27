@@ -15,6 +15,13 @@ SeamCarver::~SeamCarver()
     {
         qDeleteAll(listLignesMostSuitable);
     }
+    if (b_Pos_interdit != NULL)
+    {
+        for(int y = 0 ; y < imgOrigine->height() ; y++){
+            delete(b_Pos_interdit[y]);
+        }
+        delete b_Pos_interdit;
+    }
     delete pointAGarder;
     delete pointASup;
 }
@@ -90,7 +97,7 @@ QPoint SeamCarver::leastRouteNextPointAt(QPoint prec, int &strengthValue) {
         {
             y_most_suitable = y;
             dy_val = dy_val_cmp;
-            dy_val_prio = dy_val_cmp / 1.5;
+            dy_val_prio = dy_val_cmp;
         }
 
     }
@@ -122,7 +129,12 @@ int SeamCarver::initStrengthRoutes(int nbLines)
 {
     QPoint item;
     if (b_Pos_interdit != NULL)
+    {
+        for(int y = 0 ; y < imgOrigine->height() ; y++){
+            delete(b_Pos_interdit[y]);
+        }
         delete b_Pos_interdit;
+    }
     b_Pos_interdit = new bool*[imgOrigine->height()];
     for(int y = 0 ; y < imgOrigine->height() ; y++){
         b_Pos_interdit[y] = new bool[imgOrigine->width()];
@@ -133,28 +145,11 @@ int SeamCarver::initStrengthRoutes(int nbLines)
 
     }
     QVectorIterator<QPoint> qit_sup(*this->getPointASup());
-    //QList<int> listStrengthValueASup;
-    //QPolygon *getPointASupReordered = new QPolygon;
     while (qit_sup.hasNext())
     {
         item=qit_sup.next();
-        //listStrengthValueASup << item.y();
-
         dx_dy[item.y()][item.x()]= -20000;
     }
-    /*qSort(listStrengthValueASup);
-    int strLeast;
-    int index=1;
-    if (!listOrderedStrengthValue.isEmpty())
-    {
-        strLeast = listOrderedStrengthValue.takeFirst();
-        index = listStrengthValue.indexOf(strLeast);
-        listStrengthValue.takeAt(index);
-        item = *this->getPointASup().takeAt(index);
-        listLignesMostSuitable << polyg;
-    }*/
-
-
     QVectorIterator<QPoint> qit_garde(*this->getPointAGarder());
     while (qit_garde.hasNext())
     {
@@ -166,7 +161,7 @@ int SeamCarver::initStrengthRoutes(int nbLines)
     for (int iter=0 ; iter<nbLines ; iter++)
     {
         iteration();
-        if (iter == 77)
+        if (iter == 108)
             int u = 7;
     }
     int y=0;
@@ -215,6 +210,7 @@ void SeamCarver::iteration()
     int strLeast;
     int index=1;
     int count=0;
+    polyg = NULL;
     if (!listOrderedStrengthValue.isEmpty())
     {
         strLeast = listOrderedStrengthValue.takeFirst();
@@ -223,7 +219,7 @@ void SeamCarver::iteration()
         polyg = listLignes.takeAt(index);
         listLignesMostSuitable << polyg;
     }
-    if (polyg != NULL)
+    if ((polyg != NULL) && (!polyg->isEmpty()))
     {
         QVectorIterator<QPoint> qit(*polyg);
         while (qit.hasNext())
