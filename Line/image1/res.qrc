@@ -40,4 +40,7 @@
         <file>Tool bar/Supprimer.png</file>
         <file>Tool bar/negatif.png</file>
     </qresource>
+    <qresource prefix="/">
+        <file>Icone Programme/icon.ico</file>
+    </qresource>
 </RCC>

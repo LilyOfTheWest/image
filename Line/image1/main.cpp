@@ -57,6 +57,7 @@ int main(int argc, char *argv[])
         return -1;
     }
     mainWindow.setWindowTitle("");
+    mainWindow.setWindowIcon(QIcon("icon.ico"));
     mainWindow.show();
     return app.exec();
 }
