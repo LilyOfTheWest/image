@@ -377,7 +377,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Change</string>
+     <string>Modifier</string>
     </property>
    </widget>
    <zorder>layoutWidget</zorder>
