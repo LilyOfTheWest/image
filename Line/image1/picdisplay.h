@@ -45,6 +45,7 @@ public:
     void setSeamDisplay(int nbRoutes);
     void setErrorMsg(QString errorMsg);
     QString getErrorMsg();
+    void setResizerMode(bool visible);
 
 signals:
     void signalError();

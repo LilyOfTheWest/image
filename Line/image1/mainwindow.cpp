@@ -35,7 +35,7 @@ MainWindow::MainWindow(QWidget *parent) :
     scaleFactor = 1;
 
     //loadFile("C:/Users/Fredd/Pictures/Rafael-icon.png");
-    //loadFile("C:/Users/Fredd/Pictures/lac.jpg");
+    loadFile("C:/Users/Fredd/Pictures/lac.jpg");
     //loadFile("D:/Lily/Bureau/Dossier Line/M1-Info/PROJET/image/Fred/imageviewer/Rio-2-Official-Trailer-3-40.jpg");
     //on_actionSeamCarving_triggered();
 }
@@ -183,6 +183,7 @@ void MainWindow::updateActionsIconDisplay(bool visible)
 {
     ui->action_Nouveau->setVisible(false);
     ui->action_Coller->setVisible(false);
+    pdis->setResizerMode(false);
     ui->action_Fermer->setEnabled(visible);
     ui->action_Imprimer->setEnabled(visible);
     ui->actionPipette->setVisible(visible);
@@ -265,6 +266,7 @@ void MainWindow::adjustScrollBar(QScrollBar *scrollBar, double factor)
 
 void MainWindow::inverseColor()
 {
+    updateActionsIconAccess(false);
     TransfoCouleur *tc = new TransfoCouleur;
     //PictLabel *jj = static_cast<PictLabel*>(ui->scrollAreaPict->widget());
     QImage *imageInversee = tc->inverseColor(imageLabel->getSelectedImage());
@@ -272,6 +274,7 @@ void MainWindow::inverseColor()
     //const QImage imageConv = *imageLabel->getSelectedImage();
     //imageLabel->setPixmap(QPixmap::fromImage(imageConv));
     //scaleFactor = 1.0;//scaleImage(1.5);
+    updateActionsIconAccess(true);
 }
 
 void MainWindow::on_action_Ouvrir_triggered()
@@ -282,7 +285,6 @@ void MainWindow::on_action_Ouvrir_triggered()
 void MainWindow::on_action_Fermer_triggered()
 {
     imageLabel->closeImages();
-    updateActionsIconDisplay(false);
 }
 
 void MainWindow::on_action_Imprimer_triggered()
@@ -305,6 +307,7 @@ void MainWindow::on_action_Zoom_arriere_triggered()
 
 void MainWindow::on_actionFlou_triggered()
 {
+    updateActionsIconAccess(false);
     TransfoCouleur *tc = new TransfoCouleur();
     //PictLabel *jj = static_cast<PictLabel*>(ui->scrollAreaPict->widget());
 
@@ -314,6 +317,7 @@ void MainWindow::on_actionFlou_triggered()
     imageLabel->setPixmap(QPixmap::fromImage(imageConv));
     scaleFactor = 1.0;//scaleImage(1.5);
     delete tc;
+    updateActionsIconAccess(true);
 }
 
 void MainWindow::on_actionPipette_triggered()
@@ -335,10 +339,11 @@ void MainWindow::on_action_Selection_triggered()
 
 void MainWindow::on_action_Copier_triggered()
 {
+    updateActionsIconAccess(false);
     imageLabel->pasteSelection();
     imageLabel->setMouseListenerState(12);
     imageLabel->setSecondImgAsSelect(true);
-
+    updateActionsIconAccess(true);
 }
 
 void MainWindow::on_action_Coller_triggered()
@@ -348,14 +353,17 @@ void MainWindow::on_action_Coller_triggered()
 
 void MainWindow::on_action_Couper_triggered()
 {
+    updateActionsIconAccess(false);
     imageLabel->setCouperMode(true);
     imageLabel->pasteSelection();
     imageLabel->setMouseListenerState(12);
     imageLabel->setSecondImgAsSelect(true);
+    updateActionsIconAccess(true);
 }
 
 void MainWindow::on_actionImageGris_triggered()
 {
+    updateActionsIconAccess(false);
     QImage *imageSrc = imageLabel->getSelectedImage();
     if (imageSrc != NULL)
     {
@@ -367,10 +375,12 @@ void MainWindow::on_actionImageGris_triggered()
         imageLabel->setPixmap(QPixmap::fromImage(imageConv));
         scaleFactor = 1.0;//scaleImage(1.5);
     }
+    updateActionsIconAccess(true);
 }
 
 void MainWindow::on_actionInverseCoul_triggered()
 {
+    updateActionsIconAccess(false);
     QImage *imageSrc = imageLabel->getSelectedImage();
     if (imageSrc != NULL)
     {
@@ -382,10 +392,12 @@ void MainWindow::on_actionInverseCoul_triggered()
         imageLabel->setPixmap(QPixmap::fromImage(imageConv));
         scaleFactor = 1.0;//scaleImage(1.5);
     }
+    updateActionsIconAccess(true);
 }
 
 void MainWindow::on_actionFusion_2_triggered()
 {
+    updateActionsIconAccess(false);
     QStringList mimeTypeFilters;
     foreach (const QByteArray &mimeTypeName, QImageReader::supportedMimeTypes())
         mimeTypeFilters.append(mimeTypeName);
@@ -398,6 +410,7 @@ void MainWindow::on_actionFusion_2_triggered()
     dialog.selectMimeTypeFilter("image/jpeg");
 
     while (dialog.exec() == QDialog::Accepted && !loadFileToMerge(dialog.selectedFiles().first())) {}
+    updateActionsIconAccess(true);
 }
 
 void MainWindow::on_actionCrop_triggered()
@@ -407,57 +420,65 @@ void MainWindow::on_actionCrop_triggered()
 
 void MainWindow::on_actionValider_triggered()
 {
+    updateActionsIconAccess(false);
     imageLabel->validateTransfo();
     pdis->resizePictureArea();
+    updateActionsIconAccess(true);
 }
 
 void MainWindow::on_actionRotation_90_Horaire_triggered()
 {
+    updateActionsIconAccess(false);
     ImageResizer *resizer = new ImageResizer;
     QImage *rotatedImg =resizer->rotateImage90(imageLabel->getSelectedImage(),true);
     imageLabel->setPrincipal(rotatedImg);
     imageLabel->setInitialContext();
     pdis->resizePictureArea();
+    updateActionsIconAccess(true);
 }
 
 
 void MainWindow::on_action_Rotation_90_antihoraire_triggered()
 {
+    updateActionsIconAccess(false);
     ImageResizer *resizer = new ImageResizer;
     QImage *rotatedImg =resizer->rotateImage90(imageLabel->getSelectedImage(),false);
     imageLabel->setPrincipal(rotatedImg);
     imageLabel->setInitialContext();
     pdis->resizePictureArea();
+    updateActionsIconAccess(true);
 }
 
 
 void MainWindow::on_actionRotation_180_triggered()
 {
+    updateActionsIconAccess(false);
     ImageResizer *resizer = new ImageResizer;
     QImage *rotatedImg =resizer->rotateImage180(imageLabel->getSelectedImage());
     imageLabel->setPrincipal(rotatedImg);
     imageLabel->setInitialContext();
     pdis->resizePictureArea();
+    updateActionsIconAccess(true);
 }
 
 void MainWindow::on_action_Annuler_triggered()
 {
+    updateActionsIconAccess(false);
     imageLabel->undoLast();
     pdis->resizePictureArea();
+    updateActionsIconAccess(true);
 }
 
 void MainWindow::on_actionRecadrer_triggered()
 {
-    //loadFile("C:/Users/Fredd/Pictures/Rafael-icon.png");
-    ImageResizer *resizer = new ImageResizer;
-    /*QImage *resizedImg =resizer->resizeImage(imageLabel->getSelectedImage(),pdis->getResizedWidthRequired(),pdis->getResizedHeightRequired());
-    imageLabel->setPrincipal(resizedImg);
-    imageLabel->setInitialContext();
-    pdis->resizePictureArea();*/
+    updateActionsIconAccess(false);
+    pdis->setResizerMode(true);
+    updateActionsIconAccess(true);
 }
 
 void MainWindow::on_actionHistogramme_triggered()
 {
+    updateActionsIconAccess(false);
     QImage *imageSrc = imageLabel->getSelectedImage();
     if (imageSrc != NULL)
     {
@@ -465,10 +486,12 @@ void MainWindow::on_actionHistogramme_triggered()
         //PictLabel *jj = static_cast<PictLabel*>(ui->scrollAreaPict->widget());
         tc->histogramme(imageSrc,pdis->getYUVMode());
     }
+    updateActionsIconAccess(true);
 }
 
 void MainWindow::actionContour(int mode)
 {
+    updateActionsIconAccess(false);
     QImage *imageSrc = imageLabel->getSelectedImage();
     if (imageSrc != NULL)
     {
@@ -479,16 +502,20 @@ void MainWindow::actionContour(int mode)
         imageLabel->setPixmap(QPixmap::fromImage(imageConv));
         scaleFactor = 1.0;//scaleImage(1.5);
     }
+    updateActionsIconAccess(true);
 }
 
 void MainWindow::on_actionContour_triggered()
 {
+    updateActionsIconAccess(false);
     actionContour(1);
+    updateActionsIconAccess(true);
 }
 
 
 void MainWindow::on_actionHistogramme_2_triggered()
 {
+    updateActionsIconAccess(false);
     QImage *imageSrc = imageLabel->getSelectedImage();
     if (imageSrc != NULL)
     {
@@ -496,10 +523,12 @@ void MainWindow::on_actionHistogramme_2_triggered()
         //PictLabel *jj = static_cast<PictLabel*>(ui->scrollAreaPict->widget());
         tc->histogramme(imageSrc,pdis->getYUVMode());
     }
+    updateActionsIconAccess(true);
 }
 
 void MainWindow::on_actionRehaussement_triggered()
 {
+    updateActionsIconAccess(false);
     QImage *imageSrc = imageLabel->getSelectedImage();
     if (imageSrc != NULL)
     {
@@ -509,10 +538,12 @@ void MainWindow::on_actionRehaussement_triggered()
         imageLabel->setPixmap(QPixmap::fromImage(imageConv));
         scaleFactor = 1.0;//scaleImage(1.5);
     }
+    updateActionsIconAccess(true);
 }
 
 void MainWindow::on_actionEtalement_triggered()
 {
+    updateActionsIconAccess(false);
     QImage *imageSrc = imageLabel->getSelectedImage();
     if (imageSrc != NULL)
     {
@@ -523,10 +554,12 @@ void MainWindow::on_actionEtalement_triggered()
         imageLabel->setPixmap(QPixmap::fromImage(imageConv));
         scaleFactor = 1.0;//scaleImage(1.5);
     }
+    updateActionsIconAccess(true);
 }
 
 void MainWindow::on_actionEgalisation_triggered()
 {
+    updateActionsIconAccess(false);
     QImage *imageSrc = imageLabel->getSelectedImage();
     if (imageSrc != NULL)
     {
@@ -536,36 +569,48 @@ void MainWindow::on_actionEgalisation_triggered()
         imageLabel->setPixmap(QPixmap::fromImage(imageConv));
         scaleFactor = 1.0;//scaleImage(1.5);
     }
+    updateActionsIconAccess(true);
 }
 
 void MainWindow::on_actionSupprimer_triggered()
 {
+    updateActionsIconAccess(false);
     imageLabel->setInitialContext();
 }
 
 void MainWindow::on_action_Enregistrer_sous_triggered()
 {
+    updateActionsIconAccess(false);
     saveas();
+    updateActionsIconAccess(true);
 }
 
 void MainWindow::on_action_Enregistrer_triggered()
 {
+    updateActionsIconAccess(false);
     save();
+    updateActionsIconAccess(true);
 }
 
 void MainWindow::on_actionFiltre_Scharr_triggered()
 {
+    updateActionsIconAccess(false);
     actionContour(2);
+    updateActionsIconAccess(true);
 }
 
 void MainWindow::on_actionFiltre_Sobel_triggered()
 {
+    updateActionsIconAccess(false);
     actionContour(1);
+    updateActionsIconAccess(true);
 }
 
 void MainWindow::on_action_Filtre_Prewitt_triggered()
 {
+    updateActionsIconAccess(false);
     actionContour(0);
+    updateActionsIconAccess(true);
 }
 
 void MainWindow::on_UndoVivibilityRedefined()
@@ -585,6 +630,7 @@ void MainWindow::on_UndoValidateCancelRedefined()
 
 void MainWindow::on_action_Flou_moyenneur_triggered()
 {
+    updateActionsIconAccess(false);
     TransfoCouleur *tc = new TransfoCouleur;
     //PictLabel *jj = static_cast<PictLabel*>(ui->scrollAreaPict->widget());
 
@@ -593,10 +639,12 @@ void MainWindow::on_action_Flou_moyenneur_triggered()
     const QImage imageConv = *imageLabel->getSelectedImage();
     imageLabel->setPixmap(QPixmap::fromImage(imageConv));
     scaleFactor = 1.0;//scaleImage(1.5);
+    updateActionsIconAccess(true);
 }
 
 void MainWindow::on_action_Flou_gaussien_triggered()
 {
+    updateActionsIconAccess(false);
     TransfoCouleur *tc = new TransfoCouleur;
     //PictLabel *jj = static_cast<PictLabel*>(ui->scrollAreaPict->widget());
 
@@ -605,13 +653,16 @@ void MainWindow::on_action_Flou_gaussien_triggered()
     const QImage imageConv = *imageLabel->getSelectedImage();
     imageLabel->setPixmap(QPixmap::fromImage(imageConv));
     scaleFactor = 1.0;//scaleImage(1.5);
+    updateActionsIconAccess(true);
 }
 
 void MainWindow::on_actionSeamCarving_triggered()
 {
+    updateActionsIconAccess(false);
     imageLabel->getSeamCarver()->initImage(imageLabel->getImage1());
     int maxNbLignes = imageLabel->getSeamCarver()->initStrengthRoutes(imageLabel->getImage1()->height()/2);
     pdis->setSeamDisplay(maxNbLignes);
+    updateActionsIconAccess(true);
 }
 
 void MainWindow::displayErrorMessage()

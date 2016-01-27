@@ -145,6 +145,8 @@ void PictLabel::closeImages()
 {
     firstImg = NULL;
     this->setInitialContext();
+    drawImage();
+    signalRedisplayRequired();
 }
 
 void PictLabel::setSelectedImage(QImage *selectImgPar)
@@ -384,11 +386,11 @@ void PictLabel::moveSelection(QPoint *mouse_end,QImage *imgToMove,QPoint &positi
     int x_pos = positionRelative.x() + mouse_end->x() - mouse_origin.x();
     int y_pos = positionRelative.y() + mouse_end->y() - mouse_origin.y();
     if (x_pos < -imgToMove->width())
-        x_pos = 3-imgToMove->width();
+        x_pos = imgToMove->width();
     if (y_pos < -imgToMove->height())
-        y_pos = 3-imgToMove->height();
-    int xMax = principal->width()-3;
-    int yMax = principal->height()-3;
+        y_pos = imgToMove->height();
+    int xMax = principal->width();
+    int yMax = principal->height();
     if (x_pos > xMax)
         x_pos = xMax;
     if (y_pos > yMax)

@@ -148,8 +148,6 @@ void PicDisplay::updateDisplay()
         ui->libTailleHeigtht->setVisible(true);
         ui->libTailleWidth->setText("W:"+QString::number(imageLabel->getSelectedImage()->width()));
         ui->libTailleWidth->setVisible(true);
-        ui->lineEdit_Width->setVisible(true);
-        ui->lineEdit_Height->setVisible(true);
 
         if (imageLabel->getImage2() == NULL)
         {
@@ -164,9 +162,6 @@ void PicDisplay::updateDisplay()
         ui->libTailleGeneral->setVisible(false);
         ui->libTailleHeigtht->setVisible(false);
         ui->libTailleWidth->setVisible(false);
-        ui->lineEdit_Width->setVisible(false);
-        ui->lineEdit_Height->setVisible(false);
-
         displayImage2Selector(false);
     }
 }
@@ -184,7 +179,7 @@ void PicDisplay::displayImage2Selector(bool visible)
     ui->val_alpha_img2->setVisible(visible);
     ui->horizontalSlider_img1->setVisible(visible);
     ui->horizontalSlider_img2->setVisible(visible);
-    ui->pushButtonResize->setVisible((visible)&&(ui->val_alpha_img1->text().size()>0));
+    //ui->pushButtonResize->setVisible((visible)&&(ui->val_alpha_img1->text().size()>0));
 }
 
 void PicDisplay::displayFlouProperties(bool visible)
@@ -334,6 +329,7 @@ void PicDisplay::on_comboBoxSeamActions_currentIndexChanged(int index)
         imageLabel->setMouseListenerState(32);
         break;
     case 3:
+        imageLabel->getSeamCarver()->initImage(imageLabel->getImage1());
         int maxNbLignes = imageLabel->getSeamCarver()->initStrengthRoutes(imageLabel->getImage1()->height()/2);
         setSeamDisplay(maxNbLignes);
         break;
@@ -532,6 +528,7 @@ void PicDisplay::on_pushButtonResize_clicked()
     this->resizePictureArea();
     ui->lineEdit_Width->clear();
     ui->lineEdit_Height->setText("");
+    this->setResizerMode(false);
 }
 
 void PicDisplay::on_lineEdit_Width_textChanged(const QString &arg1)
@@ -568,4 +565,11 @@ void PicDisplay::genererFiltre(){
             filtrePerso->setIndex(tab->item(i,j)->text().toInt(),i,j);
         }
     }
+}
+
+void PicDisplay::setResizerMode(bool visible)
+{
+    ui->lineEdit_Width->setVisible(visible);
+    ui->lineEdit_Height->setVisible(visible);
+    ui->pushButtonResize->setVisible(visible);
 }

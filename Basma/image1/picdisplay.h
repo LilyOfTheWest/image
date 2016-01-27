@@ -2,6 +2,8 @@
 #define PICDISPLAY_H
 
 #include <QWidget>
+#include "kernelconv.h"
+#include <QTableWidget>
 
 namespace Ui {
 class PicDisplay;
@@ -43,6 +45,7 @@ public:
     void setSeamDisplay(int nbRoutes);
     void setErrorMsg(QString errorMsg);
     QString getErrorMsg();
+    void setResizerMode(bool visible);
 
 signals:
     void signalError();
@@ -92,10 +95,15 @@ private slots:
 
     void on_lineEdit_Height_textChanged(const QString &arg1);
 
+    void genererFiltre();
+
 private:
     Ui::PicDisplay *ui;
     PictLabel *imageLabel;
     QString errorMsg;
+    QTableWidget *tab;
+    int tailleFiltre;
+    KernelConv *filtrePerso;
     void refreshPixelProperties();
     void displayImage2Selector(bool visible);
     void displayFlouProperties(bool visible);
