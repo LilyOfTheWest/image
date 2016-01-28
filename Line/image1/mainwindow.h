@@ -124,6 +124,8 @@ private slots:
 
     void on_action_Flou_gaussien_triggered();
 
+    void on_actionExit_triggered();
+
 private:
     Ui::MainWindow *ui;
     void updateActions();

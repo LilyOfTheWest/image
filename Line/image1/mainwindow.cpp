@@ -668,3 +668,8 @@ void MainWindow::displayErrorMessage()
     msgBox.setText(pdis->getErrorMsg());
     msgBox.exec();
 }
+
+void MainWindow::on_actionExit_triggered()
+{
+    this->close();
+}

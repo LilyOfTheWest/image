@@ -44,3 +44,5 @@ RESOURCES += \
     res.qrc
 
 CONFIG+=qwt
+
+RC_FILE = myapp.rc
